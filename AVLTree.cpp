@@ -1,3 +1,5 @@
+#ifndef AVLTREE_CPP
+#define AVLTREE_CPP
 #include "AVLTree.h"
 
 template <class T>
@@ -428,3 +430,4 @@ bool AVLTree<T>::insertInternal(AVLTreeNode<T> *&root, const T &value) {
     // Successful insertion
     return true;
 }
+#endif

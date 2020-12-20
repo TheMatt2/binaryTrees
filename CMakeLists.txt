@@ -5,5 +5,6 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(
         trees
+        AVLTree.cpp
         mytest.cpp
 )
