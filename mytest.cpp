@@ -12,6 +12,8 @@ int main() {
     cout << "Hello World" << endl;
     AVLTree<int> tree(compare);
 
+    tree.clear();
+
 }
 
 /*
