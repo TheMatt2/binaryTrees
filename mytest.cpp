@@ -13,6 +13,14 @@ int main() {
     AVLTree<int> tree(compare);
 
     tree.clear();
+    tree.insert(8);
+    tree.insert(9);
+
+    if (tree.contains(8))
+        cout << 8 << endl;
+
+    if (tree.contains(9))
+        cout << 9 << endl;
 
 }
 
