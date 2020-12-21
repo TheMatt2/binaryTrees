@@ -5,6 +5,7 @@
 #define AVLTREE_H
 
 #include <cassert>
+#include "binaryTree.h"
 
 // Helper function for maximum
 // From http://www.cplusplus.com/articles/1AUq5Di1/
@@ -13,17 +14,17 @@
 template <class T> struct AVLTreeNode;
 
 template <class T>
-class AVLTree {
-    public:
-      explicit AVLTree(int8_t (*compare)(T a, T b)):
-          _root(nullptr), _compare(compare) {};
+class AVLTree : BinaryTree<T> {
+  public:
+    explicit AVLTree(int8_t (*compare)(T a, T b)):
+        _root(nullptr), _compare(compare) {};
 
-      ~AVLTree();
+    ~AVLTree();
 
-      bool contains(const T &value);
-      bool insert(const T &value);
-      bool remove(const T &value);
-      void clear();
+    bool contains(const T &value);
+    bool insert(const T &value);
+    bool remove(const T &value);
+    void clear();
 
     private:
       AVLTreeNode<T> *_root;
@@ -44,8 +45,8 @@ class AVLTree {
 
 // AVLTreeNode class to represent an object in the AVLTree
 template <class T>
-struct AVLTreeNode {
-    explicit AVLTreeNode(const T &value):
+struct AVLTreeNode : TreeNode<T> {
+    explicit AVLTreeNode(const T &value): TreeNode<T>(value),
             value(value), left(nullptr), right(nullptr), height(0) {}
 
     const T value;

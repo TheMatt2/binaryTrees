@@ -4,7 +4,13 @@ project(trees)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(
-        trees
+        AVLTreeTest
         AVLTree.cpp
-        mytest.cpp
+        AVLTreeTest.cpp
+)
+
+add_executable(
+        splayTreeTest
+        splayTree.cpp
+        splayTreeTest.cpp
 )

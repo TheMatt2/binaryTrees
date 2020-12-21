@@ -2,8 +2,9 @@
 #define AVLTREE_CPP
 #include "AVLTree.h"
 
-template <class T>
-AVLTree<T>::~AVLTree(){
+template<class T>
+AVLTree<T>::~AVLTree() {
+    // Deallocate all memory
     clear();
 }
 
@@ -430,4 +431,5 @@ bool AVLTree<T>::insertInternal(AVLTreeNode<T> *&root, const T &value) {
     // Successful insertion
     return true;
 }
+
 #endif
