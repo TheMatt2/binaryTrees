@@ -13,7 +13,6 @@ template <class T>
 class BinaryTree {
 private:
     TreeNode<T> *_root;
-    int8_t (*_compare)(T a, T b);
 };
 
 template <class T>
