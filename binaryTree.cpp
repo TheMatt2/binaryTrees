@@ -1,6 +1,6 @@
 #ifndef BINARYTREE_CPP
 #define BINARYTREE_CPP
-#include <deque>
+
 #include <cassert>
 #include "binaryTree.h"
 
@@ -25,7 +25,7 @@ void BinaryTree<T>::clearInternal(BinaryTree<T>::Node *&node){
 
 template <class T>
 typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder() const {
-    return preorder_iterator(root);
+    return BinaryTree<T>::preorder_iterator(root, 9);
 }
 
 template <class T>
@@ -54,7 +54,7 @@ typename BinaryTree<T>::counter_inorder_iterator BinaryTree<T>::reverse_inorder(
 }
 
 template <class T>
-typename BinaryTree<T>::iterator BinaryTree<T>::end() const {
+const typename BinaryTree<T>::iterator BinaryTree<T>::end() const {
     return iterator();
 }
 

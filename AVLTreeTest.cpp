@@ -27,6 +27,11 @@ int main() {
     if (tree.contains(9))
         cout << 9 << endl;
 
+    cout << "Traverse" << endl;
+
+    for (BinaryTree<int>::preorder_iterator it = tree.preorder(); !(it == tree.end()); ++it) {
+        cout << *it << endl;
+    }
 }
 
 /*

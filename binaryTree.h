@@ -54,10 +54,14 @@ class BinaryTree {
      * The values will be iterated through in the order
      * A, B, D, E, C, F, G
      */
-    class preorder_iterator : public iterator {
+    class preorder_iterator: public iterator {
         using iterator::stack;
+        using iterator::iterator;
+
       protected:
         void advance() override;
+      public:
+        preorder_iterator(Node root, int a) : iterator(root) {}
     };
 
     /**
@@ -78,6 +82,7 @@ class BinaryTree {
      */
     class postorder_iterator : iterator {
         using iterator::stack;
+        using iterator::iterator;
       protected:
         void advance() override;
     };
@@ -100,6 +105,7 @@ class BinaryTree {
      */
     class inorder_iterator : iterator {
         using iterator::stack;
+        using iterator::iterator;
       protected:
         void advance() override;
     };
@@ -122,6 +128,7 @@ class BinaryTree {
      */
     class counter_preorder_iterator : iterator {
         using iterator::stack;
+        using iterator::iterator;
       protected:
         void advance() override;
     };
@@ -145,6 +152,7 @@ class BinaryTree {
 
     class counter_postorder_iterator : iterator {
         using iterator::stack;
+        using iterator::iterator;
       protected:
         void advance() override;
     };
@@ -167,6 +175,7 @@ class BinaryTree {
      */
     class counter_inorder_iterator : iterator {
         using iterator::stack;
+        using iterator::iterator;
       protected:
         void advance() override;
     };
@@ -178,7 +187,7 @@ class BinaryTree {
     counter_postorder_iterator reverse_postorder() const;
     counter_inorder_iterator reverse_inorder() const;
 
-    iterator end() const;
+    const iterator end() const;
 
     // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
     class iterator {
@@ -191,7 +200,7 @@ class BinaryTree {
 
       public:
         // Copy constructor
-        iterator(const iterator &iter) : stack(iter.stack) {}
+//        iterator(const iterator &iter) : stack(iter.stack) {}
 
         iterator &operator=(const iterator &iter) {
             stack = iter.stack;
@@ -232,7 +241,7 @@ class BinaryTree {
       protected:
         virtual void advance() = 0;
 
-        explicit iterator(Node root) : stack() {
+        explicit iterator(Node root): stack() {
             stack.push_back(root);
         }
 
