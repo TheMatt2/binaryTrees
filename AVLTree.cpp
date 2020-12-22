@@ -11,12 +11,12 @@ AVLTree<T>::~AVLTree() {
 template <class T>
 void AVLTree<T>::clear() {
     // Deallocate all of the memory recursively
-    if (_root != nullptr)
-        clearInternal(_root);
+    if (this->root != nullptr)
+        clearInternal(root);
 }
 
 template <class T>
-void AVLTree<T>::clearInternal(AVLTreeNode<T> *&root){
+void AVLTree<T>::clearInternal(AVLTree<T>::Node *&root){
     /* Internal recursively clear the queue. */
     // Assert root exists
     assert(root != nullptr);
@@ -87,7 +87,7 @@ const AVLTreeNode<T>* AVLTree<T>::findInternal(
     assert(root != nullptr);
 
     // Choose which way to keep searching.
-    auto cmp = _compare(value, root->value);
+    auto cmp = compare(value, root->value);
 
     if (cmp == 0) {
         // Value match, this is the node
@@ -382,7 +382,7 @@ bool AVLTree<T>::insertInternal(AVLTreeNode<T> *&root, const T &value) {
     }
 
     // Check if this temp is the value value.
-    int8_t cmp = _compare(value, root->value);
+    int8_t cmp = compare(value, root->value);
 
     if (cmp == 0) {
         // value exists in the tree
