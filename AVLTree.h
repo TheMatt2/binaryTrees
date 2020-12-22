@@ -30,26 +30,21 @@ class AVLTree: public BinaryTree<T> {
     // Shadow root
     Node *root;
 
-    void clearInternal(Node *&root);
+    const Node* findInternal(const Node* const &node, const T &value);
 
-    const Node* findInternal(const Node* const &root, const T &value);
+    bool insertInternal(Node *&node, const T &value);
 
-    bool insertInternal(Node *&root, const T &value);
-
-    void updateHeight(Node *&root);
-    void leftRotation(Node *&root);
-    void rightRotation(Node *&root);
-    void reBalance(Node *&root);
+    void updateHeight(Node *&node);
+    void leftRotation(Node *&node);
+    void rightRotation(Node *&node);
+    void reBalance(Node *&node);
 
   public:
-    explicit AVLTree(int8_t (*compare)(T a, T b)): compare(compare) {};
-
-    ~AVLTree();
+    explicit AVLTree(int8_t (*compare)(T a, T b)): compare(compare), root(nullptr) {};
 
     bool contains(const T &value);
     bool insert(const T &value);
     bool remove(const T &value);
-    void clear();
 };
 #include "AVLTree.cpp"
 #endif

@@ -2,64 +2,30 @@
 #define AVLTREE_CPP
 #include "AVLTree.h"
 
-template<class T>
-AVLTree<T>::~AVLTree() {
-    // Deallocate all memory
-    clear();
-}
-
 template <class T>
-void AVLTree<T>::clear() {
-    // Deallocate all of the memory recursively
-    if (root != nullptr)
-        clearInternal(root);
-}
-
-template <class T>
-void AVLTree<T>::clearInternal(AVLTree<T>::Node *&root){
-    /* Internal recursively clear the queue. */
-    // Assert root exists
-    assert(root != nullptr);
-
-    if (root->left != nullptr) {
-        // Delete left
-        clearInternal(root->left);
-    }
-
-    if (root->right != nullptr) {
-        // Delete right
-        clearInternal(root->right);
-    }
-
-    // Now, delete this node.
-    delete root;
-    root = nullptr;
-}
-
-template <class T>
-void AVLTree<T>::updateHeight(AVLTree<T>::Node *&root) {
+void AVLTree<T>::updateHeight(AVLTree<T>::Node *&node) {
     /**
      * Helper function to recalculate the height after a node is modified.
      */
-    // Height of a node is MAX(root->left->height, root->right->height) + 1
+    // Height of a node is MAX(node->left->height, node->right->height) + 1
     // If no children, then height is 0
 
-    if (root->left != nullptr) {
-        if (root->right != nullptr) {
+    if (node->left != nullptr) {
+        if (node->right != nullptr) {
             // Max with both existing
-            root->height = MAX(root->left->height, root->right->height) + 1;
+            node->height = MAX(node->left->height, node->right->height) + 1;
         } else {
             // Left exists, right does not
-            root->height = root->left->height + 1;
+            node->height = node->left->height + 1;
         }
     } else {
         // Left does not exist
-        if (root->right != nullptr) {
+        if (node->right != nullptr) {
             // Right exists, right does not
-            root->height = root->right->height + 1;
+            node->height = node->right->height + 1;
         } else {
             // Neither left or right exist
-            root->height = 0;
+            node->height = 0;
         }
     }
 }
@@ -78,48 +44,48 @@ bool AVLTree<T>::contains(const T &value) {
 
 template <class T>
 const typename AVLTree<T>::Node* AVLTree<T>::findInternal(
-    const AVLTree<T>::Node* const &root, const T &value) {
+        const AVLTree<T>::Node* const &node, const T &value) {
     /**
-     * Recursive search for root in the tree.
+     * Recursive search for node in the tree.
      * Return's nullptr if not found.
      */
-    // Make sure root exists
-    assert(root != nullptr);
+    // Make sure node exists
+    assert(node != nullptr);
 
     // Choose which way to keep searching.
-    auto cmp = compare(value, root->value);
+    auto cmp = compare(value, node->value);
 
     if (cmp == 0) {
         // Value match, this is the node
-        return root;
+        return node;
     } else if (cmp < 0) {
         // Negative comparison
-        // value is less than root
+        // value is less than node
         // Go left
-        if (root->left != nullptr)
-            return findInternal(root->left, value);
+        if (node->left != nullptr)
+            return findInternal(node->left, value);
         else
             return nullptr;
     } else {
         // Positive comparison
-        // value is greater than root
+        // value is greater than node
         // Go right
-        if (root->right != nullptr)
-            return findInternal(root->right, value);
+        if (node->right != nullptr)
+            return findInternal(node->right, value);
         else
             return nullptr;
     }
 }
 
 template <class T>
-void AVLTree<T>::leftRotation(AVLTree<T>::Node *&root){
+void AVLTree<T>::leftRotation(AVLTree<T>::Node *&node){
     /**
      * Rotate the tree left about the given node.
      */
-    // Assert root is not null, and right is not null
-    assert(root != nullptr);
+    // Assert node is not null, and right is not null
+    assert(node != nullptr);
 
-    auto * const temp = root->right;
+    auto * const temp = node->right;
 
     assert(temp != nullptr);
     /* Assume the tree is in a state that would require a rotation.
@@ -160,79 +126,79 @@ void AVLTree<T>::leftRotation(AVLTree<T>::Node *&root){
      */
     // Test if right->right exists, that will determine the case
     if (// If the right exists, and the left doesn't
-            (root->right->right != nullptr) && (
+            (node->right->right != nullptr) && (
                     // Either left doesn't exist
-                    (root->right->left == nullptr) ||
+                    (node->right->left == nullptr) ||
                     // Or both exist and the right is "taller" than the left
-                    (root->right->right->height > root->right->left->height)
+                    (node->right->right->height > node->right->left->height)
             )) {
         // Case 1
-        // root->right needs to become root->right->left
-        // root->right safe in temp
-        root->right = root->right->left;
+        // node->right needs to become node->right->left
+        // node->right safe in temp
+        node->right = node->right->left;
         // (original right)
-        // temp->left needs to become root
-        // temp->left is safe because it just became root->right
-        temp->left = root;
+        // temp->left needs to become node
+        // temp->left is safe because it just became node->right
+        temp->left = node;
 
-        // root needs to become temp
-        // root is safe as temp->left
-        root = temp;
+        // node needs to become temp
+        // node is safe as temp->left
+        node = temp;
 
         /*
         // And now the tree is balanced!
-        // root->right height is fine
-        // root->left height needs recalculating
-        // root height needs recalculating
-        updateHeight(root->left);
+        // node->right height is fine
+        // node->left height needs recalculating
+        // node height needs recalculating
+        updateHeight(node->left);
 
-        // root is special because we know both left and right exist
+        // node is special because we know both left and right exist
         // so small optimization
-        if (root->left->getHeight() > root->right->getHeight())
-            root->_height = root->left->getHeight() + 1;
+        if (node->left->getHeight() > node->right->getHeight())
+            node->_height = node->left->getHeight() + 1;
         else
-            root->_height = root->right->getHeight() + 1;*/
+            node->_height = node->right->getHeight() + 1;*/
     } else {
         // Case 2
-        // root->right needs to become root->right->left->left
-        // root->right safe in temp
-        root->right = temp->left->left;
+        // node->right needs to become node->right->left->left
+        // node->right safe in temp
+        node->right = temp->left->left;
 
         // (original right)
-        // temp->left->left needs to become root
-        // temp->left->left is safe because it just became root->right
-        temp->left->left = root;
+        // temp->left->left needs to become node
+        // temp->left->left is safe because it just became node->right
+        temp->left->left = node;
 
-        // root needs to become temp->left
-        // root is safe as temp->left->left
-        root = temp->left;
+        // node needs to become temp->left
+        // node is safe as temp->left->left
+        node = temp->left;
 
-        // temp->left needs to become (new) root->right
-        // that is the original root->right->left->right
-        temp->left = root->right;
+        // temp->left needs to become (new) node->right
+        // that is the original node->right->left->right
+        temp->left = node->right;
 
-        // (new) root->right needs to become temp
-        root->right = temp;
+        // (new) node->right needs to become temp
+        node->right = temp;
     }
 
     // Recalculate heights
-    // Recalculate for root->left, root->right, and root;
-    updateHeight(root->left);
-    updateHeight(root->right);
-    updateHeight(root);
+    // Recalculate for node->left, node->right, and node;
+    updateHeight(node->left);
+    updateHeight(node->right);
+    updateHeight(node);
 }
 
 template <class T>
-void AVLTree<T>::rightRotation(AVLTree<T>::Node *&root){
+void AVLTree<T>::rightRotation(AVLTree<T>::Node *&node){
     /**
      * Rotate the tree right about the given node.
      */
-    // Assert root is not null, and left is not null
-    assert(root != nullptr);
+    // Assert node is not null, and left is not null
+    assert(node != nullptr);
 
     // The temp pointer is constant, but the
     // value of the pointer may be modified.
-    auto * const temp = root->left;
+    auto * const temp = node->left;
 
     assert(temp != nullptr);
     /* Assume the tree is in a state that would require a rotation.
@@ -274,71 +240,71 @@ void AVLTree<T>::rightRotation(AVLTree<T>::Node *&root){
     // Test if left->left exists, that will determine the case
     if (
         // If the left exists, and the right doesn't
-            (root->left->left != nullptr) && (
+            (node->left->left != nullptr) && (
                     // Either right doesn't exist
-                    (root->left->right == nullptr) ||
+                    (node->left->right == nullptr) ||
                     // Or both exist and the left is "taller" than the right
-                    (root->left->left->height > root->left->right->height)
+                    (node->left->left->height > node->left->right->height)
             )) {
         // Case 1
-        // root->left needs to become root->left->right
-        // root->left safe in temp
-        root->left = root->left->right;
+        // node->left needs to become node->left->right
+        // node->left safe in temp
+        node->left = node->left->right;
         // (original left)
-        // temp->right needs to become root
-        // temp->right is safe because it just became root->left
-        temp->right = root;
+        // temp->right needs to become node
+        // temp->right is safe because it just became node->left
+        temp->right = node;
 
-        // root needs to become temp
-        // root is safe as temp->right
-        root = temp;
+        // node needs to become temp
+        // node is safe as temp->right
+        node = temp;
     } else {
         // Case 2
-        // root->left needs to become root->left->right->right
-        // root->left safe in temp
-        root->left = temp->right->right;
+        // node->left needs to become node->left->right->right
+        // node->left safe in temp
+        node->left = temp->right->right;
 
         // (original left)
-        // temp->right->right needs to become root
-        // temp->right->right is safe because it just became root->left
-        temp->right->right = root;
+        // temp->right->right needs to become node
+        // temp->right->right is safe because it just became node->left
+        temp->right->right = node;
 
-        // root needs to become temp->right
-        // root is safe as temp->right->right
-        root = temp->right;
+        // node needs to become temp->right
+        // node is safe as temp->right->right
+        node = temp->right;
 
-        // temp->right needs to become (new) root->left
-        // that is the original root->left->right->left
-        temp->right = root->left;
+        // temp->right needs to become (new) node->left
+        // that is the original node->left->right->left
+        temp->right = node->left;
 
-        // (new) root->right needs to become temp
-        root->left = temp;
+        // (new) node->right needs to become temp
+        node->left = temp;
     }
 
     // Recalculate heights
-    // Recalculate for root->left, root->right, and root;
-    updateHeight(root->left);
-    updateHeight(root->right);
-    updateHeight(root);
+    // Recalculate for node->left, node->right, and node;
+    updateHeight(node->left);
+    updateHeight(node->right);
+    updateHeight(node);
 }
 
 template <class T>
-void AVLTree<T>::reBalance(AVLTree<T>::Node *&root){
+void AVLTree<T>::reBalance(AVLTree<T>::Node *&node){
     /**
-     * If needed, shifts root, root->left, and root->right
+     * If needed, shifts node, node->left, and node->right
      * will to transformed to balance the node.
      */
     int heightLeft, heightRight;
 
     // Get the heightLeft, -1 if null
-    if (root->left != nullptr)
-        heightLeft = root->left->height;
+    if (node->left != nullptr)
+        heightLeft = node->left->height;
     else
         heightLeft = -1;
 
     // Get the heightRight, -1 if null
-    if (root->right != nullptr)
-        heightRight = root->right->height;
+    if (node->right != nullptr)
+        heightRight = node->right->height;
     else
         heightRight = -1;
 
@@ -348,12 +314,12 @@ void AVLTree<T>::reBalance(AVLTree<T>::Node *&root){
         // HeightLeft is not null
         // And right is too much lower than left, (and might be null)
         // Shift the tree right
-        rightRotation(root);
+        rightRotation(node);
     } else if (cmp <= -2) {
         // heightRight is not null
         // And left is too much lower than right, (and might be null)
         // Shift the tree left
-        leftRotation(root);
+        leftRotation(node);
     }
     // Otherwise, no rotation is needed
 }
@@ -367,64 +333,64 @@ bool AVLTree<T>::insert(const T &value){
 }
 
 template <class T>
-bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&root, const T &value) {
+bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
     /**
      * An internal insert command that inserts a new value recursively.
      *
      * Returns true if the value is inserted.
      * Returns false if the value is found in the tree, and the tree is not modified.
      */
-    // Handle if root does not exist
-    if (root == nullptr) {
+    // Handle if node does not exist
+    if (node == nullptr) {
         // Well, insert the value here.
-        root = new AVLTree<T>::Node(value);
+        node = new AVLTree<T>::Node(value);
         return true;
     }
 
     // Check if this temp is the value value.
-    int8_t cmp = compare(value, root->value);
+    int8_t cmp = compare(value, node->value);
 
     if (cmp == 0) {
         // value exists in the tree
         // do not modify, nothing inserted
         return false;
     } else if (cmp < 0) {
-        // value is less than root
+        // value is less than node
         // So insert value left
 
         // If nothing inserted, no modifications required.
-        if (!insertInternal(root->left, value))
+        if (!insertInternal(node->left, value))
             return false;
 
         // If something was inserted. Recalculate heights
-        // root->left must exist because since a value was inserted on the left branch.
+        // node->left must exist because since a value was inserted on the left branch.
 
-        if (root->height <= root->left->height) {
-            // The height of root is too low, raise it
-            root->height++;
+        if (node->height <= node->left->height) {
+            // The height of node is too low, raise it
+            node->height++;
 
             // Balance
-            reBalance(root);
+            reBalance(node);
         }
     } else {
-        // value is greater than root
+        // value is greater than node
         // Insert value right.
 
         // If nothing inserted, no modifications required.
-        if (!insertInternal(root->right, value)) {
+        if (!insertInternal(node->right, value)) {
             return false;
         }
 
         // Update the height of this temp.
         // Only if the height of this temp changes
         // is balancing needed
-        // root->right must exist because we ran insert()
-        if (root->height <= root->right->height) {
-            // The height of root is too low, raise it
-            root->height++;
+        // node->right must exist because we ran insert()
+        if (node->height <= node->right->height) {
+            // The height of node is too low, raise it
+            node->height++;
 
             // Balance
-            reBalance(root);
+            reBalance(node);
         }
     }
 

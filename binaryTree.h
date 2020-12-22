@@ -7,6 +7,7 @@
 #define BINARYTREE_H
 #include <deque>
 #include <cstdlib>
+#include <iostream>
 
 using namespace std;
 
@@ -23,9 +24,20 @@ class BinaryTree {
         Node *right;
     };
 
+    void clearInternal(Node *&node);
+
     Node *root;
   public:
     BinaryTree() : root(nullptr) {}
+
+    ~BinaryTree() {
+        clear();
+    }
+
+    /**
+     * Clear all values in the tree.
+     */
+    void clear();
 
     class iterator;
 

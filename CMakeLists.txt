@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(
         AVLTreeTest
+        binaryTree.cpp
         AVLTree.cpp
         AVLTreeTest.cpp
 )

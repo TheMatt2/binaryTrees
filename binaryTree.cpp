@@ -3,7 +3,24 @@
 #include <deque>
 #include "binaryTree.h"
 
-using namespace std;
+template <class T>
+void BinaryTree<T>::clear() {
+    // Deallocate all of the memory recursively
+    clearInternal(root);
+}
+
+template <class T>
+void BinaryTree<T>::clearInternal(BinaryTree<T>::Node *&node){
+    // Recurse if node exists
+    if (node != nullptr) {
+        clearInternal(node->left);
+        clearInternal(node->right);
+
+        // Afterward, delete this node.
+        delete node;
+        node = nullptr;
+    }
+}
 
 template <class T>
 typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder() const {
