@@ -12,11 +12,10 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 template <class T>
-class AVLTree : BinaryTree<T> {
+class AVLTree: BinaryTree<T> {
   protected:
-    struct Node : BinaryTree<T>::Node {
+    struct Node: BinaryTree<T>::Node {
         explicit Node(const T &value): BinaryTree<T>::Node::Node(value), height(0) {}
-
         unsigned int height;
     };
     

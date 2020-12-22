@@ -37,7 +37,7 @@ void AVLTree<T>::clearInternal(AVLTree<T>::Node *&root){
 }
 
 template <class T>
-void AVLTree<T>::updateHeight(AVLTreeNode<T> *&root) {
+void AVLTree<T>::updateHeight(AVLTree<T>::Node *&root) {
     /**
      * Helper function to recalculate the height after a node is modified.
      */
@@ -69,16 +69,16 @@ bool AVLTree<T>::contains(const T &value) {
     /**
      * Check if value is present in the tree.
      */
-    if (_root == nullptr)
+    if (this->root == nullptr)
         // Empty, not there.
         return false;
 
-    return findInternal(_root, value) != nullptr;
+    return findInternal(this->root, value) != nullptr;
 }
 
 template <class T>
-const AVLTreeNode<T>* AVLTree<T>::findInternal(
-        const AVLTreeNode<T> * const &root, const T &value) {
+const typename AVLTree<T>::Node* AVLTree<T>::findInternal(
+    const AVLTree<T>::Node* const &root, const T &value) {
     /**
      * Recursive search for root in the tree.
      * Return's nullptr if not found.
@@ -112,7 +112,7 @@ const AVLTreeNode<T>* AVLTree<T>::findInternal(
 }
 
 template <class T>
-void AVLTree<T>::leftRotation(AVLTreeNode<T> *&root){
+void AVLTree<T>::leftRotation(AVLTree<T>::Node *&root){
     /**
      * Rotate the tree left about the given node.
      */
@@ -223,7 +223,7 @@ void AVLTree<T>::leftRotation(AVLTreeNode<T> *&root){
 }
 
 template <class T>
-void AVLTree<T>::rightRotation(AVLTreeNode<T> *&root){
+void AVLTree<T>::rightRotation(AVLTree<T>::Node *&root){
     /**
      * Rotate the tree right about the given node.
      */
@@ -323,7 +323,7 @@ void AVLTree<T>::rightRotation(AVLTreeNode<T> *&root){
 }
 
 template <class T>
-void AVLTree<T>::reBalance(AVLTreeNode<T> *&root){
+void AVLTree<T>::reBalance(AVLTree<T>::Node *&root){
     /**
      * If needed, shifts root, root->left, and root->right
      * will to transformed to balance the node.
@@ -363,11 +363,11 @@ bool AVLTree<T>::insert(const T &value){
     /**
      * Insert the a new value into the tree;
      */
-    return insertInternal(_root, value);
+    return insertInternal(root, value);
 }
 
 template <class T>
-bool AVLTree<T>::insertInternal(AVLTreeNode<T> *&root, const T &value) {
+bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&root, const T &value) {
     /**
      * An internal insert command that inserts a new value recursively.
      *
@@ -377,7 +377,7 @@ bool AVLTree<T>::insertInternal(AVLTreeNode<T> *&root, const T &value) {
     // Handle if root does not exist
     if (root == nullptr) {
         // Well, insert the value here.
-        root = new AVLTreeNode<T>(value);
+        root = new AVLTree<T>::Node(value);
         return true;
     }
 
@@ -431,5 +431,4 @@ bool AVLTree<T>::insertInternal(AVLTreeNode<T> *&root, const T &value) {
     // Successful insertion
     return true;
 }
-
 #endif
