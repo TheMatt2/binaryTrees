@@ -12,15 +12,23 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 template <class T>
-class AVLTree: BinaryTree<T> {
+class AVLTree: public BinaryTree<T> {
   protected:
-    struct Node: BinaryTree<T>::Node {
+    class Node: public BinaryTree<T>::Node {
+      public:
         explicit Node(const T &value): BinaryTree<T>::Node::Node(value), height(0) {}
         unsigned int height;
+
+        // Shadow the left and right
+        Node *left;
+        Node *right;
     };
-    
+
     // Comparison function
     int8_t (*compare)(T a, T b);
+
+    // Shadow root
+    Node *root;
 
     void clearInternal(Node *&root);
 

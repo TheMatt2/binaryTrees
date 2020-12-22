@@ -13,7 +13,8 @@ using namespace std;
 template <class T>
 class BinaryTree {
   protected:
-    struct Node {
+    class Node {
+      public:
         explicit Node(const T &value) :
                 value(value), left(nullptr), right(nullptr) {}
 

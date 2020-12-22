@@ -11,7 +11,7 @@ AVLTree<T>::~AVLTree() {
 template <class T>
 void AVLTree<T>::clear() {
     // Deallocate all of the memory recursively
-    if (this->root != nullptr)
+    if (root != nullptr)
         clearInternal(root);
 }
 
