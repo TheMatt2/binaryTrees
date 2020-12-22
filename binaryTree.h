@@ -7,9 +7,6 @@
 #define BINARYTREE_H
 #include <deque>
 #include <cstdlib>
-#include <iostream>
-
-using namespace std;
 
 template <class T>
 class BinaryTree {
@@ -57,8 +54,9 @@ class BinaryTree {
      * The values will be iterated through in the order
      * A, B, D, E, C, F, G
      */
-    class preorder_iterator : iterator {
-    protected:
+    class preorder_iterator : public iterator {
+        using iterator::stack;
+      protected:
         void advance() override;
     };
 
@@ -79,7 +77,8 @@ class BinaryTree {
      * D, E, B, F, G, C, A
      */
     class postorder_iterator : iterator {
-    protected:
+        using iterator::stack;
+      protected:
         void advance() override;
     };
 
@@ -100,7 +99,8 @@ class BinaryTree {
      * A, B, C, D, E, F, G
      */
     class inorder_iterator : iterator {
-    protected:
+        using iterator::stack;
+      protected:
         void advance() override;
     };
 
@@ -121,7 +121,8 @@ class BinaryTree {
      * A, C, G, F, B, E, D
      */
     class counter_preorder_iterator : iterator {
-    protected:
+        using iterator::stack;
+      protected:
         void advance() override;
     };
 
@@ -143,7 +144,8 @@ class BinaryTree {
      */
 
     class counter_postorder_iterator : iterator {
-    protected:
+        using iterator::stack;
+      protected:
         void advance() override;
     };
 
@@ -164,7 +166,8 @@ class BinaryTree {
      * A, C, B, G, F, E, D
      */
     class counter_inorder_iterator : iterator {
-    protected:
+        using iterator::stack;
+      protected:
         void advance() override;
     };
 
@@ -237,7 +240,7 @@ class BinaryTree {
         iterator() : stack() {}
 
         // Internally track nodes in a stack.
-        deque<Node*> stack;
+        std::deque<Node*> stack;
     };
 };
 #include "binaryTree.cpp"

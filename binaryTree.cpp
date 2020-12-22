@@ -1,6 +1,7 @@
 #ifndef BINARYTREE_CPP
 #define BINARYTREE_CPP
 #include <deque>
+#include <cassert>
 #include "binaryTree.h"
 
 template <class T>
@@ -57,35 +58,41 @@ typename BinaryTree<T>::iterator BinaryTree<T>::end() const {
     return iterator();
 }
 
+// MACRO defining the algorithm for preorder traversal
+// As a MACRO see both the normal and counter can use the same algorithm
+#define ADVANCE_PREORDER(first, second) { \
+    Node *current_node = stack.back(); \
+    if (current_node->first != nullptr) { \
+        /* Traverse to first */ \
+        stack.push_back(current_node->first); \
+    } else if (current_node->second != nullptr) { \
+        /* Traverse to second */ \
+        stack.push_back(current_node->second); \
+    } else { \
+        /* Backtrack */ \
+        do { \
+            const Node *parent_node = stack.pop_back(); \
+            if (parent_node->first == current_node && parent_node->second != nullptr) { \
+                /* Backtracking from the first */ \
+                /* Move from the left to the second */ \
+                stack.push_back(parent_node->second); \
+                break; \
+            } else { \
+                /* Backtracking from the second */ \
+                /* Continue backtracking until a node is approached from the first. */ \
+                assert(parent_node->second == current_node); \
+                current_node = parent_node; \
+            } \
+        } while (!stack.empty()); \
+    } \
+}
+
 template <class T>
 void BinaryTree<T>::preorder_iterator::advance() {
     /**
      * Advance to the next node along a preorder route.
      */
-    Node *current_node = this->stack.back();
-    if (current_node->left != nullptr) {
-        // Traverse left
-        this->stack.push_back(current_node->left);
-    } else if (current_node->right != nullptr) {
-        // Traverse right
-        this->stack.push_back(current_node->right);
-    } else {
-        // Backtrack
-        do {
-            const Node *parent_node = this->stack.pop_back();
-            if (parent_node->left == current_node && parent_node->right != nullptr) {
-                // Backtracking from the left
-                // Move from the left to the right
-                this->stack.push_back(parent_node->right);
-                break;
-            } else {
-                // Backtracking from the right
-                // Continue Backtracking until a node is approached from the left.
-                assert(parent_node->right == current_node);
-                current_node = parent_node;
-            }
-        } while (!this->stack.empty());
-    }
+    ADVANCE_PREORDER(left, right);
 }
 
 template <class T>
@@ -94,29 +101,6 @@ void BinaryTree<T>::counter_preorder_iterator::advance() {
      * Advance to the next node along a preorder route.
      * Counter order, so right to left
      */
-    Node *current_node = this->stack.back();
-    if (current_node->right != nullptr) {
-        // Traverse right
-        this->stack.push_back(current_node->right);
-    } else if (current_node->left != nullptr) {
-        // Traverse left
-        this->stack.push_back(current_node->left);
-    } else {
-        // Backtrack
-        do {
-            const Node *parent_node = this->stack.pop_back();
-            if (parent_node->right == current_node && parent_node->left != nullptr) {
-                // Backtracking from the right
-                // Move from the left to the left
-                this->stack.push_back(parent_node->left);
-                break;
-            } else {
-                // Backtracking from the left
-                // Continue Backtracking until a node is approached from the right.
-                assert(parent_node->left == current_node);
-                current_node = parent_node;
-            }
-        } while (!this->stack.empty());
-    }
+    ADVANCE_PREORDER(right, left);
 }
 #endif
