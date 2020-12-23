@@ -232,6 +232,10 @@ class BinaryTree {
             return stack.back() == iter.stack.back();
         }
 
+        bool operator!=(const iterator &iter) {
+            return !(*this == iter);
+        }
+
         T operator*() {
             // Unspecified behavior when empty
             return stack.back()->value;
