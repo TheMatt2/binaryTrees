@@ -29,9 +29,11 @@ int main() {
 
     cout << "Traverse" << endl;
 
-    for (BinaryTree<int>::preorder_iterator it = tree.preorder(); !(it == tree.end()); ++it) {
+    for (BinaryTree<int>::preorder_iterator it = tree.preorder_begin(); !(it == tree.preorder_end()); ++it) {
         cout << *it << endl;
     }
+
+    tree.clear();
 }
 
 /*

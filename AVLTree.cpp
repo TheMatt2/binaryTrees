@@ -3,6 +3,24 @@
 #include "AVLTree.h"
 
 template <class T>
+void AVLTree<T>::clear() {
+    // Deallocate all of the memory recursively
+    clearInternal(root);
+}
+
+template <class T>
+void AVLTree<T>::clearInternal(AVLTree<T>::Node* const &node) {
+    // Recurse if node exists
+    if (node != nullptr) {
+        clearInternal(node->getLeft());
+        clearInternal(node->getRight());
+
+        // Afterward, delete this node.
+        delete node;
+    }
+}
+
+template <class T>
 void AVLTree<T>::updateHeight(AVLTree<T>::Node *&node) {
     /**
      * Helper function to recalculate the height after a node is modified.

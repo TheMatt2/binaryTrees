@@ -16,10 +16,14 @@ class AVLTree: public BinaryTree<T> {
   protected:
     class Node: public BinaryTree<T>::Node {
       public:
-        explicit Node(const T &value): BinaryTree<T>::Node::Node(value), height(0) {}
+        explicit Node(const T &value): BinaryTree<T>::Node::Node(value), left(nullptr), right(nullptr), height(0) {}
         unsigned int height;
 
-        // Shadow the left and right
+        // Functions allow for traversal algorithms from parent
+        Node* getLeft() const override {return left;}
+        Node* getRight() const override {return right;}
+
+        // Members allows for modification by this class
         Node *left;
         Node *right;
     };
@@ -27,8 +31,11 @@ class AVLTree: public BinaryTree<T> {
     // Comparison function
     int8_t (*compare)(T a, T b);
 
-    // Shadow root
     Node *root;
+
+    Node* getRoot() const override {return root;};
+
+    void clearInternal(Node* const &node);
 
     const Node* findInternal(const Node* const &node, const T &value);
 
@@ -45,6 +52,11 @@ class AVLTree: public BinaryTree<T> {
     bool contains(const T &value);
     bool insert(const T &value);
     bool remove(const T &value);
+
+    /**
+     * Clear all values in the tree.
+     */
+    void clear();
 };
 #include "AVLTree.cpp"
 #endif

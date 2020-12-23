@@ -13,29 +13,20 @@ class BinaryTree {
   protected:
     class Node {
       public:
-        explicit Node(const T &value) :
-                value(value), left(nullptr), right(nullptr) {}
+        explicit Node(const T &value): value(value) {}
 
         const T value;
-        Node *left;
-        Node *right;
+
+        virtual Node* getLeft() const = 0;
+        virtual Node* getRight() const = 0;
     };
 
-    void clearInternal(Node *&node);
-
-    Node *root;
-  public:
-    BinaryTree() : root(nullptr) {}
-
-    ~BinaryTree() {
-        clear();
-    }
-
     /**
-     * Clear all values in the tree.
+     * Get a reference to the root node of the tree
      */
-    void clear();
+    virtual Node* getRoot() const = 0;
 
+  public:
     class iterator;
 
     /**
@@ -55,55 +46,6 @@ class BinaryTree {
      * A, B, D, E, C, F, G
      */
     class preorder_iterator: public iterator {
-        using iterator::stack;
-        using iterator::iterator;
-
-      protected:
-        void advance() override;
-      public:
-        preorder_iterator(Node root, int a) : iterator(root) {}
-    };
-
-    /**
-     * Iterator over the tree in a postorder traversal.
-     * Iterates through the tree from left to right,
-     * traversing as deep into the tree as possible.
-     * Nodes are reported when last backtracked away from.
-     *
-     * For the tree:
-     *       A
-     *     /   \
-     *    B     C
-     *   / \   / \
-     *  D   E F   G
-     *
-     * The values will be iterated through in the order
-     * D, E, B, F, G, C, A
-     */
-    class postorder_iterator : iterator {
-        using iterator::stack;
-        using iterator::iterator;
-      protected:
-        void advance() override;
-    };
-
-    /**
-     * Iterator over the tree in an inorder traversal.
-     * Iterates through the tree from left to right,
-     * traversing in increasing depth.
-     * Nodes are reported in the order visited.
-     *
-     * For the tree:
-     *       A
-     *     /   \
-     *    B     C
-     *   / \   / \
-     *  D   E F   G
-     *
-     * The values will be iterated through in the order
-     * A, B, C, D, E, F, G
-     */
-    class inorder_iterator : iterator {
         using iterator::stack;
         using iterator::iterator;
       protected:
@@ -126,7 +68,30 @@ class BinaryTree {
      * The values will be iterated through in the order
      * A, C, G, F, B, E, D
      */
-    class counter_preorder_iterator : iterator {
+    class counter_preorder_iterator: public iterator {
+        using iterator::stack;
+        using iterator::iterator;
+    protected:
+        void advance() override;
+    };
+
+    /**
+     * Iterator over the tree in a postorder_begin traversal.
+     * Iterates through the tree from left to right,
+     * traversing as deep into the tree as possible.
+     * Nodes are reported when last backtracked away from.
+     *
+     * For the tree:
+     *       A
+     *     /   \
+     *    B     C
+     *   / \   / \
+     *  D   E F   G
+     *
+     * The values will be iterated through in the order
+     * D, E, B, F, G, C, A
+     */
+    class postorder_iterator: public iterator {
         using iterator::stack;
         using iterator::iterator;
       protected:
@@ -134,7 +99,7 @@ class BinaryTree {
     };
 
     /**
-     * Iterator over the tree in a postorder traversal.
+     * Iterator over the tree in a postorder_begin traversal.
      * Iterates through the tree from right to left,
      * traversing as deep into the tree as possible.
      * Nodes are reported when last backtracked away from.
@@ -149,8 +114,30 @@ class BinaryTree {
      * The values will be iterated through in the order
      * G, F, C, E, D, B, A
      */
+    class counter_postorder_iterator: public iterator {
+        using iterator::stack;
+        using iterator::iterator;
+    protected:
+        void advance() override;
+    };
 
-    class counter_postorder_iterator : iterator {
+    /**
+     * Iterator over the tree in an inorder_begin traversal.
+     * Iterates through the tree from left to right,
+     * traversing in increasing depth.
+     * Nodes are reported in the order visited.
+     *
+     * For the tree:
+     *       A
+     *     /   \
+     *    B     C
+     *   / \   / \
+     *  D   E F   G
+     *
+     * The values will be iterated through in the order
+     * A, B, C, D, E, F, G
+     */
+    class inorder_iterator: public iterator {
         using iterator::stack;
         using iterator::iterator;
       protected:
@@ -158,7 +145,7 @@ class BinaryTree {
     };
 
     /**
-     * Iterator over the tree in an inorder traversal.
+     * Iterator over the tree in an inorder_begin traversal.
      * Iterates through the tree from right to left,
      * traversing in increasing depth.
      * Nodes are reported in the order visited.
@@ -173,34 +160,46 @@ class BinaryTree {
      * The values will be iterated through in the order
      * A, C, B, G, F, E, D
      */
-    class counter_inorder_iterator : iterator {
+    class counter_inorder_iterator: public iterator {
         using iterator::stack;
         using iterator::iterator;
       protected:
         void advance() override;
     };
 
-    preorder_iterator preorder() const;
-    postorder_iterator postorder() const;
-    inorder_iterator inorder() const;
-    counter_preorder_iterator reverse_preorder() const;
-    counter_postorder_iterator reverse_postorder() const;
-    counter_inorder_iterator reverse_inorder() const;
+    preorder_iterator preorder_begin() const;
+    preorder_iterator preorder_end() const;
 
-    const iterator end() const;
+    postorder_iterator postorder_begin() const;
+    postorder_iterator postorder_end() const;
+
+    inorder_iterator inorder_begin() const;
+    inorder_iterator inorder_end() const;
+
+    counter_preorder_iterator counter_preorder_begin() const;
+    counter_preorder_iterator counter_preorder_end() const;
+
+    counter_postorder_iterator counter_postorder_begin() const;
+    counter_postorder_iterator counter_postorder_end() const;
+
+    counter_inorder_iterator counter_inorder_begin() const;
+    counter_inorder_iterator counter_inorder_end() const;
 
     // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
     class iterator {
         /*
-         * Base Iterator for building both the reverse, inorder, preorder, and postorder
+         * Base Iterator for building both the reverse, inorder_begin, preorder, and postorder_begin
          * iterators.
          */
         // Allow BinaryTree to use the private constructor
         friend class BinaryTree;
 
       public:
+        // For "nullptr" iterator
+        iterator(): stack() {}
+
         // Copy constructor
-//        iterator(const iterator &iter) : stack(iter.stack) {}
+        iterator(const iterator &iter): stack(iter.stack) {}
 
         iterator &operator=(const iterator &iter) {
             stack = iter.stack;
@@ -225,12 +224,12 @@ class BinaryTree {
                 // Equal only of other is empty
                 return iter.stack.empty();
             } else if (iter.stack.empty()) {
-                // Both empty, therefore equal
-                return true;
+                // Other is empty, but this isn't. Not equal.
+                return false;
             }
 
             // Otherwise check the node is identical
-            return iter.back() == iter.stack.back();
+            return stack.back() == iter.stack.back();
         }
 
         T operator*() {
@@ -241,16 +240,15 @@ class BinaryTree {
       protected:
         virtual void advance() = 0;
 
-        explicit iterator(Node root): stack() {
-            stack.push_back(root);
+        explicit iterator(Node *root): stack() {
+            // Add the root, if it is not null
+            if (root != nullptr) stack.push_back(root);
         }
-
-        // For "nullptr" iterator
-        iterator() : stack() {}
 
         // Internally track nodes in a stack.
         std::deque<Node*> stack;
     };
 };
+
 #include "binaryTree.cpp"
 #endif

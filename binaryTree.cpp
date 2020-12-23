@@ -5,57 +5,63 @@
 #include "binaryTree.h"
 
 template <class T>
-void BinaryTree<T>::clear() {
-    // Deallocate all of the memory recursively
-    clearInternal(root);
+typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_begin() const {
+    return preorder_iterator(getRoot());
+}
+
+template<class T>
+typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_end() const {
+    return preorder_iterator();
 }
 
 template <class T>
-void BinaryTree<T>::clearInternal(BinaryTree<T>::Node *&node){
-    // Recurse if node exists
-    if (node != nullptr) {
-        clearInternal(node->left);
-        clearInternal(node->right);
-
-        // Afterward, delete this node.
-        delete node;
-        node = nullptr;
-    }
+typename BinaryTree<T>::counter_preorder_iterator BinaryTree<T>::counter_preorder_begin() const {
+    return counter_preorder_iterator(getRoot());
 }
 
 template <class T>
-typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder() const {
-    return BinaryTree<T>::preorder_iterator(root, 9);
+typename BinaryTree<T>::counter_preorder_iterator BinaryTree<T>::counter_preorder_end() const {
+    return counter_preorder_iterator();
 }
 
 template <class T>
-typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder() const {
-    return postorder_iterator(root);
+typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_begin() const {
+    return postorder_iterator(getRoot());
+}
+
+template<class T>
+typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_end() const {
+    return postorder_iterator();
 }
 
 template <class T>
-typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder() const {
-    return inorder_iterator(root);
+typename BinaryTree<T>::counter_postorder_iterator BinaryTree<T>::counter_postorder_begin() const {
+    counter_postorder_iterator(getRoot());
 }
 
 template <class T>
-typename BinaryTree<T>::counter_preorder_iterator BinaryTree<T>::reverse_preorder() const {
-    return counter_preorder_iterator(root);
+typename BinaryTree<T>::counter_postorder_iterator BinaryTree<T>::counter_postorder_end() const {
+    counter_postorder_iterator();
 }
 
 template <class T>
-typename BinaryTree<T>::counter_postorder_iterator BinaryTree<T>::reverse_postorder() const {
-    return counter_postorder_iterator(root);
+typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_begin() const {
+    return inorder_iterator(getRoot());
 }
 
 template <class T>
-typename BinaryTree<T>::counter_inorder_iterator BinaryTree<T>::reverse_inorder() const {
-    return counter_inorder_iterator(root);
+typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_end() const {
+    return inorder_iterator();
 }
 
 template <class T>
-const typename BinaryTree<T>::iterator BinaryTree<T>::end() const {
-    return iterator();
+typename BinaryTree<T>::counter_inorder_iterator BinaryTree<T>::counter_inorder_begin() const {
+    return counter_inorder_iterator(getRoot());
+}
+
+template <class T>
+typename BinaryTree<T>::counter_inorder_iterator BinaryTree<T>::counter_inorder_end() const {
+    return counter_inorder_iterator();
 }
 
 // MACRO defining the algorithm for preorder traversal
@@ -70,11 +76,12 @@ const typename BinaryTree<T>::iterator BinaryTree<T>::end() const {
         stack.push_back(current_node->second); \
     } else { \
         /* Backtrack */ \
-        do { \
-            const Node *parent_node = stack.pop_back(); \
+        stack.pop_back(); \
+        while (!stack.empty()) { \
+            Node *parent_node = stack.back(); \
             if (parent_node->first == current_node && parent_node->second != nullptr) { \
                 /* Backtracking from the first */ \
-                /* Move from the left to the second */ \
+                /* Move from the first to the second */ \
                 stack.push_back(parent_node->second); \
                 break; \
             } else { \
@@ -82,8 +89,9 @@ const typename BinaryTree<T>::iterator BinaryTree<T>::end() const {
                 /* Continue backtracking until a node is approached from the first. */ \
                 assert(parent_node->second == current_node); \
                 current_node = parent_node; \
+                stack.pop_back(); \
             } \
-        } while (!stack.empty()); \
+        } \
     } \
 }
 
@@ -92,7 +100,7 @@ void BinaryTree<T>::preorder_iterator::advance() {
     /**
      * Advance to the next node along a preorder route.
      */
-    ADVANCE_PREORDER(left, right);
+    ADVANCE_PREORDER(getLeft(), getRight());
 }
 
 template <class T>
@@ -101,6 +109,6 @@ void BinaryTree<T>::counter_preorder_iterator::advance() {
      * Advance to the next node along a preorder route.
      * Counter order, so right to left
      */
-    ADVANCE_PREORDER(right, left);
+    ADVANCE_PREORDER(getRight(), getLeft());
 }
 #endif
