@@ -26,8 +26,83 @@ class BinaryTree {
      */
     virtual Node* getRoot() const = 0;
 
+    Node* getMostLeftInternal(Node * const &node) const;
+    Node* getMostRightInternal(Node * const &node) const;
+
   public:
-    class iterator;
+    // Get the maximum and minimum values stored in the tree
+    T getMostLeft() const;
+    T getMostRight() const;
+
+    // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
+    class iterator {
+        /*
+         * Base Iterator for building both the reverse, inorder_begin, preorder, and postorder_begin
+         * iterators.
+         */
+        // Allow BinaryTree to use the private constructor
+        friend class BinaryTree;
+
+    public:
+        // For "nullptr" iterator
+        iterator(): stack() {}
+
+        // Copy constructor
+        iterator(const iterator &iter): stack(iter.stack) {}
+
+        iterator &operator=(const iterator &iter) {
+            stack = iter.stack;
+            return *this;
+        }
+
+        // Prefix ++ overload
+        iterator &operator++() {
+            if (!stack.empty()) advance();
+            return *this;
+        }
+
+        // Postfix ++ overload
+        iterator operator++(int) {
+            const iterator iter = *this;
+            ++*this;
+            return iter;
+        }
+
+        bool operator==(const iterator &iter) {
+            if (stack.empty()) {
+                // Equal only of other is empty
+                return iter.stack.empty();
+            } else if (iter.stack.empty()) {
+                // Other is empty, but this isn't. Not equal.
+                return false;
+            }
+
+            // Otherwise check the node is identical
+            return stack.back() == iter.stack.back();
+        }
+
+        bool operator!=(const iterator &iter) {
+            return !(*this == iter);
+        }
+
+        T operator*() {
+            // Unspecified behavior when empty
+            return stack.back()->value;
+        }
+
+    protected:
+        // Implemented as a blank function
+        // to allow the increment operators to be happy
+        virtual void advance() {};
+
+        explicit iterator(Node *root): stack() {
+            // Add the root, if it is not null
+            if (root != nullptr) stack.push_back(root);
+        }
+
+        // Internally track nodes in a stack.
+        std::deque<Node*> stack;
+    };
 
     /**
      * Iterator over the tree in a preorder traversal.
@@ -170,89 +245,20 @@ class BinaryTree {
     preorder_iterator preorder_begin() const;
     preorder_iterator preorder_end() const;
 
-    postorder_iterator postorder_begin() const;
-    postorder_iterator postorder_end() const;
-
-    inorder_iterator inorder_begin() const;
-    inorder_iterator inorder_end() const;
-
     counter_preorder_iterator counter_preorder_begin() const;
     counter_preorder_iterator counter_preorder_end() const;
+
+    postorder_iterator postorder_begin() const;
+    postorder_iterator postorder_end() const;
 
     counter_postorder_iterator counter_postorder_begin() const;
     counter_postorder_iterator counter_postorder_end() const;
 
+    inorder_iterator inorder_begin() const;
+    inorder_iterator inorder_end() const;
+
     counter_inorder_iterator counter_inorder_begin() const;
     counter_inorder_iterator counter_inorder_end() const;
-
-    // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
-    class iterator {
-        /*
-         * Base Iterator for building both the reverse, inorder_begin, preorder, and postorder_begin
-         * iterators.
-         */
-        // Allow BinaryTree to use the private constructor
-        friend class BinaryTree;
-
-      public:
-        // For "nullptr" iterator
-        iterator(): stack() {}
-
-        // Copy constructor
-        iterator(const iterator &iter): stack(iter.stack) {}
-
-        iterator &operator=(const iterator &iter) {
-            stack = iter.stack;
-            return *this;
-        }
-
-        // Prefix ++ overload
-        iterator &operator++() {
-            if (!stack.empty()) advance();
-            return *this;
-        }
-
-//        // Postfix ++ overload
-//        virtual iterator operator++(int) {
-//            const iterator iter = *this;
-//            ++*this;
-//            return iter;
-//        }
-
-        bool operator==(const iterator &iter) {
-            if (stack.empty()) {
-                // Equal only of other is empty
-                return iter.stack.empty();
-            } else if (iter.stack.empty()) {
-                // Other is empty, but this isn't. Not equal.
-                return false;
-            }
-
-            // Otherwise check the node is identical
-            return stack.back() == iter.stack.back();
-        }
-
-        bool operator!=(const iterator &iter) {
-            return !(*this == iter);
-        }
-
-        T operator*() {
-            // Unspecified behavior when empty
-            return stack.back()->value;
-        }
-
-      protected:
-        virtual void advance() = 0;
-
-        explicit iterator(Node *root): stack() {
-            // Add the root, if it is not null
-            if (root != nullptr) stack.push_back(root);
-        }
-
-        // Internally track nodes in a stack.
-        std::deque<Node*> stack;
-    };
 };
-
 #include "binaryTree.cpp"
 #endif

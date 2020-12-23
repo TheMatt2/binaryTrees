@@ -2,7 +2,55 @@
 #define BINARYTREE_CPP
 
 #include <cassert>
+#include <stdexcept>
 #include "binaryTree.h"
+
+// Implement searches for the further left and right values in the tree.
+template<class T>
+T BinaryTree<T>::getMostLeft() const {
+    Node* const root = getRoot();
+    if (root != nullptr) {
+        return getMostLeftInternal(root)->value;
+    } else {
+        // There are values, so nothing valid to return
+        // Raise out of bounds error
+        throw std::out_of_range("tree contains no values");
+    }
+}
+
+template<class T>
+typename BinaryTree<T>::Node* BinaryTree<T>::getMostLeftInternal(BinaryTree::Node* const &node) const {
+    Node* const left = node->getLeft();
+    if (left != nullptr) {
+        return getMostLeftInternal(left);
+    } else {
+        // As far left as possible, return result
+        return node;
+    }
+}
+
+template<class T>
+T BinaryTree<T>::getMostRight() const {
+    Node* const root = getRoot();
+    if (root != nullptr) {
+        return getMostRightInternal(root)->value;
+    } else {
+        // There are values, so nothing valid to return
+        // Raise out of bounds error
+        throw std::out_of_range("tree contains no values");
+    }
+}
+
+template<class T>
+typename BinaryTree<T>::Node* BinaryTree<T>::getMostRightInternal(BinaryTree::Node* const &node) const {
+    Node* const right = node->getRight();
+    if (right != nullptr) {
+        return getMostRightInternal(right);
+    } else {
+        // As far left as possible, return result
+        return node;
+    }
+}
 
 // Algorithms
 

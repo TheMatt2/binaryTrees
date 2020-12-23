@@ -14,18 +14,20 @@ int8_t compare(int a, int b) {
 }
 
 int main() {
-    cout << "Hello World" << endl;
+    cout << "Build Tree" << endl;
+
     AVLTree<int> tree(compare);
 
-    tree.clear();
-    tree.insert(8);
-    tree.insert(9);
+    for (int i = 0; i < 100; i++) {
+        tree.insert(i);
+    }
 
-    if (tree.contains(8))
-        cout << 8 << endl;
+    for (int i = 0; i < 100; i++) {
+        tree.insert(i);
+    }
 
-    if (tree.contains(9))
-        cout << 9 << endl;
+    cout << "Min: " << tree.getMostLeft() << endl;
+    cout << "Max: " << tree.getMostRight() << endl;
 
     cout << "Traverse" << endl;
 

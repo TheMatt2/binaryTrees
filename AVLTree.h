@@ -49,6 +49,9 @@ class AVLTree: public BinaryTree<T> {
   public:
     explicit AVLTree(int8_t (*compare)(T a, T b)): compare(compare), root(nullptr) {};
 
+    //T popMostLeft();
+    //T popMostRight();
+
     bool contains(const T &value);
     bool insert(const T &value);
     bool remove(const T &value);
