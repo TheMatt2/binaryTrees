@@ -13,16 +13,47 @@ int8_t compare(int a, int b) {
     else        return  1;
 }
 
+void printTree(const AVLTree<int> &tree) {
+    cout << "Level Order Traverse" << endl;
+    int buf = 10;
+    unsigned int level = 0;
+    unsigned int position = 1 << level;
+
+    for (unsigned int i = 0; i < buf; i++) cout << "  ";
+
+    for (auto it = tree.level_order_begin(); it != tree.level_order_end(); it++) {
+        cout << *it << " ";
+        position--;
+        if (position == 0) {
+            cout << endl;
+            buf--;
+            level++;
+            position = 1 << level;
+            for (unsigned int i = 0; i < 10 - position; i++) cout << "  ";
+
+
+        } else {
+            // Padding
+            for (unsigned int i = 0; i < buf; i+=2) cout << " ";
+        }
+    }
+    cout << endl;
+}
+
 int main() {
     cout << "Build Tree" << endl;
 
     AVLTree<int> tree(compare);
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10; i++) {
         tree.insert(i);
     }
 
+    cout << "Tree" << endl;
+    printTree(tree);
+
     cout << "Min: " << tree.getMostLeft() << endl;
+    cout << "Mid: " << tree.getRoot() << endl;
     cout << "Max: " << tree.getMostRight() << endl;
 
     cout << "Preorder Traverse" << endl;

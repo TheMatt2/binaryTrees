@@ -342,7 +342,7 @@ class BinaryTree {
         }
 
         // Postfix ++ overload
-        const stack_iterator operator++(int) {
+        stack_iterator operator++(int) {
             const stack_iterator iter = *this;
             ++*this;
             return iter;
@@ -413,7 +413,7 @@ class BinaryTree {
         }
 
         // Postfix ++ overload
-        const queue_iterator operator++(int) {
+        queue_iterator operator++(int) {
             const queue_iterator iter = *this;
             ++*this;
             return iter;
@@ -446,7 +446,7 @@ class BinaryTree {
         }
 
       protected:
-        // Implemented as a blank function
+        // Implemented as a fake function
         // to allow the increment operators to be happy
         virtual void advance() {throw std::logic_error("not implemented" /* and shouldn't exist */);}
 
