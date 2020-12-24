@@ -10,7 +10,7 @@ using namespace std;
 int8_t compare(int a, int b) {
     if (a < b)  return -1;
     if (a == b) return  0;
-                return  1;
+    else        return  1;
 }
 
 int main() {
@@ -22,18 +22,32 @@ int main() {
         tree.insert(i);
     }
 
-    for (int i = 0; i < 100; i++) {
-        tree.insert(i);
-    }
-
     cout << "Min: " << tree.getMostLeft() << endl;
     cout << "Max: " << tree.getMostRight() << endl;
 
-    cout << "Traverse" << endl;
-
-    for (BinaryTree<int>::preorder_iterator it = tree.preorder_begin(); it != tree.preorder_end(); ++it) {
-        cout << *it << endl;
+    cout << "Preorder Traverse" << endl;
+    for (auto it = tree.preorder_begin(); it != tree.preorder_end(); it++) {
+        cout << *it << " ";
     }
+    cout << endl;
+
+    cout << "Counter Preorder Traverse" << endl;
+    for (auto it = tree.counter_preorder_begin(); it != tree.counter_preorder_end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    cout << "Postorder Traverse" << endl;
+    for (auto it = tree.postorder_begin(); it != tree.postorder_end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    cout << "Counter Postorder Traverse" << endl;
+    for (auto it = tree.counter_postorder_begin(); it != tree.counter_postorder_end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
 
     tree.clear();
 }

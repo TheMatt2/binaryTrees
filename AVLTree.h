@@ -17,7 +17,6 @@ class AVLTree: public BinaryTree<T> {
     class Node: public BinaryTree<T>::Node {
       public:
         explicit Node(const T &value): BinaryTree<T>::Node::Node(value), left(nullptr), right(nullptr), height(0) {}
-        unsigned int height;
 
         // Functions allow for traversal algorithms from parent
         Node* getLeft() const override {return left;}
@@ -26,6 +25,7 @@ class AVLTree: public BinaryTree<T> {
         // Members allows for modification by this class
         Node *left;
         Node *right;
+        unsigned int height;
     };
 
     // Comparison function
@@ -33,7 +33,7 @@ class AVLTree: public BinaryTree<T> {
 
     Node *root;
 
-    Node* getRoot() const override {return root;};
+    Node* getRootNode() const override {return root;};
 
     void clearInternal(Node* const &node);
 
