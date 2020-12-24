@@ -49,6 +49,31 @@ int main() {
     }
     cout << endl;
 
+    cout << "Inorder Traverse" << endl;
+    for (auto it = tree.inorder_begin(); it != tree.inorder_end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    cout << "Counter Inorder Traverse" << endl;
+    for (auto it = tree.counter_inorder_begin(); it != tree.counter_inorder_end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    cout << "Level Order Traverse" << endl;
+    for (auto it = tree.level_order_begin(); it != tree.level_order_end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    cout << "Counter Level Order Traverse" << endl;
+    for (auto it = tree.counter_level_order_begin(); it != tree.counter_level_order_end(); it++) {
+        cout << *it << " ";
+
+    }
+    cout << endl;
+
     tree.clear();
 }
 
