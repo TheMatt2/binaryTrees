@@ -324,9 +324,6 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
       public:
-        // For "nullptr" stack_iterator
-        stack_iterator(): stack() {}
-
         // Copy constructor
         stack_iterator(const stack_iterator &iter): stack(iter.stack) {}
 
@@ -395,9 +392,6 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
       public:
-        // For "nullptr" queue_iterator
-        queue_iterator(): queue() {}
-
         // Copy constructor
         queue_iterator(const queue_iterator &iter): queue(iter.queue) {}
 

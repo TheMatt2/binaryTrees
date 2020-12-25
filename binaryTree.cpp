@@ -114,7 +114,7 @@ void BinaryTree<T>::preorder_iterator::advance() {
 
 template<class T>
 typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_end() const {
-    return preorder_iterator();
+    return preorder_iterator(nullptr);
 }
 
 template <class T>
@@ -132,7 +132,7 @@ void BinaryTree<T>::reverse_preorder_iterator::advance() {
 
 template <class T>
 typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorder_end() const {
-    return reverse_preorder_iterator();
+    return reverse_preorder_iterator(nullptr);
 }
 
 #define ADVANCE_TO_NEXT_POSTORDER(first, second) { \
@@ -193,7 +193,7 @@ void BinaryTree<T>::postorder_iterator::advance() {
 
 template<class T>
 typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_end() const {
-    return postorder_iterator();
+    return postorder_iterator(nullptr);
 }
 
 template <class T>
@@ -219,7 +219,7 @@ void BinaryTree<T>::reverse_postorder_iterator::advance() {
 
 template <class T>
 typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postorder_end() const {
-    return reverse_postorder_iterator();
+    return reverse_postorder_iterator(nullptr);
 }
 
 #define ADVANCE_TO_NEXT_INORDER(first, second) { \
@@ -287,7 +287,7 @@ void BinaryTree<T>::inorder_iterator::advance() {
 
 template <class T>
 typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_end() const {
-    return inorder_iterator();
+    return inorder_iterator(nullptr);
 }
 
 template <class T>
@@ -313,7 +313,7 @@ void BinaryTree<T>::reverse_inorder_iterator::advance() {
 
 template <class T>
 typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_end() const {
-    return reverse_inorder_iterator();
+    return reverse_inorder_iterator(nullptr);
 }
 
 #define ADVANCE_LEVEL_ORDER(first, second) { \
@@ -339,7 +339,7 @@ void BinaryTree<T>::level_order_iterator::advance() {
 
 template <class T>
 typename BinaryTree<T>::level_order_iterator BinaryTree<T>::level_order_end() const {
-    return level_order_iterator();
+    return level_order_iterator(nullptr);
 }
 
 template <class T>
@@ -357,6 +357,6 @@ void BinaryTree<T>::reverse_level_order_iterator::advance() {
 
 template <class T>
 typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_end() const {
-    return reverse_level_order_iterator();
+    return reverse_level_order_iterator(nullptr);
 }
 #endif
