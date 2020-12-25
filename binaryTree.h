@@ -395,7 +395,7 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
       public:
-        // For "nullptr" stack_iterator
+        // For "nullptr" queue_iterator
         queue_iterator(): queue() {}
 
         // Copy constructor
@@ -455,7 +455,7 @@ class BinaryTree {
             if (root != nullptr) queue.push(root);
         }
 
-        // Internally track nodes in a stack.
+        // Internally track nodes in a queue.
         std::queue<const Node*> queue;
     };
 };
