@@ -68,7 +68,7 @@ typename BinaryTree<T>::Node* BinaryTree<T>::getMostRightInternal(BinaryTree::No
 // Algorithms
 
 // MACRO defining the algorithm for preorder traversal
-// As a MACRO see both the normal and counter can use the same algorithm
+// As a MACRO see both the normal and reverse can use the same algorithm
 #define ADVANCE_PREORDER(first, second) { \
     const Node *current_node = stack.top(); \
     if (current_node->first != nullptr) { \
@@ -118,21 +118,21 @@ typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_end() const {
 }
 
 template <class T>
-typename BinaryTree<T>::counter_preorder_iterator BinaryTree<T>::counter_preorder_begin() const {
-    return counter_preorder_iterator(getRootNode());
+typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorder_begin() const {
+    return reverse_preorder_iterator(getRootNode());
 }
 
 template <class T>
-void BinaryTree<T>::counter_preorder_iterator::advance() {
+void BinaryTree<T>::reverse_preorder_iterator::advance() {
     /**
-     * Advance to the next node along a counter preorder traversal.
+     * Advance to the next node along a reverse preorder traversal.
      */
     ADVANCE_PREORDER(getRight(), getLeft());
 }
 
 template <class T>
-typename BinaryTree<T>::counter_preorder_iterator BinaryTree<T>::counter_preorder_end() const {
-    return counter_preorder_iterator();
+typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorder_end() const {
+    return reverse_preorder_iterator();
 }
 
 #define ADVANCE_TO_NEXT_POSTORDER(first, second) { \
@@ -197,12 +197,12 @@ typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_end() const 
 }
 
 template <class T>
-typename BinaryTree<T>::counter_postorder_iterator BinaryTree<T>::counter_postorder_begin() const {
-    return counter_postorder_iterator(getRootNode());
+typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postorder_begin() const {
+    return reverse_postorder_iterator(getRootNode());
 }
 
 template <class T>
-void BinaryTree<T>::counter_postorder_iterator::advanceToNext() {
+void BinaryTree<T>::reverse_postorder_iterator::advanceToNext() {
     /**
      * Advance to the first leaf in the tree.
      */
@@ -210,16 +210,16 @@ void BinaryTree<T>::counter_postorder_iterator::advanceToNext() {
 }
 
 template <class T>
-void BinaryTree<T>::counter_postorder_iterator::advance() {
+void BinaryTree<T>::reverse_postorder_iterator::advance() {
     /**
-     * Advance to the next node along a counter postorder traversal.
+     * Advance to the next node along a reverse postorder traversal.
      */
     ADVANCE_POSTORDER(getRight(), getLeft());
 }
 
 template <class T>
-typename BinaryTree<T>::counter_postorder_iterator BinaryTree<T>::counter_postorder_end() const {
-    return counter_postorder_iterator();
+typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postorder_end() const {
+    return reverse_postorder_iterator();
 }
 
 #define ADVANCE_TO_NEXT_INORDER(first, second) { \
@@ -291,12 +291,12 @@ typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_end() const {
 }
 
 template <class T>
-typename BinaryTree<T>::counter_inorder_iterator BinaryTree<T>::counter_inorder_begin() const {
-    return counter_inorder_iterator(getRootNode());
+typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_begin() const {
+    return reverse_inorder_iterator(getRootNode());
 }
 
 template <class T>
-void BinaryTree<T>::counter_inorder_iterator::advanceToNext() {
+void BinaryTree<T>::reverse_inorder_iterator::advanceToNext() {
     /**
      * Advance to the right most node in this subtree.
      */
@@ -304,16 +304,16 @@ void BinaryTree<T>::counter_inorder_iterator::advanceToNext() {
 }
 
 template <class T>
-void BinaryTree<T>::counter_inorder_iterator::advance() {
+void BinaryTree<T>::reverse_inorder_iterator::advance() {
     /**
-     * Advance to the next node along a counter inorder traversal.
+     * Advance to the next node along a reverse inorder traversal.
      */
     ADVANCE_INORDER(getRight(), getLeft());
 }
 
 template <class T>
-typename BinaryTree<T>::counter_inorder_iterator BinaryTree<T>::counter_inorder_end() const {
-    return counter_inorder_iterator();
+typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_end() const {
+    return reverse_inorder_iterator();
 }
 
 #define ADVANCE_LEVEL_ORDER(first, second) { \
@@ -343,20 +343,20 @@ typename BinaryTree<T>::level_order_iterator BinaryTree<T>::level_order_end() co
 }
 
 template <class T>
-typename BinaryTree<T>::counter_level_order_iterator BinaryTree<T>::counter_level_order_begin() const {
-    return counter_level_order_iterator(getRootNode());
+typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_begin() const {
+    return reverse_level_order_iterator(getRootNode());
 }
 
 template <class T>
-void BinaryTree<T>::counter_level_order_iterator::advance() {
+void BinaryTree<T>::reverse_level_order_iterator::advance() {
     /**
-     * Advance to the next node along a counter level order traversal.
+     * Advance to the next node along a reverse level order traversal.
      */
     ADVANCE_LEVEL_ORDER(getRight(), getLeft());
 }
 
 template <class T>
-typename BinaryTree<T>::counter_level_order_iterator BinaryTree<T>::counter_level_order_end() const {
-    return counter_level_order_iterator();
+typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_end() const {
+    return reverse_level_order_iterator();
 }
 #endif

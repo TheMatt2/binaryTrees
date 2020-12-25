@@ -52,38 +52,38 @@ class BinaryTree {
 
     // iterators
     class preorder_iterator;
-    class counter_preorder_iterator;
+    class reverse_preorder_iterator;
     class postorder_iterator;
-    class counter_postorder_iterator;
+    class reverse_postorder_iterator;
     class inorder_iterator;
-    class counter_inorder_iterator;
+    class reverse_inorder_iterator;
     class level_order_iterator;
-    class counter_level_order_iterator;
+    class reverse_level_order_iterator;
 
     // begin() and end() functions for iterators
     preorder_iterator preorder_begin() const;
     preorder_iterator preorder_end() const;
 
-    counter_preorder_iterator counter_preorder_begin() const;
-    counter_preorder_iterator counter_preorder_end() const;
+    reverse_preorder_iterator reverse_preorder_begin() const;
+    reverse_preorder_iterator reverse_preorder_end() const;
 
     postorder_iterator postorder_begin() const;
     postorder_iterator postorder_end() const;
 
-    counter_postorder_iterator counter_postorder_begin() const;
-    counter_postorder_iterator counter_postorder_end() const;
+    reverse_postorder_iterator reverse_postorder_begin() const;
+    reverse_postorder_iterator reverse_postorder_end() const;
 
     inorder_iterator inorder_begin() const;
     inorder_iterator inorder_end() const;
 
-    counter_inorder_iterator counter_inorder_begin() const;
-    counter_inorder_iterator counter_inorder_end() const;
+    reverse_inorder_iterator reverse_inorder_begin() const;
+    reverse_inorder_iterator reverse_inorder_end() const;
 
     level_order_iterator level_order_begin() const;
     level_order_iterator level_order_end() const;
 
-    counter_level_order_iterator counter_level_order_begin() const;
-    counter_level_order_iterator counter_level_order_end() const;
+    reverse_level_order_iterator reverse_level_order_begin() const;
+    reverse_level_order_iterator reverse_level_order_end() const;
     /**
      * Iterator over the tree in a preorder traversal.
      * Iterates through the tree from left to right,
@@ -108,7 +108,7 @@ class BinaryTree {
     };
 
     /**
-     * Iterator over the tree in a counter preorder traversal.
+     * Iterator over the tree in a reverse preorder traversal.
      * Iterates through the tree from right to left,
      * traversing as deep into the tree as possible.
      * Nodes are reported when first encountered.
@@ -123,7 +123,7 @@ class BinaryTree {
      * The values will be iterated through in the order:
      * D, F, G, E, B, C, A
      */
-    class counter_preorder_iterator: public stack_iterator {
+    class reverse_preorder_iterator: public stack_iterator {
         using stack_iterator::stack;
         using stack_iterator::stack_iterator;
       protected:
@@ -167,7 +167,7 @@ class BinaryTree {
     };
 
     /**
-     * Iterator over the tree in a counter postorder traversal.
+     * Iterator over the tree in a reverse postorder traversal.
      * Iterates through the tree from right to left,
      * traversing as deep into the tree as possible.
      * Nodes are reported when last backtracked away from.
@@ -182,14 +182,14 @@ class BinaryTree {
      * The values will be iterated through in the order:
      * G, F, C, E, D, B, A
      */
-    class counter_postorder_iterator: public stack_iterator {
+    class reverse_postorder_iterator: public stack_iterator {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
         using stack_iterator::stack;
         using stack_iterator::stack_iterator;
       protected:
-        explicit counter_postorder_iterator(Node *root): stack_iterator(root) {
+        explicit reverse_postorder_iterator(Node *root): stack_iterator(root) {
             // Go to the first value
             if (root != nullptr) advanceToNext();
         }
@@ -235,7 +235,7 @@ class BinaryTree {
     };
 
     /**
-     * Iterator over the tree in a counter inorder traversal.
+     * Iterator over the tree in a reverse inorder traversal.
      * Iterates through the tree from right to left,
      * traversing with the values decreasing.
      * Nodes are reported after their right and before their left.
@@ -250,14 +250,14 @@ class BinaryTree {
      * The values will be iterated through in the order
      * G, F, E, D, C, B, A
      */
-    class counter_inorder_iterator: public stack_iterator {
+    class reverse_inorder_iterator: public stack_iterator {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
         using stack_iterator::stack;
         using stack_iterator::stack_iterator;
       protected:
-        explicit counter_inorder_iterator(Node *root): stack_iterator(root) {
+        explicit reverse_inorder_iterator(Node *root): stack_iterator(root) {
                 // Go to the first value
                 if (root != nullptr) advanceToNext();
         }
@@ -292,7 +292,7 @@ class BinaryTree {
     };
 
     /**
-     * Iterator over the tree in a counter inorder traversal.
+     * Iterator over the tree in a reverse inorder traversal.
      * Iterates through the tree from right to left,
      * traversing in increasing depth.
      * Nodes are reported in the order visited.
@@ -307,7 +307,7 @@ class BinaryTree {
      * The values will be iterated through in the order
      * D, F, B, G, E, C, A
      */
-    class counter_level_order_iterator: public queue_iterator {
+    class reverse_level_order_iterator: public queue_iterator {
         using queue_iterator::queue;
         using queue_iterator::queue_iterator;
     protected:
@@ -319,7 +319,7 @@ class BinaryTree {
     // Used as a base for the other iterators
     class stack_iterator {
         /*
-         * Base iterator for building the preorder, postorder, and the counter iterators.
+         * Base iterator for building the preorder, postorder, and the reverse iterators.
          */
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
@@ -390,7 +390,7 @@ class BinaryTree {
 
     class queue_iterator {
         /*
-         * Base Iterator for level order and counter level order iterators.
+         * Base Iterator for level order and reverse level order iterators.
          */
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;

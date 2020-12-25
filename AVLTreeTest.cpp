@@ -62,8 +62,8 @@ int main() {
     }
     cout << endl;
 
-    cout << "Counter Preorder Traverse" << endl;
-    for (auto it = tree.counter_preorder_begin(); it != tree.counter_preorder_end(); it++) {
+    cout << "Reverse Preorder Traverse" << endl;
+    for (auto it = tree.reverse_preorder_begin(); it != tree.reverse_preorder_end(); it++) {
         cout << *it << " ";
     }
     cout << endl;
@@ -74,8 +74,8 @@ int main() {
     }
     cout << endl;
 
-    cout << "Counter Postorder Traverse" << endl;
-    for (auto it = tree.counter_postorder_begin(); it != tree.counter_postorder_end(); it++) {
+    cout << "Reverse Postorder Traverse" << endl;
+    for (auto it = tree.reverse_postorder_begin(); it != tree.reverse_postorder_end(); it++) {
         cout << *it << " ";
     }
     cout << endl;
@@ -86,8 +86,8 @@ int main() {
     }
     cout << endl;
 
-    cout << "Counter Inorder Traverse" << endl;
-    for (auto it = tree.counter_inorder_begin(); it != tree.counter_inorder_end(); it++) {
+    cout << "Reverse Inorder Traverse" << endl;
+    for (auto it = tree.reverse_inorder_begin(); it != tree.reverse_inorder_end(); it++) {
         cout << *it << " ";
     }
     cout << endl;
@@ -98,8 +98,8 @@ int main() {
     }
     cout << endl;
 
-    cout << "Counter Level Order Traverse" << endl;
-    for (auto it = tree.counter_level_order_begin(); it != tree.counter_level_order_end(); it++) {
+    cout << "Reverse Level Order Traverse" << endl;
+    for (auto it = tree.reverse_level_order_begin(); it != tree.reverse_level_order_end(); it++) {
         cout << *it << " ";
 
     }
