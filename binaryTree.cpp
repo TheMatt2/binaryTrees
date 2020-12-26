@@ -359,4 +359,53 @@ template <class T>
 typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_end() const {
     return reverse_level_order_iterator(nullptr);
 }
+
+#define ADVANCE_LEVEL_ORDER_DEFAULT(first, second) { \
+    /* pop the front value, and add first and second to the list */ \
+    const Node* const current_node = queue.front(); \
+    queue.pop(); \
+    if (current_node != nullptr) { \
+        queue.push(current_node->first); \
+        queue.push(current_node->second); \
+        nonnull_level = true; \
+    } else { \
+        queue.push(nullptr); \
+        queue.push(nullptr); \
+    }\
+    /* Increment position */ \
+    count++; \
+    if (count == level_size) { \
+        /* End of level */ \
+        if (nonnull_level) { \
+            /* Move to next level */ \
+            level_size <<= 1; /* * 2 */ \
+            count = 0; \
+            nonnull_level = false; \
+        } else { \
+            /* Level was null. Stop iteration */ \
+            while (!queue.empty()) { \
+                assert(queue.front() == nullptr); \
+                queue.pop(); \
+            } \
+        } \
+    } \
+}
+
+template <class T>
+typename BinaryTree<T>::level_order_default_iterator BinaryTree<T>::level_order_default_begin(const T default_) const {
+    return level_order_default_iterator(getRootNode(), default_);
+}
+
+template <class T>
+void BinaryTree<T>::level_order_default_iterator::advance() {
+    /**
+     * Advance to the next node along a level order traversal.
+     */
+    ADVANCE_LEVEL_ORDER_DEFAULT(getLeft(), getRight());
+}
+
+template <class T>
+typename BinaryTree<T>::level_order_default_iterator BinaryTree<T>::level_order_default_end() const {
+    return level_order_default_iterator(nullptr);
+}
 #endif

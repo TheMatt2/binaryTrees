@@ -14,27 +14,23 @@ int8_t compare(int a, int b) {
 }
 
 void printTree(const AVLTree<int> &tree) {
-    cout << "Level Order Traverse" << endl;
-    int buf = 10;
-    unsigned int level = 0;
-    unsigned int position = 1 << level;
+//    int buf = 10;
+    unsigned int level_size = 1;
+    unsigned int count = 0;
 
-    for (unsigned int i = 0; i < buf; i++) cout << "  ";
+//    for (unsigned int i = 0; i < buf; i++) cout << "  ";
 
-    for (auto it = tree.level_order_begin(); it != tree.level_order_end(); it++) {
+    for (auto it = tree.level_order_default_begin(0); it != tree.level_order_end(); it++) {
         cout << *it << " ";
-        position--;
-        if (position == 0) {
+        count++;
+        if (count == level_size) {
             cout << endl;
-            buf--;
-            level++;
-            position = 1 << level;
-            for (unsigned int i = 0; i < 10 - position; i++) cout << "  ";
-
-
+            level_size <<= 1;
+            count = 0;
+//            for (unsigned int i = 0; i < 10 - count; i++) cout << "  ";
         } else {
             // Padding
-            for (unsigned int i = 0; i < buf; i+=2) cout << " ";
+//            for (unsigned int i = 0; i < buf; i+=2) cout << " ";
         }
     }
     cout << endl;

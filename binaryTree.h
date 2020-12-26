@@ -59,6 +59,8 @@ class BinaryTree {
     class reverse_inorder_iterator;
     class level_order_iterator;
     class reverse_level_order_iterator;
+    class level_order_default_iterator;
+    // reverse_level_order_default_iterator, lacks any use I can think of, so it is not implemented
 
     // begin() and end() functions for iterators
     preorder_iterator preorder_begin() const;
@@ -84,6 +86,10 @@ class BinaryTree {
 
     reverse_level_order_iterator reverse_level_order_begin() const;
     reverse_level_order_iterator reverse_level_order_end() const;
+
+    level_order_default_iterator level_order_default_begin(T default_) const;
+    level_order_default_iterator level_order_default_end() const;
+
     /**
      * Iterator over the tree in a preorder traversal.
      * Iterates through the tree from left to right,
@@ -287,7 +293,7 @@ class BinaryTree {
     class level_order_iterator: public queue_iterator {
         using queue_iterator::queue;
         using queue_iterator::queue_iterator;
-    protected:
+      protected:
         void advance() override;
     };
 
@@ -310,11 +316,59 @@ class BinaryTree {
     class reverse_level_order_iterator: public queue_iterator {
         using queue_iterator::queue;
         using queue_iterator::queue_iterator;
-    protected:
+      protected:
         void advance() override;
     };
 
-  protected:
+    /**
+     * Iterator over the tree in a level order traversal.
+     * Instead of skipping null nodes, return a default value.
+     * Iterates through the tree from left to right,
+     * traversing in increasing depth.
+     * Nodes are reported in the order visited.
+     *
+     * This is specifically used for printing a tree on screen.
+     *
+     * For the tree:
+     *       D
+     *     /   \
+     *    B     F
+     *   / \   / \
+     *  A   C E   G
+     *
+     * The values will be iterated through in the order
+     * D, B, F, A, C, E, G
+     */
+    class level_order_default_iterator: public queue_iterator {
+        // Allow BinaryTree to use the protected constructor
+        friend class BinaryTree;
+
+        using queue_iterator::queue;
+      protected:
+        level_order_default_iterator(Node* node): queue_iterator(node) {
+            // Since default is not specified, this can only be used for nullptr
+            assert(node == nullptr);
+        }
+
+        level_order_default_iterator(Node* node, const T &def):
+            queue_iterator(node), default_(def), nonnull_level(false), count(0), level_size(1) {}
+
+        void advance() override;
+        const T default_;
+        bool nonnull_level;
+        unsigned int count;
+        unsigned int level_size;
+      public:
+        T operator*() const override {
+            const BinaryTree::Node* const node = queue.front();
+            if (node != nullptr)
+                return node->value;
+            else
+                return default_;
+        }
+    };
+
+protected:
     // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
     // Used as a base for the other iterators
     class stack_iterator {
@@ -362,10 +416,9 @@ class BinaryTree {
             return !(*this == iter);
         }
 
-        T operator*() const {
-            const BinaryTree::Node* const node = stack.top();
-            if (node != nullptr)
-                return node->value;
+        virtual T operator*() const {
+            if (!stack.empty())
+                return stack.top()->value;
             else
                 // Throw error since nothing exists
                 throw std::out_of_range("iterator has been exhausted");
@@ -430,10 +483,9 @@ class BinaryTree {
             return !(*this == iter);
         }
 
-        T operator*() const {
-            const BinaryTree::Node* const node = queue.front();
-            if (node != nullptr)
-                return node->value;
+        virtual T operator*() const {
+            if (!queue.empty())
+                return queue.front()->value;
             else
                 // Throw error since nothing exists
                 throw std::out_of_range("iterator has been exhausted");
