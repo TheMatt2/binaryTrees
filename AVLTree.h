@@ -60,6 +60,9 @@ class AVLTree: public BinaryTree<T> {
      * Clear all values in the tree.
      */
     void clear();
+
+    // Specialized getHeight(). Faster for AVLTree
+    unsigned int getHeight() const override;
 };
 #include "AVLTree.cpp"
 #endif

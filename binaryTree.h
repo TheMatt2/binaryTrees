@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 #include <cstdlib>
+#include <iostream>
 #include <stdexcept>
 
 template <class T>
@@ -32,8 +33,30 @@ class BinaryTree {
      */
     virtual Node* getRootNode() const = 0;
 
-    Node* getMostLeftInternal(Node * const &node) const;
-    Node* getMostRightInternal(Node * const &node) const;
+    const Node* getMostLeftInternal(const Node* const &node) const;
+    const Node* getMostRightInternal(const Node* const &node) const;
+
+    unsigned int getHeightInternal(const Node* const &node) const;
+
+    /**
+     * Internally recursively print out the tree.
+     * @param node
+     * The node within the tree to start printing from.
+     *
+     * @param height
+     * The height that this node is in the tree being printed.
+     * Note that the height may vary from the height of the node in the full tree.
+     * It varies if only part of the tree is being printed, or if more levels of tree are being printed then exist.
+     *
+     * @param width
+     * The width of the object to be printed. If the width varies, then the printed tree will have defects.
+     *
+     * @param biasLeft
+     * If elements in the tree should be shifted toward the left, or right.
+     * If width is even, then the bias will not effect the result.
+     */
+    /* void printTreeInternal(const Node* const &node, unsigned int height,
+                           unsigned int width, bool biasLeft = true);*/
 
     // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
     // Used as a base for the other iterators
@@ -44,11 +67,17 @@ class BinaryTree {
     bool empty() const;
 
     // Get the value at the root
-    T getRoot() const;
+    virtual T getRoot() const;
 
     // Get the maximum and minimum values stored in the tree
-    T getMostLeft() const;
-    T getMostRight() const;
+    virtual T getMostLeft() const;
+    virtual T getMostRight() const;
+
+    // Get the height of the tree.
+    // A height of zero indicates an empty tree.
+    virtual unsigned int getHeight() const;
+
+    //virtual void printTree(std::ostream &ostream = std::cout) const;
 
     // iterators
     class preorder_iterator;

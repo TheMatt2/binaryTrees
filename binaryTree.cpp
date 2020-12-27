@@ -2,15 +2,17 @@
 #define BINARYTREE_CPP
 
 #include <cassert>
+#include <iomanip>
 #include <stdexcept>
+#include <algorithm>
 #include "binaryTree.h"
 
-template<class T>
+template <class T>
 bool BinaryTree<T>::empty() const {
     return getRootNode() == nullptr;
 }
 
-template<class T>
+template <class T>
 T BinaryTree<T>::getRoot() const {
     if (!empty()) {
         return getRootNode()->value;
@@ -21,7 +23,7 @@ T BinaryTree<T>::getRoot() const {
 }
 
 // Implement searches for the further left and right values in the tree.
-template<class T>
+template <class T>
 T BinaryTree<T>::getMostLeft() const {
     if (!empty()) {
         return getMostLeftInternal(getRootNode())->value;
@@ -32,18 +34,17 @@ T BinaryTree<T>::getMostLeft() const {
     }
 }
 
-template<class T>
-typename BinaryTree<T>::Node* BinaryTree<T>::getMostLeftInternal(BinaryTree::Node* const &node) const {
-    Node* const left = node->getLeft();
-    if (left != nullptr) {
-        return getMostLeftInternal(left);
+template <class T>
+const typename BinaryTree<T>::Node* BinaryTree<T>::getMostLeftInternal(const BinaryTree::Node* const &node) const {
+    if (node->getLeft() != nullptr) {
+        return getMostLeftInternal(node->getLeft());
     } else {
         // As far left as possible, return result
         return node;
     }
 }
 
-template<class T>
+template <class T>
 T BinaryTree<T>::getMostRight() const {
     if (!empty()) {
         return getMostRightInternal(getRootNode())->value;
@@ -54,14 +55,103 @@ T BinaryTree<T>::getMostRight() const {
     }
 }
 
-template<class T>
-typename BinaryTree<T>::Node* BinaryTree<T>::getMostRightInternal(BinaryTree::Node* const &node) const {
-    Node* const right = node->getRight();
-    if (right != nullptr) {
-        return getMostRightInternal(right);
+template <class T>
+const typename BinaryTree<T>::Node* BinaryTree<T>::getMostRightInternal(const BinaryTree::Node* const &node) const {
+    if (node->getRight() != nullptr) {
+        return getMostRightInternal(node->getRight());
     } else {
         // As far left as possible, return result
         return node;
+    }
+}
+
+template <class T>
+unsigned int BinaryTree<T>::getHeight() const {
+    // Get the height of the tree.
+    return getHeightInternal(getRootNode());
+}
+
+/*
+template<class T>
+void BinaryTree<T>::printTreeInternal(const BinaryTree::Node *const &node, const unsigned int height,
+                                      const unsigned int width, const bool biasLeft, std::ostream &out) {
+    // A height of zero, means don't print a tree
+    if (height == 0) return;
+
+    // Calculate the width of the base of this subtree.
+    // Width, minus the width of the single object that will be printed.
+    const unsigned int base_width = width << (height - 1) - width;
+
+    const unsigned padding_left  = biasLeft  ? (base_width - 1) / 2 : base_width / 2;
+    const unsigned padding_right = biasLeft  ? base_width / 2       : (base_width - 1) / 2;
+
+    // Print left
+    for (unsigned int i = 0; i < padding_left; i++) out << " ";
+
+    // Print object
+    out << std::setw((int) width) << node->value;
+
+    // Print right
+    for (unsigned int i = 0; i < padding_right; i++) out << " ";
+}*/
+
+/*template <class T>
+void BinaryTree<T>::printTree(std::ostream &ostream) const {
+    const unsigned int height = getHeight();
+
+    // Calculate width by looking at the largest (and therefore widest) number.
+    const int width = max(std::to_string(getMostRight()).length(), std::to_string(getMostLeft()).length());
+    const unsigned int spacing = width;
+
+    auto it = tree.level_order_default_begin(-1);
+
+    for (unsigned int level = 0; level < height; level++) {
+        // Print left padding
+
+        // 3 height.
+        // num = final level will have 4 values
+        // width of bottom row = num * width + (num - 1) * spacing
+        // width of bottom row / 2
+        // h = 3
+        // e = 2 ** (h - 1)
+        // l = e * width + (e - 1) * spacing
+        // offset = l / 2
+        // Simplify
+        // l = e * (width + spacing) - spacing
+        // offset = (e * (width + spacing) - spacing) / 2
+        // offset = (2 ** (h - 1) * (width + spacing) - spacing) / 2
+        // offset = 2 ** (h - 1) * (width + spacing) / 2 - spacing / 2
+
+        // Left padding
+        const unsigned int left_padding = (((width + spacing) / 2) << (height - level - 1)) - (spacing / 2 + 1);
+        const unsigned int padding      = left_padding * 2;
+
+        for (unsigned int i = 0; i < left_padding; i++) cout << " ";
+
+        for (unsigned int position = 0; position < (1 << level) - 1; position++) {
+            cout << std::setw(width);
+            if (*it == -1) cout << "";
+            else cout << *it;
+
+            for (unsigned int i = 0; i < spacing; i++) cout << " ";
+            for (unsigned int i = 0; i < padding; i++) cout << " ";
+            it++;
+        }
+        cout << std::setw(width);
+        if (*it == -1) cout << "";
+        else cout << *it << endl;
+        it++;
+    }
+}*/
+
+template <class T>
+unsigned int BinaryTree<T>::getHeightInternal(const BinaryTree::Node* const &node) const {
+    if (node == nullptr) {
+        // A nullptr node has a height of zero
+        return 0;
+    } else {
+        // Return the max of the children nodes
+        return std::max(getHeightInternal(node->getLeft()), getHeightInternal(node->getRight())) + 1;
     }
 }
 
@@ -408,4 +498,6 @@ template <class T>
 typename BinaryTree<T>::level_order_default_iterator BinaryTree<T>::level_order_default_end() const {
     return level_order_default_iterator(nullptr);
 }
+
+
 #endif

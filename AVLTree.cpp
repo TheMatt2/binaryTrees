@@ -21,6 +21,16 @@ void AVLTree<T>::clearInternal(AVLTree<T>::Node* const &node) {
 }
 
 template <class T>
+unsigned int AVLTree<T>::getHeight() const {
+    // Zero if tree is empty
+    if (root == nullptr) {
+        return 0;
+    } else {
+        return root->height + 1;
+    }
+}
+
+template <class T>
 void AVLTree<T>::updateHeight(AVLTree<T>::Node *&node) {
     /**
      * Helper function to recalculate the height after a node is modified.
