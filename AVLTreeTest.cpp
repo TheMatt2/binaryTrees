@@ -108,9 +108,8 @@ void printTree(const AVLTree<int> &tree, const unsigned int width, const unsigne
     // Special in it is both the first and last on the level
     {
         unsigned int base_width = ((width + spacing) << (height - 1)) - width;
-        const unsigned int padding_left_2x  = (biasLeft ? base_width: base_width + 1) - spacing;
-        const unsigned int padding_right_2x = trailing ? (biasLeft ? base_width + 1 : base_width) - spacing
-                                                       : 0;
+        const unsigned int padding_left_2x  = base_width + !biasLeft - spacing;
+        const unsigned int padding_right_2x = trailing ? base_width + biasLeft - spacing: 0;
         printTreeInternal(padding_left_2x, padding_right_2x, width, *it, def);
         cout << endl;
     }
@@ -121,17 +120,15 @@ void printTree(const AVLTree<int> &tree, const unsigned int width, const unsigne
         const unsigned int base_width = ((width + spacing) << (height - level - 1)) - width;
 
         // Special case for the first value
-        printTreeInternal((biasLeft ? base_width: base_width + 1) - spacing, biasLeft ? base_width + 1: base_width, width, *++it, def);
+        printTreeInternal(base_width + !biasLeft - spacing, base_width + biasLeft, width, *++it, def);
 
         for (unsigned int position = 1; position < (1 << level) - 1; position++) {
-            printTreeInternal(biasLeft ? base_width: base_width + 1, biasLeft ? base_width + 1: base_width, width, *++it, def);
+            printTreeInternal(base_width + !biasLeft, base_width + biasLeft, width, *++it, def);
         }
 
         // Special case for final in level
-        const unsigned int padding_right_2x = trailing ? (biasLeft ? base_width + 1 : base_width) - spacing
-                                                       : 0;
-        printTreeInternal(biasLeft ? base_width : base_width + 1,
-                          padding_right_2x, width, *++it, def);
+        const unsigned int padding_right_2x = trailing ? base_width + biasLeft - spacing: 0;
+        printTreeInternal(base_width + !biasLeft, padding_right_2x, width, *++it, def);
         cout << endl;
     }
 }
