@@ -14,77 +14,10 @@ int8_t compare(int a, int b) {
     else        return  1;
 }
 
-/*void printTree(const AVLTree<int> &tree, const int width, const unsigned int height,  const unsigned int spacing) {
-    // Calculate width by looking at the largest (and therefore widest) number.
-    auto it = tree.level_order_default_begin(-1);
-
-    cout << setfill('0');
-
-    for (unsigned int level = 0; level < height; level++) {
-        // Print left padding
-
-        // 3 height.
-        // num = final level will have 4 values
-        // width of bottom row = num * width + (num - 1) * spacing
-        // width of bottom row / 2
-        // h = 3
-        // e = 2 ** (h - 1)
-        // l = e * width + (e - 1) * spacing
-        // offset = l / 2
-        // Simplify
-        // l = e * (width + spacing) - spacing
-        // offset = (e * (width + spacing) - spacing) / 2
-        // offset = (2 ** (h - 1) * (width + spacing) - spacing) / 2
-        // offset = 2 ** (h - 1) * (width + spacing) / 2 - spacing / 2
-
-        // Left padding
-        const unsigned int left_padding = (((width + spacing) / 2) << (height - level - 1)) - (spacing / 2 + 1);
-        const unsigned int padding      = left_padding * 2;
-
-        for (unsigned int i = 0; i < left_padding; i++) cout << " ";
-
-        for (unsigned int position = 0; position < (1 << level) - 1; position++) {
-            cout << std::setw(width);
-            if (*it == -1) cout << "";
-            else cout << *it;
-
-            for (unsigned int i = 0; i < spacing; i++) cout << " ";
-            for (unsigned int i = 0; i < padding; i++) cout << " ";
-            it++;
-        }
-        cout << std::setw(width);
-        if (*it == -1) cout << "";
-        else cout << *it << endl;
-        it++;
-    }
-}
-
-template<class T>
-void printTreeInternal(const T value, const unsigned int height,
-                       const unsigned int width, const bool biasLeft, std::ostream &out) {
-    // A height of zero, means don't print a tree
-    if (height == 0) return;
-
-    // Calculate the width of the base of this subtree.
-    // Width, minus the width of the single object that will be printed.
-    const unsigned int base_width = (width << (height - 1)) - width;
-
-    const unsigned padding_left  = biasLeft  ? base_width / 2      : (base_width + 1) / 2;
-    const unsigned padding_right = biasLeft  ? (base_width + 1) / 2: base_width / 2;
-
+void printTreeInternal(const unsigned int padding_left_2x, const unsigned int padding_right_2x,
+                       const unsigned int width, const int value, const int def, const char background) {
     // Print left
-    for (unsigned int i = 0; i < padding_left; i++) out << " ";
-
-    // Print object
-    out << std::setw((int) width) << value;
-
-    // Print right
-    for (unsigned int i = 0; i < padding_right; i++) out << " ";
-}*/
-
-void printTreeInternal(const unsigned int padding_left_2x, const unsigned int padding_right_2x, const unsigned int width, const int value, const int def) {
-    // Print left
-    for (unsigned int i = 0; i < padding_left_2x / 2; i++) cout << " ";
+    for (unsigned int i = 0; i < padding_left_2x / 2; i++) cout << background;
 
     // Print object
     cout << setw((int) width);
@@ -92,11 +25,11 @@ void printTreeInternal(const unsigned int padding_left_2x, const unsigned int pa
     else              cout <<  "";
 
     // Print right
-    for (unsigned int i = 0; i < padding_right_2x / 2; i++) cout << " ";
+    for (unsigned int i = 0; i < padding_right_2x / 2; i++) cout << background;
 }
 
 void printTree(const AVLTree<int> &tree, const unsigned int width, const unsigned int height, const unsigned int spacing,
-               const char fill, const bool biasLeft, const bool trailing) {
+               const char fill, const char background, const bool biasLeft, const bool trailing) {
     // Calculate width by looking at the largest (and therefore widest) number.
     const int def = -1;
 
@@ -110,7 +43,7 @@ void printTree(const AVLTree<int> &tree, const unsigned int width, const unsigne
         unsigned int base_width = ((width + spacing) << (height - 1)) - width;
         const unsigned int padding_left_2x  = base_width + !biasLeft - spacing;
         const unsigned int padding_right_2x = trailing ? base_width + biasLeft - spacing: 0;
-        printTreeInternal(padding_left_2x, padding_right_2x, width, *it, def);
+        printTreeInternal(padding_left_2x, padding_right_2x, width, *it, def, background);
         cout << endl;
     }
 
@@ -120,15 +53,15 @@ void printTree(const AVLTree<int> &tree, const unsigned int width, const unsigne
         const unsigned int base_width = ((width + spacing) << (height - level - 1)) - width;
 
         // Special case for the first value
-        printTreeInternal(base_width + !biasLeft - spacing, base_width + biasLeft, width, *++it, def);
+        printTreeInternal(base_width + !biasLeft - spacing, base_width + biasLeft, width, *++it, def, background);
 
         for (unsigned int position = 1; position < (1 << level) - 1; position++) {
-            printTreeInternal(base_width + !biasLeft, base_width + biasLeft, width, *++it, def);
+            printTreeInternal(base_width + !biasLeft, base_width + biasLeft, width, *++it, def, background);
         }
 
         // Special case for final in level
         const unsigned int padding_right_2x = trailing ? base_width + biasLeft - spacing: 0;
-        printTreeInternal(base_width + !biasLeft, padding_right_2x, width, *++it, def);
+        printTreeInternal(base_width + !biasLeft, padding_right_2x, width, *++it, def, background);
         cout << endl;
     }
 }
@@ -137,7 +70,7 @@ void printTree(const AVLTree<int> &tree) {
     const unsigned int height = tree.getHeight();
     if (height != 0) {
         const unsigned int width = std::to_string(tree.getMostRight()).length();
-        printTree(tree, width, height, width, ' ', true, false);
+        printTree(tree, width, height, width, '0', ' ', true, false);
     }
 }
 
@@ -146,11 +79,10 @@ int main() {
 
     AVLTree<int> tree(compare);
 
-    for (int i = 0; i < 10; i++) {
-        printTree(tree);
+    for (int i = 0; i < 80; i++) {
         tree.insert(i);
-        cout << "----" << endl;
     }
+    printTree(tree);
 
     cout << "Min: " << tree.getMostLeft() << endl;
     cout << "Mid: " << tree.getRoot() << endl;
