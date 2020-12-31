@@ -16,7 +16,7 @@ class AVLTree: public BinaryTree<T> {
   protected:
     class Node: public BinaryTree<T>::Node {
       public:
-        explicit Node(const T &value): BinaryTree<T>::Node::Node(value), left(nullptr), right(nullptr), height(0) {}
+        explicit Node(const T &value): BinaryTree<T>::Node::Node(value), left(nullptr), right(nullptr), height(1) {}
 
         // Functions allow for traversal algorithms from parent
         Node* getLeft() const override {return left;}
@@ -35,7 +35,7 @@ class AVLTree: public BinaryTree<T> {
 
     Node* getRootNode() const override {return root;};
 
-    void clearInternal(Node* const &node);
+    void clearInternal(Node* const &node) noexcept;
 
     const Node* findInternal(const Node* const &node, const T &value);
 
@@ -59,9 +59,9 @@ class AVLTree: public BinaryTree<T> {
     /**
      * Clear all values in the tree.
      */
-    void clear();
+    void clear() noexcept;
 
-    // Specialized getHeight(). Faster for AVLTree
+    // Specialized getHeight(). Implement O(1) algorthm specific to AVL trees
     unsigned int getHeight() const override;
 };
 #include "AVLTree.cpp"

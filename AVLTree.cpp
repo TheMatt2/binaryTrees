@@ -3,14 +3,14 @@
 #include "AVLTree.h"
 
 template <class T>
-void AVLTree<T>::clear() {
+void AVLTree<T>::clear() noexcept {
     // Deallocate all of the memory recursively
     clearInternal(root);
     root = nullptr;
 }
 
 template <class T>
-void AVLTree<T>::clearInternal(AVLTree<T>::Node* const &node) {
+void AVLTree<T>::clearInternal(AVLTree<T>::Node* const &node) noexcept {
     // Recurse if node exists
     if (node != nullptr) {
         clearInternal(node->getLeft());
@@ -27,7 +27,7 @@ unsigned int AVLTree<T>::getHeight() const {
     if (root == nullptr) {
         return 0;
     } else {
-        return root->height + 1;
+        return root->height;
     }
 }
 
@@ -37,7 +37,7 @@ void AVLTree<T>::updateHeight(AVLTree<T>::Node *&node) {
      * Helper function to recalculate the height after a node is modified.
      */
     // Height of a node is MAX(node->left->height, node->right->height) + 1
-    // If no children, then height is 0
+    // If no children, then height is 1
 
     if (node->left != nullptr) {
         if (node->right != nullptr) {
@@ -54,7 +54,7 @@ void AVLTree<T>::updateHeight(AVLTree<T>::Node *&node) {
             node->height = node->right->height + 1;
         } else {
             // Neither left or right exist
-            node->height = 0;
+            node->height = 1;
         }
     }
 }
@@ -323,19 +323,19 @@ void AVLTree<T>::reBalance(AVLTree<T>::Node *&node){
      * If needed, shifts node, node->left, and node->right
      * will to transformed to balance the node.
      */
-    int heightLeft, heightRight;
+    unsigned int heightLeft, heightRight;
 
-    // Get the heightLeft, -1 if null
+    // Get the heightLeft, 0 if null
     if (node->left != nullptr)
         heightLeft = node->left->height;
     else
-        heightLeft = -1;
+        heightLeft = 0;
 
-    // Get the heightRight, -1 if null
+    // Get the heightRight, 0 if null
     if (node->right != nullptr)
         heightRight = node->right->height;
     else
-        heightRight = -1;
+        heightRight = 0;
 
     // If the difference between left and right is greater than 1, we need to rebalance.
     int cmp = heightLeft - heightRight;

@@ -80,7 +80,7 @@ class BinaryTree {
      * @param ostream
      * stream to print to.
      */
-    void printTreeInternal(const BinaryTree::Node* const &node,
+    void printTreeInternal(const Node* const &node,
                            unsigned int padding_left, unsigned int padding_right,
                            unsigned int width, char background, std::ostream &ostream) const;
 
