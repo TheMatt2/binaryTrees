@@ -162,9 +162,8 @@ class BinaryTree {
      * @param ostream
      * Output stream to print the tree to.
      */
-    void printTree(
-            unsigned int width = 0, unsigned int height = 0, bool biasLeft = true,
-            bool trailing = false, char fill = ' ', char background = ' ', std::ostream &ostream = std::cout) const;
+    void printTree(unsigned int width = 0, unsigned int height = 0, char fill = ' ', bool biasLeft = true,
+                   bool trailing = false, char background = ' ', std::ostream &ostream = std::cout) const;
 
     /**
      * Print a text visualization of the binary tree.
@@ -237,10 +236,9 @@ class BinaryTree {
      * @param ostream
      * Output stream to print the tree to.
      */
-    void printTreeWithSpacing(
-            unsigned int spacing, unsigned int width = 0, unsigned int height = 0,
-            bool biasLeft = true, bool trailing = false, char fill = ' ',
-            char background = ' ', std::ostream &ostream = std::cout) const;
+    void printTreeWithSpacing(unsigned int spacing, unsigned int width = 0, unsigned int height = 0,
+                              char fill = ' ', bool biasLeft = true, bool trailing = false,
+                              char background = ' ', std::ostream &ostream = std::cout) const;
 
     // iterators
     class preorder_iterator;

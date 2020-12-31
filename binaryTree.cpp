@@ -72,21 +72,20 @@ unsigned int BinaryTree<T>::getHeight() const {
 }
 
 template<class T>
-void BinaryTree<T>::printTree(
-        unsigned int width, const unsigned int height, const bool biasLeft,
-        const bool trailing, const char fill, const char background, std::ostream &ostream) const {
+void BinaryTree<T>::printTree(unsigned int width, const unsigned int height, const char fill, const bool biasLeft,
+                              const bool trailing, const char background, std::ostream &ostream) const {
     // Spacing is equal to width
     if (width == 0) {
         width = getMaxStringWidth();
     }
 
-    printTreeWithSpacing(width, width, height, biasLeft, trailing, fill, background, ostream);
+    printTreeWithSpacing(width, width, height, fill, biasLeft, trailing, background, ostream);
 }
 
 template <class T>
-void BinaryTree<T>::printTreeWithSpacing(
-        const unsigned int spacing, unsigned int width, unsigned int height, const bool biasLeft,
-        const bool trailing, const char fill, const char background, std::ostream &ostream) const {
+void BinaryTree<T>::printTreeWithSpacing(const unsigned int spacing, unsigned int width, unsigned int height,
+                                         const char fill, const bool biasLeft, const bool trailing,
+                                         const char background, std::ostream &ostream) const {
     if (width == 0) {
         width = getMaxStringWidth();
     }

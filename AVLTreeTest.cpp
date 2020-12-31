@@ -22,14 +22,8 @@ int main() {
         tree.insert(i);
     }
 
-    //for (int i = 1; i < 4; i++) {
-    //    tree.printTree(0, i);
-    //}
-
-    tree.clear();
-
-    for (int i = 1; i < 4; i++) {
-        tree.printTree(0, i);
+    for (int i = 1; i < 10; i++) {
+        tree.printTree(0, i, '0');
     }
 
     if (!tree.empty()) {
