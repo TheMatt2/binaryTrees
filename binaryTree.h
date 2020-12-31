@@ -1,4 +1,4 @@
-/*
+/**
  * Base Binary Tree structure that implements iterators for a sorted binary.
  * Iterators assume the existence of a private attribute root to be a struct that holds attributes left and right.
  */
@@ -164,11 +164,11 @@ class BinaryTree {
      * @param ostream
      * Output stream to print the tree to.
      */
-    virtual void printTree(
+    void printTree(
             unsigned int width = 0, unsigned int height = 0, bool biasLeft = true,
             bool trailing = false, char fill = ' ', char background = ' ', std::ostream &ostream = std::cout) const;
 
-    virtual void printTree(
+    void printTree(
             unsigned int spacing, unsigned int width = 0, unsigned int height = 0,
             bool biasLeft = true, bool trailing = false, char fill = ' ',
             char background = ' ', std::ostream &ostream = std::cout) const;
@@ -442,7 +442,7 @@ protected:
     class level_order_print_iterator;
 
     constexpr level_order_print_iterator level_order_print_begin() const noexcept;
-//    level_order_print_iterator level_order_print_end() const;
+//    constexpr level_order_print_iterator level_order_print_end() const;
     /**
      * Iterator over the tree in a level order traversal.
      * Instead of skipping null nodes, return nullptr
