@@ -20,7 +20,7 @@ class BinaryTree {
       public:
         explicit Node(const T &value): value(value) {}
 
-        // Declare default constructor to make g++ happy
+        // Declare default deconstructor to make g++ happy
         // -Wdelete-non-abstract-non-virtual-dtor
         virtual ~Node() = default;
 
@@ -35,10 +35,22 @@ class BinaryTree {
      */
     virtual Node* getRootNode() const = 0;
 
+    /**
+     * Recursively get the most left node in the tree.
+     */
     const Node* getMostLeftInternal(const Node* const &node) const;
+
+    /**
+     * Recursively get the most left node in the tree.
+     */
     const Node* getMostRightInternal(const Node* const &node) const;
 
-    unsigned int getHeightInternal(const Node* const &node) const;
+    /**
+     * Recursively get the height of from the tree.
+     * This assumes the tree may be of any shape, and tries all branches.
+     *
+     */
+    virtual unsigned int getHeightInternal(const Node* const &node) const;
 
     /**
      * Internal function only used for determining how to print
@@ -442,7 +454,7 @@ protected:
     class level_order_print_iterator;
 
     constexpr level_order_print_iterator level_order_print_begin() const noexcept;
-//    constexpr level_order_print_iterator level_order_print_end() const;
+//    constexpr level_order_print_iterator level_order_print_end() const noexcept;
     /**
      * Iterator over the tree in a level order traversal.
      * Instead of skipping null nodes, return nullptr
