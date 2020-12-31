@@ -212,7 +212,7 @@ unsigned int BinaryTree<T>::getHeightInternal(const BinaryTree::Node* const &nod
 }
 
 template <class T>
-typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_begin() const {
+constexpr typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_begin() const noexcept {
     return preorder_iterator(getRootNode());
 }
 
@@ -225,12 +225,12 @@ void BinaryTree<T>::preorder_iterator::advance() {
 }
 
 template<class T>
-typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_end() const {
+constexpr typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_end() const noexcept {
     return preorder_iterator(nullptr);
 }
 
 template <class T>
-typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorder_begin() const {
+constexpr typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorder_begin() const noexcept {
     return reverse_preorder_iterator(getRootNode());
 }
 
@@ -243,7 +243,7 @@ void BinaryTree<T>::reverse_preorder_iterator::advance() {
 }
 
 template <class T>
-typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorder_end() const {
+constexpr typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorder_end() const noexcept {
     return reverse_preorder_iterator(nullptr);
 }
 
@@ -283,7 +283,7 @@ typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorde
 }
 
 template <class T>
-typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_begin() const {
+constexpr typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_begin() const noexcept {
     return postorder_iterator(getRootNode());
 }
 
@@ -304,12 +304,12 @@ void BinaryTree<T>::postorder_iterator::advance() {
 }
 
 template<class T>
-typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_end() const {
+constexpr typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_end() const noexcept {
     return postorder_iterator(nullptr);
 }
 
 template <class T>
-typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postorder_begin() const {
+constexpr typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postorder_begin() const noexcept {
     return reverse_postorder_iterator(getRootNode());
 }
 
@@ -330,7 +330,7 @@ void BinaryTree<T>::reverse_postorder_iterator::advance() {
 }
 
 template <class T>
-typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postorder_end() const {
+constexpr typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postorder_end() const noexcept {
     return reverse_postorder_iterator(nullptr);
 }
 
@@ -377,7 +377,7 @@ typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postor
 }
 
 template <class T>
-typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_begin() const {
+constexpr typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_begin() const noexcept {
     return inorder_iterator(getRootNode());
 }
 
@@ -398,12 +398,12 @@ void BinaryTree<T>::inorder_iterator::advance() {
 }
 
 template <class T>
-typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_end() const {
+constexpr typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_end() const noexcept {
     return inorder_iterator(nullptr);
 }
 
 template <class T>
-typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_begin() const {
+constexpr typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_begin() const noexcept {
     return reverse_inorder_iterator(getRootNode());
 }
 
@@ -424,7 +424,7 @@ void BinaryTree<T>::reverse_inorder_iterator::advance() {
 }
 
 template <class T>
-typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_end() const {
+constexpr typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_end() const noexcept {
     return reverse_inorder_iterator(nullptr);
 }
 
@@ -437,7 +437,7 @@ typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_
 }
 
 template <class T>
-typename BinaryTree<T>::level_order_iterator BinaryTree<T>::level_order_begin() const {
+constexpr typename BinaryTree<T>::level_order_iterator BinaryTree<T>::level_order_begin() const noexcept {
     return level_order_iterator(getRootNode());
 }
 
@@ -450,12 +450,12 @@ void BinaryTree<T>::level_order_iterator::advance() {
 }
 
 template <class T>
-typename BinaryTree<T>::level_order_iterator BinaryTree<T>::level_order_end() const {
+constexpr typename BinaryTree<T>::level_order_iterator BinaryTree<T>::level_order_end() const noexcept {
     return level_order_iterator(nullptr);
 }
 
 template <class T>
-typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_begin() const {
+constexpr typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_begin() const noexcept {
     return reverse_level_order_iterator(getRootNode());
 }
 
@@ -468,7 +468,7 @@ void BinaryTree<T>::reverse_level_order_iterator::advance() {
 }
 
 template <class T>
-typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_end() const {
+constexpr typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_end() const noexcept {
     return reverse_level_order_iterator(nullptr);
 }
 
@@ -504,8 +504,8 @@ typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_leve
 }
 
 template <class T>
-typename BinaryTree<T>::level_order_print_iterator BinaryTree<T>::level_order_print_begin(/*const T default_*/) const {
-    return level_order_print_iterator(getRootNode()/*, default_*/);
+constexpr typename BinaryTree<T>::level_order_print_iterator BinaryTree<T>::level_order_print_begin() const noexcept {
+    return level_order_print_iterator(getRootNode());
 }
 
 template <class T>

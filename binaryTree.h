@@ -184,29 +184,29 @@ class BinaryTree {
     class reverse_level_order_iterator;
 
     // begin() and end() functions for iterators
-    preorder_iterator preorder_begin() const;
-    preorder_iterator preorder_end() const;
+    constexpr preorder_iterator preorder_begin() const noexcept;
+    constexpr preorder_iterator preorder_end() const noexcept;
 
-    reverse_preorder_iterator reverse_preorder_begin() const;
-    reverse_preorder_iterator reverse_preorder_end() const;
+    constexpr reverse_preorder_iterator reverse_preorder_begin() const noexcept;
+    constexpr reverse_preorder_iterator reverse_preorder_end() const noexcept;
 
-    postorder_iterator postorder_begin() const;
-    postorder_iterator postorder_end() const;
+    constexpr postorder_iterator postorder_begin() const noexcept;
+    constexpr postorder_iterator postorder_end() const noexcept;
 
-    reverse_postorder_iterator reverse_postorder_begin() const;
-    reverse_postorder_iterator reverse_postorder_end() const;
+    constexpr reverse_postorder_iterator reverse_postorder_begin() const noexcept;
+    constexpr reverse_postorder_iterator reverse_postorder_end() const noexcept;
 
-    inorder_iterator inorder_begin() const;
-    inorder_iterator inorder_end() const;
+    constexpr inorder_iterator inorder_begin() const noexcept;
+    constexpr inorder_iterator inorder_end() const noexcept;
 
-    reverse_inorder_iterator reverse_inorder_begin() const;
-    reverse_inorder_iterator reverse_inorder_end() const;
+    constexpr reverse_inorder_iterator reverse_inorder_begin() const noexcept;
+    constexpr reverse_inorder_iterator reverse_inorder_end() const noexcept;
 
-    level_order_iterator level_order_begin() const;
-    level_order_iterator level_order_end() const;
+    constexpr level_order_iterator level_order_begin() const noexcept;
+    constexpr level_order_iterator level_order_end() const noexcept;
 
-    reverse_level_order_iterator reverse_level_order_begin() const;
-    reverse_level_order_iterator reverse_level_order_end() const;
+    constexpr reverse_level_order_iterator reverse_level_order_begin() const noexcept;
+    constexpr reverse_level_order_iterator reverse_level_order_end() const noexcept;
 
     /**
      * Iterator over the tree in a preorder traversal.
@@ -441,7 +441,7 @@ class BinaryTree {
 protected:
     class level_order_print_iterator;
 
-    level_order_print_iterator level_order_print_begin(/*T default_*/) const;
+    constexpr level_order_print_iterator level_order_print_begin() const noexcept;
 //    level_order_print_iterator level_order_print_end() const;
     /**
      * Iterator over the tree in a level order traversal.
