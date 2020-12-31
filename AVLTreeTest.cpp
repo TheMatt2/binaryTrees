@@ -3,7 +3,6 @@
  */
 
 #include <iostream>
-#include <iomanip>
 #include "AVLTree.h"
 
 using namespace std;
@@ -14,68 +13,6 @@ int8_t compare(int a, int b) {
     else        return  1;
 }
 
-void printTreeInternal(const unsigned int padding_left, const unsigned int padding_right,
-                       const unsigned int width, const int value, const int def, const char background) {
-    // Print left
-    for (unsigned int i = 0; i < padding_left; i++) cout << background;
-
-    // Print object
-    cout << setw((int) width);
-    if (value != def) cout << value;
-    else              cout <<  "";
-
-    // Print right
-    for (unsigned int i = 0; i < padding_right; i++) cout << background;
-}
-
-//void printTree(const AVLTree<int> &tree, const unsigned int width, const unsigned int height, const unsigned int spacing,
-//               const char fill, const char background, const bool biasLeft, const bool trailing) {
-//    // Calculate width by looking at the largest (and therefore widest) number.
-//    const int def = -1;
-//
-//    auto it = tree.level_order_print_begin();
-//
-//    cout << setfill(fill);
-//
-//    // First level is its own special case
-//    // Special in it is both the first and last on the level
-//    {
-//        unsigned int base_width = ((width + spacing) << (height - 1)) - width;
-//        const unsigned int padding_left  = (base_width + !biasLeft - spacing) / 2;
-//        const unsigned int padding_right = trailing ? (base_width + biasLeft - spacing) / 2: 0;
-//        printTreeInternal(padding_left, padding_right, width, *it, def, background);
-//        cout << endl;
-//    }
-//
-//    for (unsigned int level = 1; level < height; level++) {
-//        // Calculate the width of the base of this subtree.
-//        // Width, minus the width of the single object that will be printed.
-//        const unsigned int base_width = ((width + spacing) << (height - level - 1)) - width;
-//        const unsigned int base_width_left = base_width + !biasLeft;
-//        const unsigned int base_width_right = base_width + biasLeft;
-//
-//        // Special case for the first value
-//        printTreeInternal((base_width_left - spacing) / 2, base_width_right / 2, width, *++it, def, background);
-//
-//        for (unsigned int position = 1; position < (1 << level) - 1; position++) {
-//            printTreeInternal(base_width_left / 2, base_width_right / 2, width, *++it, def, background);
-//        }
-//
-//        // Special case for final in level
-//        const unsigned int padding_right = trailing ? (base_width_right - spacing) / 2: 0;
-//        printTreeInternal(base_width_left / 2, padding_right, width, *++it, def, background);
-//        cout << endl;
-//    }
-//}
-
-//void printTree(const AVLTree<int> &tree) {
-//    const unsigned int height = tree.getHeight();
-//    if (height != 0) {
-//        const unsigned int width = std::to_string(tree.getMostRight()).length();
-//        printTree(tree, width, height, width, '0', ' ', true, false);
-//    }
-//}
-
 int main() {
     cout << "Build Tree" << endl;
 
@@ -85,7 +22,7 @@ int main() {
         tree.printTree();
         tree.insert(i);
     }
-    //printTree(tree);
+
     tree.printTree();
 
     cout << "Min: " << tree.getMostLeft() << endl;
@@ -175,21 +112,6 @@ int main(){
 
     // bookTreeTest second
     BookTree aTree;
-    aTree.loadData("Entire_king_James_bible_data.txt");
-    string title = "king james bible";
-    cout << "tinsmith: " << aTree.findFrequency(title,"tinsmith") << endl;
-    cout << "of      : " << aTree.findFrequency(title,"of") << endl;
-    cout << "king    : " << aTree.findFrequency(title,"king") << endl;
-    cout << "james   : " << aTree.findFrequency(title,"james") << endl;
-    cout << "bible   : " << aTree.findFrequency(title,"bible") << endl;
-    cout << "true    : " << aTree.findFrequency(title,"true") << endl;
-    cout << "false   : " << aTree.findFrequency(title,"false") << endl;
-    cout << "heaven  : " << aTree.findFrequency(title,"heaven") << endl;
-    cout << "hell    : " << aTree.findFrequency(title,"hell") << endl;
-    cout << "death   : " << aTree.findFrequency(title,"death") << endl;
-    cout << "life    : " << aTree.findFrequency(title,"life") << endl;
-    cout << "yes     : " << aTree.findFrequency(title,"yes") << endl;
-    cout << "no      : " << aTree.findFrequency(title,"no") << endl;
     cout << aTree.getTextTreeHeight(title);
     cout << endl << endl;
     //aTree.dumpTitle("king james bible");
@@ -198,11 +120,6 @@ int main(){
 
     // SplayTree Test
     BookTree bTree;
-    bTree.loadData("data.txt");
-    cout << "Lookup 'the wonderful wizard of oz': " << bTree.getTextTreeHeight("the wonderful wizard of oz") << endl;
-    cout << "Lookup 'the wonderful wizard of oz': " << bTree.getTextTreeHeight("the wonderful wizard of oz") << endl;
-    cout << "Lookup 'a tale of two cities'      : " << bTree.getTextTreeHeight("a tale of two cities") << endl;
-    cout << "Lookup 'the wonderful wizard of oz': " << bTree.getTextTreeHeight("the wonderful wizard of oz") << endl;
     cout << endl;
 
     return 0;
