@@ -11,6 +11,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "clearable_queue.h"
+
 template <class T>
 class BinaryTree {
   protected:
@@ -39,24 +41,36 @@ class BinaryTree {
     unsigned int getHeightInternal(const Node* const &node) const;
 
     /**
-     * Internally recursively print out the tree.
-     * @param node
-     * The node within the tree to start printing from.
+     * Internal function only used for determining how to print
+     * the tree.
+     */
+    virtual unsigned int getMaxStringWidth() const;
+
+    /**
+     * Internally print out part of the tree.
      *
-     * @param height
-     * The height that this node is in the tree being printed.
-     * Note that the height may vary from the height of the node in the full tree.
-     * It varies if only part of the tree is being printed, or if more levels of tree are being printed then exist.
+     * @param node
+     * The node within the tree print.
+     * If null, a replacement is printed.
+     *
+     * @param padding_left
+     * Amount of padding to put on the left of the node.
+     *
+     * @param padding_right
+     * Amount of padding to put on the right of the node.
      *
      * @param width
      * The width of the object to be printed. If the width varies, then the printed tree will have defects.
      *
-     * @param biasLeft
-     * If elements in the tree should be shifted toward the left, or right.
-     * If width is even, then the bias will not effect the result.
+     * @param background
+     * Character to print as the padding in this portion of the tree.
+     *
+     * @param ostream
+     * stream to print to.
      */
-    /* void printTreeInternal(const Node* const &node, unsigned int height,
-                           unsigned int width, bool biasLeft = true);*/
+    void printTreeInternal(const BinaryTree::Node* const &node,
+                           unsigned int padding_left, unsigned int padding_right,
+                           unsigned int width, char background, std::ostream &ostream) const;
 
     // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
     // Used as a base for the other iterators
@@ -73,11 +87,91 @@ class BinaryTree {
     virtual T getMostLeft() const;
     virtual T getMostRight() const;
 
-    // Get the height of the tree.
-    // A height of zero indicates an empty tree.
+    /**
+     * Get the height of the tree.
+     * A height of zero indicates an empty tree.
+     */
     virtual unsigned int getHeight() const;
 
-    //virtual void printTree(std::ostream &ostream = std::cout) const;
+    /**
+     * Print a text visualization of the binary tree.
+     * Prints out a tree with showing each value and its relation to other
+     * values in the tree.
+     *
+     * If a value in the tree does not exist, the `fill` character is used to represent it.
+     * The spacing is accomplished using the `background` character.
+     *
+     *
+     * Example:
+     *        3
+     *    1       7
+     *  0   2   5   8
+     * 0 0 0 0 4 6 0 9
+     *
+     * @param spacing
+     * The minimum number of spaces between to values in the tree.
+     * A spacing of zero will cause each value to be immediately next to their neighbors.
+     * If spacing is omitted, spacing is equal to width.
+     * Example: spacing of 5
+     *    B
+     * A     C
+     *  <---> Spacing of 5
+     *
+     * Example: spacing of 0
+     *
+     * B
+     * AC
+     * <> No spacing
+     *
+     * @param width
+     * The fixed width of each value. If a value printed has a greater width, the
+     * printed visualization will be malformed.
+     * If omitted or zero, width is determined by checking the width of each value in the tree.
+     *
+     * @param height
+     * The number of levels of the tree to print.
+     * If greater than the height of the tree, rows will be printed with the fill character.
+     * If less than the height of the tree, rows will be omitted from the bottom of the tree.
+     * If zero or omitted, height is the height of the tree.
+     *
+     * @param biasLeft
+     * There are situations where it is ambiguous if a value should be printed one character to the left,
+     * or right. `biasLeft` specifies how to handle this case.
+     * If true, characters will always be printed closer to the left.
+     * If false, characters will always be printed closer to the right.
+     *
+     * Example: left bias tree
+     *  20
+     * 17 21
+     *
+     * Example: right bias tree
+     *   20
+     * 17 21
+     *
+     * @param trailing
+     * Should trailing whitespace be printed after the tree.
+     * This may be preferable if background is not the default value.
+     * Off by default.
+     *
+     * @param fill
+     * The character used to increase the size of a value, if less than width.
+     * Also used to represent a value that does not exist.
+     *
+     * @param background
+     * The character used to represent the spacing in the tree.
+     * See `trailing`.
+     *
+     * @param ostream
+     * Output stream to print the tree to.
+     */
+    virtual void printTree(
+            unsigned int width = 0, unsigned int height = 0, bool biasLeft = true,
+            bool trailing = false, char fill = ' ', char background = ' ', std::ostream &ostream = std::cout) const;
+
+    virtual void printTree(
+            unsigned int spacing, unsigned int width = 0, unsigned int height = 0,
+            bool biasLeft = true, bool trailing = false, char fill = ' ',
+            char background = ' ', std::ostream &ostream = std::cout) const;
 
     // iterators
     class preorder_iterator;
@@ -88,8 +182,6 @@ class BinaryTree {
     class reverse_inorder_iterator;
     class level_order_iterator;
     class reverse_level_order_iterator;
-    class level_order_default_iterator;
-    // reverse_level_order_default_iterator, lacks any use I can think of, so it is not implemented
 
     // begin() and end() functions for iterators
     preorder_iterator preorder_begin() const;
@@ -115,9 +207,6 @@ class BinaryTree {
 
     reverse_level_order_iterator reverse_level_order_begin() const;
     reverse_level_order_iterator reverse_level_order_end() const;
-
-    level_order_default_iterator level_order_default_begin(T default_) const;
-    level_order_default_iterator level_order_default_end() const;
 
     /**
      * Iterator over the tree in a preorder traversal.
@@ -349,55 +438,99 @@ class BinaryTree {
         void advance() override;
     };
 
+protected:
+    class level_order_print_iterator;
+
+    level_order_print_iterator level_order_print_begin(/*T default_*/) const;
+//    level_order_print_iterator level_order_print_end() const;
     /**
      * Iterator over the tree in a level order traversal.
-     * Instead of skipping null nodes, return a default value.
+     * Instead of skipping null nodes, return nullptr
+     *
+     * Returns the pointers to nodes instead of the values.
+     * Because of this, this iterator is private only for use by printing.
+     *
      * Iterates through the tree from left to right,
      * traversing in increasing depth.
      * Nodes are reported in the order visited.
      *
      * This is specifically used for printing a tree on screen.
+     * This is an infinite iterator and will never stop returning NULL
+     * (and allocating more memory). This is because this is a light weight iterator
+     * that does not track if has run off the end of the tree.
      *
      * For the tree:
      *       D
      *     /   \
      *    B     F
-     *   / \   / \
-     *  A   C E   G
+     *     \   /
+     *      C E
      *
      * The values will be iterated through in the order
-     * D, B, F, A, C, E, G
+     * D, B, F, NULL, C, E, NULL, NULL ...
      */
-    class level_order_default_iterator: public queue_iterator {
+    // Due to the changing return type, this iterator must be built independent of queue_iterator
+    class level_order_print_iterator {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
-        using queue_iterator::queue;
-      protected:
-        level_order_default_iterator(Node* node): queue_iterator(node) {
-            // Since default is not specified, this can only be used for nullptr
-            assert(node == nullptr);
-        }
-
-        level_order_default_iterator(Node* node, const T &def):
-            queue_iterator(node), default_(def), nonnull_level(false), count(0), level_size(1) {}
-
-        void advance() override;
-        const T default_;
-        bool nonnull_level;
-        unsigned int count;
-        unsigned int level_size;
       public:
-        T operator*() const override {
-            const BinaryTree::Node* const node = queue.front();
-            if (node != nullptr)
-                return node->value;
-            else
-                return default_;
+        // Copy constructor
+        level_order_print_iterator(const level_order_print_iterator &iter): queue(iter.queue) {}
+
+        level_order_print_iterator &operator=(const level_order_print_iterator &iter) {
+            queue = iter.queue;
+            return *this;
         }
+
+        // Prefix ++ overload
+        level_order_print_iterator &operator++() {
+            if (!queue.empty()) advance();
+            return *this;
+        }
+
+        // Postfix ++ overload
+        level_order_print_iterator operator++(int) {
+            level_order_print_iterator iter = *this;
+            ++*this;
+            return iter;
+        }
+
+        bool operator==(const level_order_print_iterator &iter) const {
+            if (queue.empty()) {
+                // Equal only of other is empty
+                return iter.queue.empty();
+            } else if (iter.queue.empty()) {
+                // Other is empty, but this isn't. Not equal.
+                return false;
+            }
+
+            // Otherwise check the node is identical
+            return queue.front() == iter.queue.front();
+        }
+
+        bool operator!=(const queue_iterator &iter) const {
+            return !(*this == iter);
+        }
+
+        virtual const Node* operator*() const {
+            // Behavior is undefined if queue has been cleared.
+            return queue.front();
+        }
+
+        void clear() {queue.clear();}
+
+      protected:
+        virtual void advance();
+
+        explicit level_order_print_iterator(const Node *root): queue() {
+            queue.push(root);
+        }
+
+        // Internally track nodes in a queue.
+        clearable_queue<const Node*> queue;
     };
 
-protected:
     // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
     // Used as a base for the other iterators
     class stack_iterator {
@@ -423,7 +556,7 @@ protected:
 
         // Postfix ++ overload
         stack_iterator operator++(int) {
-            const stack_iterator iter = *this;
+            stack_iterator iter = *this;
             ++*this;
             return iter;
         }
@@ -458,7 +591,7 @@ protected:
         // to allow the increment operators to be happy
         virtual void advance() {throw std::logic_error("not implemented" /* and shouldn't exist */);}
 
-        explicit stack_iterator(Node *root): stack() {
+        explicit stack_iterator(const Node *root): stack() {
             // Add pointer, if non-null
             if (root != nullptr) stack.push(root);
         }
@@ -490,7 +623,7 @@ protected:
 
         // Postfix ++ overload
         queue_iterator operator++(int) {
-            const queue_iterator iter = *this;
+            queue_iterator iter = *this;
             ++*this;
             return iter;
         }
@@ -525,7 +658,7 @@ protected:
         // to allow the increment operators to be happy
         virtual void advance() {throw std::logic_error("not implemented" /* and shouldn't exist */);}
 
-        explicit queue_iterator(Node *root): queue() {
+        explicit queue_iterator(const Node *root): queue() {
             // Add pointer, if non-null
             if (root != nullptr) queue.push(root);
         }
