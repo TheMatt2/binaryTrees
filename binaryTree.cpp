@@ -80,20 +80,32 @@ void BinaryTree<T>::printTree(
         width = getMaxStringWidth();
     }
 
-    printTree(width, width, height, biasLeft, trailing, fill, background, ostream);
+    printTreeWithSpacing(width, width, height, biasLeft, trailing, fill, background, ostream);
 }
 
 template <class T>
-void BinaryTree<T>::printTree(
+void BinaryTree<T>::printTreeWithSpacing(
         const unsigned int spacing, unsigned int width, unsigned int height, const bool biasLeft,
         const bool trailing, const char fill, const char background, std::ostream &ostream) const {
     if (width == 0) {
         width = getMaxStringWidth();
     }
 
+    // Also get the height of the tree.
+    // In the case where height is much greater than the height of the tree
+    // This prevents the use of O(2^height) memory.
+    // (Note that O(n) memory is required for the region where there is actually tree)
+    // The fix is to spend O(log(n)) time now finding the height of the tree.
+    unsigned int tree_height = getHeight();
+
+    // If height is zero, it is the height of the tree.
     if (height == 0) {
         // If height is zero, print the entire tree.
-        height = getHeight();
+        height = tree_height;
+    } else if (height < tree_height) {
+        // If height is less than tree height, then lower tree height
+        // to indicate a stop
+        tree_height = height;
     }
 
     // Iterator in level order. This is an infinite iterator that will never terminate.
@@ -104,15 +116,17 @@ void BinaryTree<T>::printTree(
 
     // First level is its own special case
     // Special in it is both the first and last value on the level
+    // Scoped to prevent name collisions
     {
-        unsigned int base_width = ((width + spacing) << (height - 1)) - width;
+        const unsigned int base_width = ((width + spacing) << (height - 1)) - width;
         const unsigned int padding_left  = (base_width + !biasLeft - spacing) / 2;
         const unsigned int padding_right = trailing ? (base_width + biasLeft - spacing) / 2: 0;
         printTreeInternal(*it, padding_left, padding_right, width, background, ostream);
         ostream << std::endl;
     }
 
-    for (unsigned int level = 1; level < height; level++) {
+    unsigned int level = 1;
+    for (; level < tree_height; level++) {
         // Calculate the width of the base of this subtree.
         // Width, minus the width of the single object that will be printed.
         const unsigned int base_width = ((width + spacing) << (height - level - 1)) - width;
@@ -131,6 +145,34 @@ void BinaryTree<T>::printTree(
         // Special case for final in level
         const unsigned int padding_right = trailing ? (base_width_right - spacing) / 2: 0;
         printTreeInternal(*++it, base_width_left / 2, padding_right, width, background, ostream);
+        ostream << std::endl;
+    }
+
+    // Rolled of the end of the tree.
+    // Clear the iterator to free the memory
+    it.clear();
+
+    for (; level < height; level++) {
+        // Printing null lines after rolling off the end of the tree.
+        // All values will be null
+        // Calculate the width of the base of this subtree.
+        // Width, minus the width of the single object that will be printed.
+        const unsigned int base_width = ((width + spacing) << (height - level - 1)) - width;
+        const unsigned int base_width_left = base_width + !biasLeft;
+        const unsigned int base_width_right = base_width + biasLeft;
+
+        // Special case for the first value
+        printTreeInternal(nullptr, (base_width_left - spacing) / 2, base_width_right / 2,
+                          width, background, ostream);
+
+        for (unsigned int position = 1; position < (1 << level) - 1; position++) {
+            printTreeInternal(nullptr, base_width_left / 2, base_width_right / 2,
+                              width, background, ostream);
+        }
+
+        // Special case for final in level
+        const unsigned int padding_right = trailing ? (base_width_right - spacing) / 2: 0;
+        printTreeInternal(nullptr, base_width_left / 2, padding_right, width, background, ostream);
         ostream << std::endl;
     }
 }

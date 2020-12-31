@@ -120,6 +120,67 @@ class BinaryTree {
      *  0   2   5   8
      * 0 0 0 0 4 6 0 9
      *
+     *
+     * @param width
+     * The fixed width of each value. If a value printed has a greater width, the
+     * printed visualization will be malformed.
+     * If omitted or zero, width is determined by checking the width of each value in the tree.
+     *
+     * @param height
+     * The number of levels of the tree to print.
+     * If greater than the height of the tree, rows will be printed with the fill character.
+     * If less than the height of the tree, rows will be omitted from the bottom of the tree.
+     * If zero or omitted, height is the height of the tree.
+     *
+     * @param biasLeft
+     * There are situations where it is ambiguous if a value should be printed one character to the left,
+     * or right. `biasLeft` specifies how to handle this case.
+     * If true, characters will always be printed closer to the left.
+     * If false, characters will always be printed closer to the right.
+     *
+     * Example: left bias tree
+     *  20
+     * 17 21
+     *
+     * Example: right bias tree
+     *   20
+     * 17 21
+     *
+     * @param trailing
+     * Should trailing whitespace be printed after the tree.
+     * This may be preferable if background is not the default value.
+     * Off by default.
+     *
+     * @param fill
+     * The character used to increase the size of a value, if less than width.
+     * Also used to represent a value that does not exist.
+     *
+     * @param background
+     * The character used to represent the spacing in the tree.
+     * See `trailing`.
+     *
+     * @param ostream
+     * Output stream to print the tree to.
+     */
+    void printTree(
+            unsigned int width = 0, unsigned int height = 0, bool biasLeft = true,
+            bool trailing = false, char fill = ' ', char background = ' ', std::ostream &ostream = std::cout) const;
+
+    /**
+     * Print a text visualization of the binary tree.
+     * Prints out a tree with showing each value and its relation to other
+     * values in the tree.
+     *
+     * If a value in the tree does not exist, the `fill` character is used to represent it.
+     * The spacing is accomplished using the `background` character.
+     *
+     *
+     * Example:
+     *        3
+     *    1       7
+     *  0   2   5   8
+     * 0 0 0 0 4 6 0 9
+     *
      * @param spacing
      * The minimum number of spaces between to values in the tree.
      * A spacing of zero will cause each value to be immediately next to their neighbors.
@@ -176,11 +237,7 @@ class BinaryTree {
      * @param ostream
      * Output stream to print the tree to.
      */
-    void printTree(
-            unsigned int width = 0, unsigned int height = 0, bool biasLeft = true,
-            bool trailing = false, char fill = ' ', char background = ' ', std::ostream &ostream = std::cout) const;
-
-    void printTree(
+    void printTreeWithSpacing(
             unsigned int spacing, unsigned int width = 0, unsigned int height = 0,
             bool biasLeft = true, bool trailing = false, char fill = ' ',
             char background = ' ', std::ostream &ostream = std::cout) const;

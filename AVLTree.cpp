@@ -6,6 +6,7 @@ template <class T>
 void AVLTree<T>::clear() {
     // Deallocate all of the memory recursively
     clearInternal(root);
+    root = nullptr;
 }
 
 template <class T>

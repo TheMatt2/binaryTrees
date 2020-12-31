@@ -18,16 +18,25 @@ int main() {
 
     AVLTree<int> tree(compare);
 
-    for (int i = 0; i < 11; i++) {
-        tree.printTree();
+    for (int i = 0; i < 10; i++) {
         tree.insert(i);
     }
 
-    tree.printTree();
+    //for (int i = 1; i < 4; i++) {
+    //    tree.printTree(0, i);
+    //}
 
-    cout << "Min: " << tree.getMostLeft() << endl;
-    cout << "Mid: " << tree.getRoot() << endl;
-    cout << "Max: " << tree.getMostRight() << endl;
+    tree.clear();
+
+    for (int i = 1; i < 4; i++) {
+        tree.printTree(0, i);
+    }
+
+    if (!tree.empty()) {
+        cout << "Min: " << tree.getMostLeft() << endl;
+        cout << "Mid: " << tree.getRoot() << endl;
+        cout << "Max: " << tree.getMostRight() << endl;
+    }
 
     cout << "Preorder Traverse" << endl;
     for (auto it = tree.preorder_begin(); it != tree.preorder_end(); it++) {
