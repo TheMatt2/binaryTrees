@@ -427,6 +427,11 @@ bool check_forward_reverse_iterators(
                       reverse_first, reverse_last);
 }
 
+template <class T, class It>
+bool iteratorEquals(It first, It last, std::initializer_list<T> init_values) {
+    return std::equal(first, last, init_values.begin(), init_values.end());
+}
+
 int main() {
     cout << "AVL Tree Tests" << endl;
 
@@ -1059,10 +1064,34 @@ int main() {
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
+    // Test Vector Check
+    passed = true;
     AVLTree<int> tree;
     constructTree(tree, {3, 2, 6, 1, 5, 7, 4, 8});
-    tree.printTree();
 
+    passed &= iteratorEquals(tree.preorder_begin(), tree.preorder_end(),
+                             {3, 2, 1, 6, 5, 4, 7, 8});
+    passed &= iteratorEquals(tree.reverse_preorder_begin(), tree.reverse_preorder_end(),
+                             {3, 6, 7, 8, 5, 4, 2, 1});
+    passed &= iteratorEquals(tree.postorder_begin(), tree.postorder_end(),
+                             {1, 2, 4, 5, 8, 7, 6, 3});
+    passed &= iteratorEquals(tree.reverse_postorder_begin(), tree.reverse_postorder_end(),
+                             {8, 7, 4, 5, 6, 1, 2, 3});
+    passed &= iteratorEquals(tree.inorder_begin(), tree.inorder_end(),
+                             {1, 2, 3, 4, 5, 6, 7, 8});
+    passed &= iteratorEquals(tree.reverse_inorder_begin(), tree.reverse_inorder_end(),
+                             {8, 7, 6, 5, 4, 3, 2, 1});
+    passed &= iteratorEquals(tree.level_order_begin(), tree.level_order_end(),
+                             {3, 2, 6, 1, 5, 7, 4, 8});
+    passed &= iteratorEquals(tree.reverse_level_order_begin(), tree.reverse_level_order_end(),
+                             {3, 6, 2, 7, 5, 1, 8, 4});
+
+    cout << "Test Vector Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+#if 0
+    tree.printTree();
     cout << "Preorder Traverse" << endl;
     for (auto it = tree.preorder_begin(); it != tree.preorder_end(); it++) {
         cout << *it << " ";
@@ -1110,4 +1139,5 @@ int main() {
         cout << *it << " ";
     }
     cout << endl;
+#endif
 }
