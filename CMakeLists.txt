@@ -13,31 +13,31 @@ SET(CMAKE_CXX_FLAGS_RELEASE_INIT "${CMAKE_CXX_FLAGS} ${GCC_WALL} ${GCC_PEDANTIC}
 
 add_executable(
         AVLTreeTest
-        AVLTreeTest.cpp
-        AVLTree.cpp
+        AVLTree/AVLTreeTest.cpp
+        AVLTree/AVLTree.cpp
         binaryTree.cpp
 )
 
 add_executable(
         splayTreeTest
-        splayTreeTest.cpp
-        splayTree.cpp
+        SplayTree/splayTreeTest.cpp
+        SplayTree/splayTree.cpp
         binaryTree.cpp
 )
 
 add_executable(
         churntest
         churntest.cpp
-        AVLTree.cpp
-        splayTree.cpp
+        AVLTree/AVLTree.cpp
+        SplayTree/splayTree.cpp
         binaryTree.cpp
 )
 
 add_executable(
         speedtest
         speedtest.cpp
-        AVLTree.cpp
-        splayTree.cpp
+        AVLTree/AVLTree.cpp
+        SplayTree/splayTree.cpp
         binaryTree.cpp
 )
 
@@ -46,8 +46,8 @@ find_package(benchmark QUIET)
 if (benchmark_FOUND)
     add_executable(
             AVLTreeBenchmark
-            AVLTreeBenchmark.cpp
-            AVLTree.cpp
+            AVLTree/AVLTreeBenchmark.cpp
+            AVLTree/AVLTree.cpp
             binaryTree.cpp
     )
 
@@ -55,8 +55,8 @@ if (benchmark_FOUND)
 
     add_executable(
             splayTreeBenchmark
-            splayTreeBenchmark.cpp
-            splayTree.cpp
+            SplayTree/splayTreeBenchmark.cpp
+            SplayTree/splayTree.cpp
             binaryTree.cpp
     )
 

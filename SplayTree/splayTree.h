@@ -4,7 +4,7 @@
 #ifndef SPLAYTREE_H
 #define SPLAYTREE_H
 
-#include "binaryTree.h"
+#include "../binaryTree.h"
 
 template <class T>
 struct SplayTreeNode {

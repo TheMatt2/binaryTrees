@@ -16,7 +16,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "clearable_queue.h"
+#include "util/clearable_queue.h"
 
 // Default comparator functions
 template <class T>

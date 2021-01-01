@@ -6,7 +6,7 @@
 
 //#define BINARYTREE_SANITY_CHECK
 //#define BINARYTREE_EXTENDED_SANITY_CHECK
-#include "AVLTree.h"
+#include "AVLTree/AVLTree.h"
 
 void loadDataset(const char *filename, std::vector<std::string> &dataset) {
     // Load the values from the file into a vector.

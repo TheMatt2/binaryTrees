@@ -5,7 +5,7 @@
 #define AVLTREE_H
 
 #include <cstdint>
-#include "binaryTree.h"
+#include "../binaryTree.h"
 
 #ifdef BINARYTREE_SANITY_CHECK
 #include <stdexcept> // For sanity error handling
