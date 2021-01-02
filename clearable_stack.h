@@ -1,3 +1,5 @@
+#ifndef CLEARABLE_STACK_H
+#define CLEARABLE_STACK_H
 #include <stack>
 
 /**
@@ -15,3 +17,4 @@ class clearable_stack: public std::stack<T, Container> {
         std::stack<T, Container>::c.clear();
     }
 };
+#endif
