@@ -1,6 +1,7 @@
 /**
  * Base Binary Tree structure that implements iterators for a sorted binary.
- * Iterators assume the existence of a private attribute root to be a struct that holds attributes left and right.
+ *
+ * This class presents facilities to iterate over a tree and print a visual representation of it.
  */
 
 #ifndef BINARYTREE_H

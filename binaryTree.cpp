@@ -71,6 +71,17 @@ unsigned int BinaryTree<T>::getHeight() const {
     return getHeightInternal(getRootNode());
 }
 
+template <class T>
+unsigned int BinaryTree<T>::getHeightInternal(const BinaryTree::Node* const &node) const {
+    if (node == nullptr) {
+        // A nullptr node has a height of zero
+        return 0;
+    } else {
+        // Return the max of the children nodes
+        return std::max(getHeightInternal(node->getLeft()), getHeightInternal(node->getRight())) + 1;
+    }
+}
+
 template<class T>
 void BinaryTree<T>::printTree(unsigned int width, const unsigned int height, const char fill, const bool biasLeft,
                               const bool trailing, const char background, std::ostream &ostream) const {
@@ -205,17 +216,6 @@ unsigned int BinaryTree<T>::getMaxStringWidth() const {
         if (node_width > width) width = node_width;
     }
     return width;
-}
-
-template <class T>
-unsigned int BinaryTree<T>::getHeightInternal(const BinaryTree::Node* const &node) const {
-    if (node == nullptr) {
-        // A nullptr node has a height of zero
-        return 0;
-    } else {
-        // Return the max of the children nodes
-        return std::max(getHeightInternal(node->getLeft()), getHeightInternal(node->getRight())) + 1;
-    }
 }
 
 // Algorithms
@@ -520,28 +520,10 @@ constexpr typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::re
     if (current_node != nullptr) { \
         queue.push(current_node->first); \
         queue.push(current_node->second); \
-        /* nonnull_level = true; */ \
     } else { \
         queue.push(nullptr); \
         queue.push(nullptr); \
-    }\
-    /* Increment position */ \
-    /* count++; */ \
-    /* if (count == level_size) { */ \
-        /* End of level */ \
-        /* if (nonnull_level) { */ \
-            /* Move to next level */ \
-            /* level_size <<= 1; */ /* * 2 */ \
-            /* count = 0; */ \
-            /* nonnull_level = false; */ \
-        /* } else { */ \
-            /* Level was null. Stop iteration */ \
-            /* while (!queue.empty()) { */ \
-                /* assert(queue.front() == nullptr); */ \
-                /* queue.pop(); */ \
-            /*}*/ \
-        /*}*/ \
-    /*}*/ \
+    } \
 }
 
 template <class T>

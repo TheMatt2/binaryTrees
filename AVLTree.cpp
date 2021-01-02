@@ -13,8 +13,8 @@ template <class T>
 void AVLTree<T>::clearInternal(AVLTree<T>::Node* const &node) noexcept {
     // Recurse if node exists
     if (node != nullptr) {
-        clearInternal(node->getLeft());
-        clearInternal(node->getRight());
+        clearInternal(node->left);
+        clearInternal(node->right);
 
         // Afterward, delete this node.
         delete node;
@@ -60,15 +60,15 @@ void AVLTree<T>::updateHeight(AVLTree<T>::Node *&node) {
 }
 
 template <class T>
-bool AVLTree<T>::contains(const T &value) {
+bool AVLTree<T>::contains(const T &value) const {
     /**
      * Check if value is present in the tree.
      */
-    if (this->root == nullptr)
+    if (root == nullptr)
         // Empty, not there.
         return false;
 
-    return findInternal(this->root, value) != nullptr;
+    return findInternal(root, value) != nullptr;
 }
 
 template <class T>
@@ -107,7 +107,7 @@ const typename AVLTree<T>::Node* AVLTree<T>::findInternal(
 }
 
 template <class T>
-void AVLTree<T>::leftRotation(AVLTree<T>::Node *&node){
+void AVLTree<T>::leftRotation(AVLTree<T>::Node *&node) {
     /**
      * Rotate the tree left about the given node.
      */
@@ -318,12 +318,12 @@ void AVLTree<T>::rightRotation(AVLTree<T>::Node *&node){
 }
 
 template <class T>
-void AVLTree<T>::reBalance(AVLTree<T>::Node *&node){
+void AVLTree<T>::rebalance(AVLTree<T>::Node *&node){
     /**
      * If needed, shifts node, node->left, and node->right
      * will to transformed to balance the node.
      */
-    unsigned int heightLeft, heightRight;
+    int heightLeft, heightRight;
 
     // Get the heightLeft, 0 if null
     if (node->left != nullptr)
@@ -399,7 +399,7 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
             node->height++;
 
             // Balance
-            reBalance(node);
+            rebalance(node);
         }
     } else {
         // value is greater than node
@@ -419,7 +419,7 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
             node->height++;
 
             // Balance
-            reBalance(node);
+            rebalance(node);
         }
     }
 

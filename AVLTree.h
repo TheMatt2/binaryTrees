@@ -44,7 +44,7 @@ class AVLTree: public BinaryTree<T> {
     void updateHeight(Node *&node);
     void leftRotation(Node *&node);
     void rightRotation(Node *&node);
-    void reBalance(Node *&node);
+    void rebalance(Node *&node);
 
   public:
     explicit AVLTree(int8_t (*compare)(T a, T b)): compare(compare), root(nullptr) {};
@@ -52,7 +52,7 @@ class AVLTree: public BinaryTree<T> {
     //T popMostLeft();
     //T popMostRight();
 
-    bool contains(const T &value);
+    bool contains(const T &value) const;
     bool insert(const T &value);
     bool remove(const T &value);
 
@@ -61,7 +61,7 @@ class AVLTree: public BinaryTree<T> {
      */
     void clear() noexcept;
 
-    // Specialized getHeight(). Implement O(1) algorthm specific to AVL trees
+    // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
     unsigned int getHeight() const override;
 };
 #include "AVLTree.cpp"
