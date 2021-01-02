@@ -1,3 +1,7 @@
+#ifndef CLEARABLE_QUEUE_H
+#define CLEARABLE_QUEUE_H
+#include <queue>
+
 /**
  * An extension to the standard queue that requires the container
  * to also be clearable.
@@ -13,3 +17,4 @@ public:
         std::queue<T, Container>::c.clear();
     }
 };
+#endif
