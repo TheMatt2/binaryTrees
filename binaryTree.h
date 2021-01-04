@@ -28,7 +28,7 @@ class BinaryTree {
         virtual Node* getLeft() const = 0;
         virtual Node* getRight() const = 0;
 
-        const T value;
+        T value;
     };
 
     /**
