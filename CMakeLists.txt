@@ -15,6 +15,13 @@ add_executable(
 )
 
 add_executable(
+        AVLTreeProfile
+        binaryTree.cpp
+        AVLTree.cpp
+        AVLTreeProfile.cpp
+)
+
+add_executable(
         splayTreeTest
         splayTree.cpp
         splayTreeTest.cpp
