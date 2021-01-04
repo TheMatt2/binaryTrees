@@ -20,18 +20,15 @@ int main() {
 
     for (int i = 0; i < 10; i++) {
         tree.insert(i);
-    }
-
-    //for (int i = 1; i < 10; i++) {
-    //    tree.printTree(0, i, '0');
-    //}
-
-    for (int i = 0; i < 2; i++) {
         tree.printTree();
-        tree.remove(i);
+        cout << "--------------------" << endl;
     }
-    tree.printTree();
-    return 0;
+
+    for (int i = 0; i < 10; i++) {
+        tree.remove(i);
+        tree.printTree();
+        cout << "--------------------" << endl;
+    }
 
     for (int i = 0; i < 10; i++) {
         tree.insert(i);

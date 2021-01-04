@@ -428,6 +428,8 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
     return true;
 }
 
+// TODO find bug that means results after remove disagree with other AVL trees.
+// Possibly related to a double rotation happening when a single rotation should have been done.
 template <class T>
 bool AVLTree<T>::remove(const T &value) {
     // Find the node to remove in the stack.
@@ -533,11 +535,12 @@ bool AVLTree<T>::remove(const T &value) {
             // If there wasn't a parent, the root was deleted!
             // Update the root.
             root = nullptr;
+            return true;
         }
     }
 
     // Unwind this traversal, updating heights.
-    while (value_path.size() > 1 ) {
+    while (value_path.size() > 1) {
         const auto prev_height = value_path.top()->height;
         updateHeight(value_path.top());
         rebalance(value_path.top());
