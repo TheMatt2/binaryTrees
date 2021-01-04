@@ -343,7 +343,6 @@ class BinaryTree {
         friend class BinaryTree;
 
         using stack_iterator::stack;
-        using stack_iterator::stack_iterator;
       protected:
         explicit postorder_iterator(Node *root): stack_iterator(root) {
             // The root is the last value in postorder traversal, not the first
@@ -379,7 +378,6 @@ class BinaryTree {
         friend class BinaryTree;
 
         using stack_iterator::stack;
-        using stack_iterator::stack_iterator;
       protected:
         explicit reverse_postorder_iterator(Node *root): stack_iterator(root) {
             // Go to the first value
@@ -413,7 +411,6 @@ class BinaryTree {
         friend class BinaryTree;
 
         using stack_iterator::stack;
-        using stack_iterator::stack_iterator;
       protected:
         explicit inorder_iterator(Node *root): stack_iterator(root) {
                 // Go to the first value
@@ -447,7 +444,6 @@ class BinaryTree {
         friend class BinaryTree;
 
         using stack_iterator::stack;
-        using stack_iterator::stack_iterator;
       protected:
         explicit reverse_inorder_iterator(Node *root): stack_iterator(root) {
                 // Go to the first value

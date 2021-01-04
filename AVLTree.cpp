@@ -441,21 +441,21 @@ bool AVLTree<T>::remove(const T &value) {
         if (value_path.top() == nullptr) return false;
 
         // Choose which way to keep searching.
-       auto cmp = compare(value, value_path.top()->value);
-       if (cmp == 0) {
-           // This is the value that needs to be removed
-           break;
-       } else if (cmp < 0) {
-           // Negative comparison
-           // value is less than node
-           // Go left
-           value_path.push(value_path.top()->left);
-       } else {
-           // Positive comparison
-           // value is greater than node
-           // Go right
-           value_path.push(value_path.top()->right);
-       }
+        auto cmp = compare(value, value_path.top()->value);
+        if (cmp == 0) {
+            // This is the value that needs to be removed
+            break;
+        } else if (cmp < 0) {
+            // Negative comparison
+            // value is less than node
+            // Go left
+            value_path.push(value_path.top()->left);
+        } else {
+            // Positive comparison
+            // value is greater than node
+            // Go right
+            value_path.push(value_path.top()->right);
+        }
     }
 
     // Replace this node with the most left value of its right branch.
@@ -494,6 +494,7 @@ bool AVLTree<T>::remove(const T &value) {
         // Unwind this traversal, updating heights.
         while (!replacement_path.empty()) {
             const auto prev_height = replacement_path.top()->height;
+            updateHeight(value_path.top());
             rebalance(replacement_path.top());
 
             if (replacement_path.top()->height == prev_height) {
@@ -536,19 +537,29 @@ bool AVLTree<T>::remove(const T &value) {
     }
 
     // Unwind this traversal, updating heights.
-    while (!value_path.empty()) {
+    while (value_path.size() > 1 ) {
         const auto prev_height = value_path.top()->height;
+        updateHeight(value_path.top());
         rebalance(value_path.top());
 
         if (value_path.top()->height == prev_height) {
             // Height did not change, can stop traversal.
             value_path.clear();
-            break;
+            // Not just break, but return
+            // break;
+            return true;
         } else {
             // Remove the top
             value_path.pop();
         }
     }
+
+    // There should be exactly 1 value, the root
+    assert(value_path.size() == 1 && value_path.top() == root);
+
+    // Update root
+    updateHeight(root);
+    rebalance(root);
     return true;
 }
 

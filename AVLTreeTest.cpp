@@ -26,9 +26,15 @@ int main() {
     //    tree.printTree(0, i, '0');
     //}
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 2; i++) {
         tree.printTree();
         tree.remove(i);
+    }
+    tree.printTree();
+    return 0;
+
+    for (int i = 0; i < 10; i++) {
+        tree.insert(i);
     }
 
     if (!tree.empty()) {

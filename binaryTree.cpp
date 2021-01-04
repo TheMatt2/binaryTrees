@@ -147,7 +147,7 @@ void BinaryTree<T>::printTreeWithSpacing(const unsigned int spacing, unsigned in
         printTreeInternal(*++it, (base_width_left - spacing) / 2, base_width_right / 2,
                           width, background, ostream);
 
-        for (unsigned int position = 1; position < (1 << level) - 1; position++) {
+        for (unsigned int position = 1; position < ((1U << level) - 1U); position++) {
             printTreeInternal(*++it, base_width_left / 2, base_width_right / 2,
                               width, background, ostream);
         }
@@ -175,7 +175,7 @@ void BinaryTree<T>::printTreeWithSpacing(const unsigned int spacing, unsigned in
         printTreeInternal(nullptr, (base_width_left - spacing) / 2, base_width_right / 2,
                           width, background, ostream);
 
-        for (unsigned int position = 1; position < (1 << level) - 1; position++) {
+        for (unsigned int position = 1; position < ((1U << level) - 1U); position++) {
             printTreeInternal(nullptr, base_width_left / 2, base_width_right / 2,
                               width, background, ostream);
         }
