@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include <climits>
 
 // The files to load data from
 const std::string domainFilesGroupA[] = {
@@ -71,7 +70,7 @@ const std::string domainFilesGroupB[] = {
 
 const size_t domainFilesGroupBSize = sizeof(domainFilesGroupB) / sizeof(domainFilesGroupB[0]);
 
-std::vector<std::string>* loadDomains(const std::string &filename) {
+static std::vector<std::string>* loadDomains(const std::string &filename) {
     // Load the values from the file into a vector.
     std::ifstream domains_file(filename);
 
@@ -94,43 +93,46 @@ std::vector<std::string>* loadDomains(const std::string &filename) {
     }
 }
 
-
 // Big table all domains will end up in
 std::vector<std::string>* groupA[domainFilesGroupASize];
 std::vector<std::string>* groupB[domainFilesGroupBSize];
 
-void loadDomains() {
+static void loadAllDomains() {
     for (unsigned int i = 0; i < domainFilesGroupASize; i++) {
         const std::string &domains_file = domainFilesGroupA[i];
-        auto *domains = loadDomains(domains_file);
+        auto * const &domains = loadDomains(domains_file);
 
         groupA[i] = domains;
 
-        std::cout << domains_file;
-        if (domains != nullptr) {
-            std::cout << ": loaded " << domains->size() << " domains";
-        } else {
-            std::cout << ": failed to open";
-        }
-        std::cout << std::endl;
+//        std::cout << domains_file;
+//        if (domains != nullptr) {
+//            std::cout << ": loaded " << domains->size() << " domains";
+//        } else {
+//            std::cout << ": failed to open";
+//        }
+//        std::cout << std::endl;
     }
-    for (const std::string &domains_file: domainFilesGroupB) {
-        std::vector<std::string> *domains = loadDomains(domains_file);
 
-        std::cout << domains_file;
-        if (domains != nullptr) {
-            std::cout << ": loaded " << domains->size() << " domains";
-        } else {
-            std::cout << ": failed to open";
-        }
-        std::cout << std::endl;
+    for (unsigned int i = 0; i < domainFilesGroupBSize; i++) {
+        const std::string &domains_file = domainFilesGroupB[i];
+        auto * const &domains = loadDomains(domains_file);
+
+        groupB[i] = domains;
+
+//        std::cout << domains_file;
+//        if (domains != nullptr) {
+//            std::cout << ": loaded " << domains->size() << " domains";
+//        } else {
+//            std::cout << ": failed to open";
+//        }
+//        std::cout << std::endl;
     }
 }
 
 int main () {
     std::cout << "Loading Domains" << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
-    loadDomains();
+    loadAllDomains();
     auto stop = std::chrono::high_resolution_clock::now();
 
     std::cout << "Loaded all test files in " << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
