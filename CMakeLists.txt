@@ -19,7 +19,7 @@ add_executable(
         AVLTreeProfile
         binaryTree.cpp
         AVLTree.cpp
-        AVLTreeProfile.cpp
+        speedtest.cpp
 )
 
 add_executable(

@@ -430,6 +430,7 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
 
 // TODO find bug that means results after remove disagree with other AVL trees.
 // Possibly related to a double rotation happening when a single rotation should have been done.
+// TODO (possible related) fix invalid state coming from remove
 template <class T>
 bool AVLTree<T>::remove(const T &value) {
     // Find the node to remove in the stack.

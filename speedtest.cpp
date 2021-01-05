@@ -9,6 +9,36 @@
 
 // The files to load data from
 const std::string domainFilesGroupA[] = {
+        "gfrogeye-firstparty-trackers.txt",
+        "hostsvn.txt",
+        "kadhosts.txt",
+        "kowabit.de-kwbtlist.txt",
+        "lightswitch05-ads-and-tracking.txt",
+        "malwaredomains.com-immortaldomains.txt",
+        "malwaredomains.com-justdomains.txt",
+        "matomo.org-spammers.txt",
+        "mitchellkrogza-badd-boyz-hosts.txt",
+        "molinero.dev.txt",
+        "pgl.yoyo.org.txt",
+        "phishing.army-extended.txt",
+        "phishing.army.txt",
+        "socram8888-notonmyshift.txt",
+        "someonewhocares.org.txt",
+        "spam404.com.txt",
+        "stevenblack.txt",
+        "stopforumspam.com.txt",
+        "ublock-abuse.txt",
+        "ublock-badware.txt",
+        "ublock-privacy.txt",
+        "ublock.txt",
+        "urlhaus.txt",
+        "winhelp2002.mvps.org.txt",
+        "zerodot1-coinblockerlists-browser.txt",
+        "zerodot1-coinblockerlists-optional.txt",
+        "zerodot1-coinblockerlists.txt"
+};
+
+const std::string domainFilesGroupB[] = {
     "adaway.org.txt",
     "adblock-nocoin-list.txt",
     "adguard-simplified.txt",
@@ -37,36 +67,6 @@ const std::string domainFilesGroupA[] = {
     "fademind-add.spam.txt",
     "fanboy-annoyance.txt",
     "fanboy-social.txt"
-};
-
-const std::string domainFilesGroupB[] = {
-    "gfrogeye-firstparty-trackers.txt",
-    "hostsvn.txt",
-    "kadhosts.txt",
-    "kowabit.de-kwbtlist.txt",
-    "lightswitch05-ads-and-tracking.txt",
-    "malwaredomains.com-immortaldomains.txt",
-    "malwaredomains.com-justdomains.txt",
-    "matomo.org-spammers.txt",
-    "mitchellkrogza-badd-boyz-hosts.txt",
-    "molinero.dev.txt",
-    "pgl.yoyo.org.txt",
-    "phishing.army-extended.txt",
-    "phishing.army.txt",
-    "socram8888-notonmyshift.txt",
-    "someonewhocares.org.txt",
-    "spam404.com.txt",
-    "stevenblack.txt",
-    "stopforumspam.com.txt",
-    "ublock-abuse.txt",
-    "ublock-badware.txt",
-    "ublock-privacy.txt",
-    "ublock.txt",
-    "urlhaus.txt",
-    "winhelp2002.mvps.org.txt",
-    "zerodot1-coinblockerlists-browser.txt",
-    "zerodot1-coinblockerlists-optional.txt",
-    "zerodot1-coinblockerlists.txt"
 };
 
 static bool loadDomains(const std::string &filename, std::vector<std::string> &domains) {
@@ -139,7 +139,7 @@ int main () {
 
     std::cout << "Inserted all values in "
               << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
-
+    return 0;
     std::cout << "Removing all values from Group B" << std::endl;
 
     start = std::chrono::high_resolution_clock::now();
