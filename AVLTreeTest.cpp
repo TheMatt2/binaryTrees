@@ -7,7 +7,8 @@
 
 using namespace std;
 
-int8_t compare(int a, int b) {
+int compare(const int &a, const int &b) {
+    return a - b;
     if (a < b)  return -1;
     if (a == b) return  0;
     else        return  1;
@@ -18,19 +19,19 @@ int main() {
 
     AVLTree<int> tree(compare);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 11; i++) {
         tree.insert(i);
         tree.printTree();
         cout << "--------------------" << endl;
     }
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 11; i++) {
         tree.remove(i);
         tree.printTree();
         cout << "--------------------" << endl;
     }
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 11; i++) {
         tree.insert(i);
     }
 

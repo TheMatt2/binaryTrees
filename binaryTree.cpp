@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <iomanip>
+#include <sstream>
 #include <stdexcept>
 #include <algorithm>
 #include "binaryTree.h"
@@ -211,7 +212,10 @@ unsigned int BinaryTree<T>::getMaxStringWidth() const {
     // If width is zero, search tree to determine the maximum width.
     unsigned int width = 0;
     for (auto it = preorder_begin(); it != preorder_end(); ++it) {
-        const unsigned int node_width = std::to_string(*it).length();
+        // Use stringstream to determine length of string representation
+        std::stringstream buf;
+        buf << *it;
+        const unsigned int node_width = buf.str().length();
 
         if (node_width > width) width = node_width;
     }

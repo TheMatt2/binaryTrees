@@ -29,7 +29,7 @@ class AVLTree: public BinaryTree<T> {
     };
 
     // Comparison function
-    int8_t (*compare)(T a, T b);
+    int (*compare)(const T &a, const T &b);
 
     Node *root;
 
@@ -47,7 +47,7 @@ class AVLTree: public BinaryTree<T> {
     void rebalance(Node *&node);
 
   public:
-    explicit AVLTree(int8_t (*compare)(T a, T b)): compare(compare), root(nullptr) {};
+    explicit AVLTree(int (*compare)(const T &a, const T &b)): compare(compare), root(nullptr) {};
 
     //T popMostLeft();
     //T popMostRight();

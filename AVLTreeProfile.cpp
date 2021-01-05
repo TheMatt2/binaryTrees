@@ -1,8 +1,10 @@
-#include <iostream>
-#include <fstream>
+#include <chrono>
 #include <vector>
 #include <string>
-#include <chrono>
+#include <fstream>
+#include <iostream>
+
+#include "AVLTree.h"
 
 // The files to load data from
 const std::string domainFilesGroupA[] = {
@@ -36,8 +38,6 @@ const std::string domainFilesGroupA[] = {
     "fanboy-social.txt"
 };
 
-const size_t domainFilesGroupASize = sizeof(domainFilesGroupA) / sizeof(domainFilesGroupA[0]);
-
 const std::string domainFilesGroupB[] = {
     "gfrogeye-firstparty-trackers.txt",
     "hostsvn.txt",
@@ -68,66 +68,46 @@ const std::string domainFilesGroupB[] = {
     "zerodot1-coinblockerlists.txt"
 };
 
-const size_t domainFilesGroupBSize = sizeof(domainFilesGroupB) / sizeof(domainFilesGroupB[0]);
-
-static std::vector<std::string>* loadDomains(const std::string &filename) {
+static bool loadDomains(const std::string &filename, std::vector<std::string> &domains) {
     // Load the values from the file into a vector.
     std::ifstream domains_file(filename);
 
     if (domains_file.is_open()) {
-        auto *domains = new std::vector<std::string>();
         std::string domain;
         while (domains_file >> domain) {
             // If the first character in domain is #, or blank, then ignore
             if (!domain.empty() && domain[0] != '#') {
-                domains->push_back(domain);
+                domains.push_back(domain);
                 domains_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             }
         }
-
-        // The vector will be held and not changed from now.
-        domains->shrink_to_fit();
-        return domains;
+        return true;
     } else {
-        return nullptr;
+        return false;
     }
 }
 
 // Big table all domains will end up in
-std::vector<std::string>* groupA[domainFilesGroupASize];
-std::vector<std::string>* groupB[domainFilesGroupBSize];
+std::vector<std::string> groupA;
+std::vector<std::string> groupB;
 
 static void loadAllDomains() {
-    for (unsigned int i = 0; i < domainFilesGroupASize; i++) {
-        const std::string &domains_file = domainFilesGroupA[i];
-        auto * const &domains = loadDomains(domains_file);
-
-        groupA[i] = domains;
-
-//        std::cout << domains_file;
-//        if (domains != nullptr) {
-//            std::cout << ": loaded " << domains->size() << " domains";
-//        } else {
-//            std::cout << ": failed to open";
-//        }
-//        std::cout << std::endl;
+    for (const std::string &domains_file: domainFilesGroupA) {
+        loadDomains(domains_file, groupA);
     }
+    groupA.shrink_to_fit();
 
-    for (unsigned int i = 0; i < domainFilesGroupBSize; i++) {
-        const std::string &domains_file = domainFilesGroupB[i];
-        auto * const &domains = loadDomains(domains_file);
-
-        groupB[i] = domains;
-
-//        std::cout << domains_file;
-//        if (domains != nullptr) {
-//            std::cout << ": loaded " << domains->size() << " domains";
-//        } else {
-//            std::cout << ": failed to open";
-//        }
-//        std::cout << std::endl;
+    for (const std::string &domains_file: domainFilesGroupB) {
+        loadDomains(domains_file, groupB);
     }
 }
+
+// Set up for tree, a compare function
+int compare(const std::string &a, const std::string &b) {
+    return a.compare(b);
+}
+
+
 
 int main () {
     std::cout << "Loading Domains" << std::endl;
@@ -135,5 +115,8 @@ int main () {
     loadAllDomains();
     auto stop = std::chrono::high_resolution_clock::now();
 
-    std::cout << "Loaded all test files in " << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
+    std::cout << "Loaded all test files in "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
+
+    //AVLTree<std::string> avlTree(compare);
 }
