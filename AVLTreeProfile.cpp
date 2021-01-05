@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 
+//#define AVLTREE_SANITYCHECK
 #include "AVLTree.h"
 
 // The files to load data from
@@ -100,14 +101,13 @@ static void loadAllDomains() {
     for (const std::string &domains_file: domainFilesGroupB) {
         loadDomains(domains_file, groupB);
     }
+    groupB.shrink_to_fit();
 }
 
 // Set up for tree, a compare function
 int compare(const std::string &a, const std::string &b) {
     return a.compare(b);
 }
-
-
 
 int main () {
     std::cout << "Loading Domains" << std::endl;
@@ -118,5 +118,42 @@ int main () {
     std::cout << "Loaded all test files in "
               << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
 
-    //AVLTree<std::string> avlTree(compare);
+    std::cout << "Loaded " << groupA.size() << " domains into groupA" << std::endl;
+    std::cout << "Loaded " << groupB.size() << " domains into groupB" << std::endl;
+
+    AVLTree<std::string> avlTree(compare);
+
+    std::cout << "Add Group A into a tree" << std::endl;
+
+    start = std::chrono::high_resolution_clock::now();
+#ifdef AVLTREE_SANITYCHECK
+    avlTree.sanityCheck();
+#endif
+    for (const std::string &domain: groupA) {
+        avlTree.insert(domain);
+#ifdef AVLTREE_SANITYCHECK
+        avlTree.sanityCheck();
+#endif
+    }
+    stop = std::chrono::high_resolution_clock::now();
+
+    std::cout << "Inserted all values in "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
+
+    std::cout << "Removing all values from Group B" << std::endl;
+
+    start = std::chrono::high_resolution_clock::now();
+#ifdef AVLTREE_SANITYCHECK
+    avlTree.sanityCheck();
+#endif
+    for (const std::string &domain: groupB) {
+        avlTree.remove(domain);
+#ifdef AVLTREE_SANITYCHECK
+        avlTree.sanityCheck();
+#endif
+    }
+    stop = std::chrono::high_resolution_clock::now();
+
+    std::cout << "Removed all values in Group B in "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
 }
