@@ -137,7 +137,13 @@ int main () {
     }
     stop = std::chrono::high_resolution_clock::now();
 
-    std::cout << "Inserted all values in "
+    // Count values
+    unsigned int count = 0;
+    for (auto it = avlTree.preorder_begin(); it != avlTree.preorder_end(); it++) {
+        count++;
+    }
+
+    std::cout << "Inserted " << count << " values in "
               << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
     return 0;
     std::cout << "Removing all values from Group B" << std::endl;

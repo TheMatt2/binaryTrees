@@ -377,14 +377,18 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
         return true;
     }
 
-    // Check if this temp is the value value.
-    int8_t cmp = compare(value, node->value);
+    // Check if this temp is the value.
+    auto cmp = compare(value, node->value);
 
     if (cmp == 0) {
         // value exists in the tree
         // do not modify, nothing inserted
         return false;
-    } else if (cmp < 0) {
+    }
+
+    // else
+    unsigned int child_height;
+    if (cmp < 0) {
         // value is less than node
         // So insert value left
 
@@ -392,16 +396,7 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
         if (!insertInternal(node->left, value))
             return false;
 
-        // If something was inserted. Recalculate heights
-        // node->left must exist because since a value was inserted on the left branch.
-
-        if (node->height <= node->left->height) {
-            // The height of node is too low, raise it
-            node->height++;
-
-            // Balance
-            rebalance(node);
-        }
+        child_height = node->left->height;
     } else {
         // value is greater than node
         // Insert value right.
@@ -411,17 +406,17 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
             return false;
         }
 
-        // Update the height of this temp.
-        // Only if the height of this temp changes
-        // is balancing needed
-        // node->right must exist because we ran insert()
-        if (node->height <= node->right->height) {
-            // The height of node is too low, raise it
-            node->height++;
+        child_height = node->right->height;
+    }
 
-            // Balance
-            rebalance(node);
-        }
+    // Increase height and balance if needed
+    // node must be greater than the child that was just added to
+    if (node->height <= child_height) {
+        // The height of node is too low, raise it
+        node->height++;
+
+        // Balance
+        rebalance(node);
     }
 
     // Successful insertion
