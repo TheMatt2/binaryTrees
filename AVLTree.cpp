@@ -155,12 +155,15 @@ void AVLTree<T>::leftRotation(AVLTree<T>::Node *&node) {
      *             A   C E   G
      */
     // Test if right->right exists, that will determine the case
+    // After careful consideration and testing
+    // it is noted that if the heights are equal, the outer case *must* be used
+    // to avoid an odd case that occurs during removals.
     if (// If the right exists, and the left doesn't
             (node->right->right != nullptr) && (
                     // Either left doesn't exist
                     (node->right->left == nullptr) ||
                     // Or both exist and the right is "taller" than the left
-                    (node->right->right->height > node->right->left->height)
+                    (node->right->right->height >= node->right->left->height)
             )) {
         // Case 1
         // node->right needs to become node->right->left
@@ -268,13 +271,16 @@ void AVLTree<T>::rightRotation(AVLTree<T>::Node *&node){
      *              A   C E   G
      */
     // Test if left->left exists, that will determine the case
+    // After careful consideration and testing
+    // it is noted that if the heights are equal, the outer case *must* be used
+    // to avoid an odd case that occurs during removals.
     if (
         // If the left exists, and the right doesn't
             (node->left->left != nullptr) && (
                     // Either right doesn't exist
                     (node->left->right == nullptr) ||
                     // Or both exist and the left is "taller" than the right
-                    (node->left->left->height > node->left->right->height)
+                    (node->left->left->height >= node->left->right->height)
             )) {
         // Case 1
         // node->left needs to become node->left->right
@@ -430,16 +436,16 @@ template <class T>
 bool AVLTree<T>::remove(const T &value) {
     // Find the node to remove in the stack.
     // Create a stack for processing and (later) unwinding.
-    clearable_stack<Node*> value_path;
+    clearable_stack<Node**> value_path;
 
-    value_path.push(root);
+    value_path.push(&root);
 
     while (true) {
         // If the stack has a nullptr on top, then failed to find node.
-        if (value_path.top() == nullptr) return false;
+        if (*value_path.top() == nullptr) return false;
 
         // Choose which way to keep searching.
-        auto cmp = compare(value, value_path.top()->value);
+        auto cmp = compare(value, (*value_path.top())->value);
         if (cmp == 0) {
             // This is the value that needs to be removed
             break;
@@ -447,55 +453,48 @@ bool AVLTree<T>::remove(const T &value) {
             // Negative comparison
             // value is less than node
             // Go left
-            value_path.push(value_path.top()->left);
+            value_path.push(&((*value_path.top())->left));
         } else {
             // Positive comparison
             // value is greater than node
             // Go right
-            value_path.push(value_path.top()->right);
+            value_path.push(&((*value_path.top())->right));
         }
     }
 
     // Replace this node with the most left value of its right branch.
     // If no right branch, replace with its left (because AVL, if not right the left most be a leaf).
     // If neither, just delete this one.
-
-    if (value_path.top()->right != nullptr) {
-        clearable_stack<Node*> replacement_path;
-        replacement_path.push(value_path.top()->right);
+    if ((*value_path.top())->right != nullptr) {
+        clearable_stack<Node**> replacement_path;
+        replacement_path.push(&(*value_path.top())->right);
 
         // Continue to the most left node.
-        while (replacement_path.top()->left != nullptr) {
-            replacement_path.push(replacement_path.top()->left);
+        while ((*replacement_path.top())->left != nullptr) {
+            replacement_path.push(&(*replacement_path.top())->left);
         }
 
         // Now that we have found the most left of the right tree.
         // Get its value
-        value_path.top()->value = replacement_path.top()->value;
+        (*value_path.top())->value = (*replacement_path.top())->value;
 
         // Delete it, replacing with its right branch
-        Node * const right = replacement_path.top()->right;
+        Node * const right = (*replacement_path.top())->right;
 
-        delete replacement_path.top();
+        // Left should be known nullptr
+        assert((*replacement_path.top())->left == nullptr);
+
+        delete *replacement_path.top();
+        *replacement_path.top() = right;
         replacement_path.pop();
-
-        if (!replacement_path.empty()) {
-            // Remove the pointer to the removed node.
-            // We were traversing left, so we know the left child needs replacing.
-            replacement_path.top()->left = right;
-        } else {
-            // If replacement path is empty, then we deleted the right of the value node.
-            // Set null on right of value node
-            value_path.top()->right = nullptr;
-        }
 
         // Unwind this traversal, updating heights.
         while (!replacement_path.empty()) {
-            const auto prev_height = replacement_path.top()->height;
-            updateHeight(value_path.top());
-            rebalance(replacement_path.top());
+            const auto prev_height = (*replacement_path.top())->height;
+            updateHeight(*replacement_path.top());
+            rebalance(*replacement_path.top());
 
-            if (replacement_path.top()->height == prev_height) {
+            if ((*replacement_path.top())->height == prev_height) {
                 // Height did not change, can stop traversal.
                 replacement_path.clear();
                 break;
@@ -504,61 +503,38 @@ bool AVLTree<T>::remove(const T &value) {
                 replacement_path.pop();
             }
         }
-    } else if (value_path.top()->left != nullptr) {
+    } else if ((*value_path.top())->left != nullptr) {
         // Since right doesn't exist, left must only be a leaf
-        assert(value_path.top()->left->left == nullptr && value_path.top()->left->right == nullptr);
+        assert((*value_path.top())->left->left == nullptr &&
+               (*value_path.top())->left->right == nullptr);
 
         // Replace parent with left. Delete left.
-        value_path.top()->value = value_path.top()->left->value;
-        delete value_path.top()->left;
-        value_path.top()->left = nullptr;
+        (*value_path.top())->value = (*value_path.top())->left->value;
+        delete (*value_path.top())->left;
+        (*value_path.top())->left = nullptr;
     } else {
         // Neither left nor right, just delete the node with value.
-        Node * const node = value_path.top();
-        delete node;
+        delete *value_path.top();
+        *value_path.top() = nullptr;
         value_path.pop();
-
-        // Remove it as a reference from its parent.
-        if (!value_path.empty()) {
-            // Find if left or right
-            if (value_path.top()->left == node) {
-                value_path.top()->left = nullptr;
-            } else {
-                assert(value_path.top()->right == node);
-                value_path.top()->right = nullptr;
-            }
-        } else {
-            // If there wasn't a parent, the root was deleted!
-            // Update the root.
-            root = nullptr;
-            return true;
-        }
     }
 
     // Unwind this traversal, updating heights.
-    while (value_path.size() > 1) {
-        const auto prev_height = value_path.top()->height;
-        updateHeight(value_path.top());
-        rebalance(value_path.top());
+    while (!value_path.empty()) {
+        const auto prev_height = (*value_path.top())->height;
+        updateHeight(*value_path.top());
+        rebalance(*value_path.top());
 
-        if (value_path.top()->height == prev_height) {
+        if ((*value_path.top())->height == prev_height) {
             // Height did not change, can stop traversal.
             value_path.clear();
             // Not just break, but return
-            // break;
-            return true;
+            break;
         } else {
             // Remove the top
             value_path.pop();
         }
     }
-
-    // There should be exactly 1 value, the root
-    assert(value_path.size() == 1 && value_path.top() == root);
-
-    // Update root
-    updateHeight(root);
-    rebalance(root);
     return true;
 }
 

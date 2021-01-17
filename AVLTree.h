@@ -64,7 +64,7 @@ class AVLTree: public BinaryTree<T> {
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
     unsigned int getHeight() const override;
 
-#ifdef AVLTREE_SANITYCHECK
+#ifdef AVLTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
     // Throws assertion errors if anything is wrong
     void sanityCheck() const {
@@ -107,9 +107,9 @@ class AVLTree: public BinaryTree<T> {
 
             // left and right must exist
             if (node->left == nullptr)
-                throw std::logic_error("Node with height greater than 2 should have both a left child");
+                throw std::logic_error("Node with height greater than 2 should have a left child");
             if (node->left == nullptr)
-                throw std::logic_error("Node with height greater than 2 should have both a right child");
+                throw std::logic_error("Node with height greater than 2 should have a right child");
 
             // One node has height - 1, the other is equal to or less than that.
             if (node->left->height != node->height - 1) {

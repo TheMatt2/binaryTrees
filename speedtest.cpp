@@ -4,69 +4,69 @@
 #include <fstream>
 #include <iostream>
 
-//#define AVLTREE_SANITYCHECK
+#define AVLTREE_SANITY_CHECK
 #include "AVLTree.h"
 
 // The files to load data from
 const std::string domainFilesGroupA[] = {
-        "gfrogeye-firstparty-trackers.txt",
-        "hostsvn.txt",
-        "kadhosts.txt",
-        "kowabit.de-kwbtlist.txt",
-        "lightswitch05-ads-and-tracking.txt",
-        "malwaredomains.com-immortaldomains.txt",
-        "malwaredomains.com-justdomains.txt",
-        "matomo.org-spammers.txt",
-        "mitchellkrogza-badd-boyz-hosts.txt",
-        "molinero.dev.txt",
-        "pgl.yoyo.org.txt",
-        "phishing.army-extended.txt",
-        "phishing.army.txt",
-        "socram8888-notonmyshift.txt",
-        "someonewhocares.org.txt",
-        "spam404.com.txt",
-        "stevenblack.txt",
-        "stopforumspam.com.txt",
-        "ublock-abuse.txt",
-        "ublock-badware.txt",
-        "ublock-privacy.txt",
-        "ublock.txt",
-        "urlhaus.txt",
-        "winhelp2002.mvps.org.txt",
-        "zerodot1-coinblockerlists-browser.txt",
-        "zerodot1-coinblockerlists-optional.txt",
-        "zerodot1-coinblockerlists.txt"
+    "data/gfrogeye-firstparty-trackers.txt",
+    "data/hostsvn.txt",
+    "data/kadhosts.txt",
+    "data/kowabit.de-kwbtlist.txt",
+    "data/lightswitch05-ads-and-tracking.txt",
+    "data/malwaredomains.com-immortaldomains.txt",
+    "data/malwaredomains.com-justdomains.txt",
+    "data/matomo.org-spammers.txt",
+    "data/mitchellkrogza-badd-boyz-hosts.txt",
+    "data/molinero.dev.txt",
+    "data/pgl.yoyo.org.txt",
+    "data/phishing.army-extended.txt",
+    "data/phishing.army.txt",
+    "data/socram8888-notonmyshift.txt",
+    "data/someonewhocares.org.txt",
+    "data/spam404.com.txt",
+    "data/stevenblack.txt",
+    "data/stopforumspam.com.txt",
+    "data/ublock-abuse.txt",
+    "data/ublock-badware.txt",
+    "data/ublock-privacy.txt",
+    "data/ublock.txt",
+    "data/urlhaus.txt",
+    "data/winhelp2002.mvps.org.txt",
+    "data/zerodot1-coinblockerlists-browser.txt",
+    "data/zerodot1-coinblockerlists-optional.txt",
+    "data/zerodot1-coinblockerlists.txt"
 };
 
 const std::string domainFilesGroupB[] = {
-    "adaway.org.txt",
-    "adblock-nocoin-list.txt",
-    "adguard-simplified.txt",
-    "antipopads.txt",
-    "anudeepnd-adservers.txt",
-    "anudeepnd-coinminer.txt",
-    "anudeepnd-facebook.txt",
-    "digitalside-threat-intel.txt",
-    "disconnect.me-ad.txt",
-    "disconnect.me-malvertising.txt",
-    "disconnect.me-tracking.txt",
-    "easylist-ara.txt",
-    "easylist-chn.txt",
-    "easylist-deu.txt",
-    "easylist-fra.txt",
-    "easylist-ita.txt",
-    "easylist-nld.txt",
-    "easylist-rus.txt",
-    "easylist-spa.txt",
-    "easylist.txt",
-    "easyprivacy.txt",
-    "eth-phishing-detect.txt",
-    "fademind-add.2o7net.txt",
-    "fademind-add.dead.txt",
-    "fademind-add.risk.txt",
-    "fademind-add.spam.txt",
-    "fanboy-annoyance.txt",
-    "fanboy-social.txt"
+    "data/adaway.org.txt",
+    "data/adblock-nocoin-list.txt",
+    "data/adguard-simplified.txt",
+    "data/antipopads.txt",
+    "data/anudeepnd-adservers.txt",
+    "data/anudeepnd-coinminer.txt",
+    "data/anudeepnd-facebook.txt",
+    "data/digitalside-threat-intel.txt",
+    "data/disconnect.me-ad.txt",
+    "data/disconnect.me-malvertising.txt",
+    "data/disconnect.me-tracking.txt",
+    "data/easylist-ara.txt",
+    "data/easylist-chn.txt",
+    "data/easylist-deu.txt",
+    "data/easylist-fra.txt",
+    "data/easylist-ita.txt",
+    "data/easylist-nld.txt",
+    "data/easylist-rus.txt",
+    "data/easylist-spa.txt",
+    "data/easylist.txt",
+    "data/easyprivacy.txt",
+    "data/eth-phishing-detect.txt",
+    "data/fademind-add.2o7net.txt",
+    "data/fademind-add.dead.txt",
+    "data/fademind-add.risk.txt",
+    "data/fademind-add.spam.txt",
+    "data/fanboy-annoyance.txt",
+    "data/fanboy-social.txt"
 };
 
 static bool loadDomains(const std::string &filename, std::vector<std::string> &domains) {
@@ -84,7 +84,9 @@ static bool loadDomains(const std::string &filename, std::vector<std::string> &d
         }
         return true;
     } else {
-        return false;
+        // Failed to load file.
+        std::cerr << "Failed to open file: " << filename << std::endl;
+        exit(1);
     }
 }
 
@@ -116,25 +118,23 @@ int main () {
     auto stop = std::chrono::high_resolution_clock::now();
 
     std::cout << "Loaded all test files in "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
+              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
+              << "ms" << std::endl;
 
-    std::cout << "Loaded " << groupA.size() << " domains into groupA" << std::endl;
-    std::cout << "Loaded " << groupB.size() << " domains into groupB" << std::endl;
+    std::cout << "Loaded " << groupA.size() << " domains into Group A" << std::endl;
+    std::cout << "Loaded " << groupB.size() << " domains into Group B" << std::endl;
 
     AVLTree<std::string> avlTree(compare);
 
     std::cout << "Add Group A into a tree" << std::endl;
 
     start = std::chrono::high_resolution_clock::now();
-#ifdef AVLTREE_SANITYCHECK
-    avlTree.sanityCheck();
-#endif
     for (const std::string &domain: groupA) {
         avlTree.insert(domain);
-#ifdef AVLTREE_SANITYCHECK
-        avlTree.sanityCheck();
-#endif
     }
+#ifdef AVLTREE_SANITY_CHECK
+    avlTree.sanityCheck();
+#endif
     stop = std::chrono::high_resolution_clock::now();
 
     // Count values
@@ -145,19 +145,16 @@ int main () {
 
     std::cout << "Inserted " << count << " values in "
               << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
-    return 0;
+
     std::cout << "Removing all values from Group B" << std::endl;
 
     start = std::chrono::high_resolution_clock::now();
-#ifdef AVLTREE_SANITYCHECK
-    avlTree.sanityCheck();
-#endif
     for (const std::string &domain: groupB) {
         avlTree.remove(domain);
-#ifdef AVLTREE_SANITYCHECK
-        avlTree.sanityCheck();
-#endif
     }
+#ifdef AVLTREE_SANITY_CHECK
+    avlTree.sanityCheck();
+#endif
     stop = std::chrono::high_resolution_clock::now();
 
     std::cout << "Removed all values in Group B in "
