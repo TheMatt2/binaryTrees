@@ -2,7 +2,6 @@
 #define AVLTREE_CPP
 
 #include "AVLTree.h"
-#include "clearable_stack.h"
 
 template <class T>
 void AVLTree<T>::clear() noexcept {
@@ -436,7 +435,7 @@ template <class T>
 bool AVLTree<T>::remove(const T &value) {
     // Find the node to remove in the stack.
     // Create a stack for processing and (later) unwinding.
-    clearable_stack<Node**> value_path;
+    std::stack<Node**> value_path;
 
     value_path.push(&root);
 
@@ -466,7 +465,7 @@ bool AVLTree<T>::remove(const T &value) {
     // If no right branch, replace with its left (because AVL, if not right the left most be a leaf).
     // If neither, just delete this one.
     if ((*value_path.top())->right != nullptr) {
-        clearable_stack<Node**> replacement_path;
+        std::stack<Node**> replacement_path;
         replacement_path.push(&(*value_path.top())->right);
 
         // Continue to the most left node.
@@ -496,7 +495,6 @@ bool AVLTree<T>::remove(const T &value) {
 
             if ((*replacement_path.top())->height == prev_height) {
                 // Height did not change, can stop traversal.
-                replacement_path.clear();
                 break;
             } else {
                 // Remove the top
@@ -527,8 +525,6 @@ bool AVLTree<T>::remove(const T &value) {
 
         if ((*value_path.top())->height == prev_height) {
             // Height did not change, can stop traversal.
-            value_path.clear();
-            // Not just break, but return
             break;
         } else {
             // Remove the top
