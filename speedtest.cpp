@@ -9,7 +9,6 @@
 
 // The files to load data from
 const std::string domainFilesGroupA[] = {
-    "data/gfrogeye-firstparty-trackers.txt",
     "data/hostsvn.txt",
     "data/kadhosts.txt",
     "data/kowabit.de-kwbtlist.txt",
@@ -27,18 +26,10 @@ const std::string domainFilesGroupA[] = {
     "data/spam404.com.txt",
     "data/stevenblack.txt",
     "data/stopforumspam.com.txt",
-    "data/ublock-abuse.txt",
-    "data/ublock-badware.txt",
-    "data/ublock-privacy.txt",
-    "data/ublock.txt",
-    "data/urlhaus.txt",
-    "data/winhelp2002.mvps.org.txt",
-    "data/zerodot1-coinblockerlists-browser.txt",
-    "data/zerodot1-coinblockerlists-optional.txt",
-    "data/zerodot1-coinblockerlists.txt"
 };
 
 const std::string domainFilesGroupB[] = {
+    "data/gfrogeye-firstparty-trackers.txt",
     "data/adaway.org.txt",
     "data/adblock-nocoin-list.txt",
     "data/adguard-simplified.txt",
@@ -66,7 +57,16 @@ const std::string domainFilesGroupB[] = {
     "data/fademind-add.risk.txt",
     "data/fademind-add.spam.txt",
     "data/fanboy-annoyance.txt",
-    "data/fanboy-social.txt"
+    "data/fanboy-social.txt",
+    "data/ublock-abuse.txt",
+    "data/ublock-badware.txt",
+    "data/ublock-privacy.txt",
+    "data/ublock.txt",
+    "data/urlhaus.txt",
+    "data/winhelp2002.mvps.org.txt",
+    "data/zerodot1-coinblockerlists-browser.txt",
+    "data/zerodot1-coinblockerlists-optional.txt",
+    "data/zerodot1-coinblockerlists.txt"
 };
 
 static bool loadDomains(const std::string &filename, std::vector<std::string> &domains) {
@@ -160,7 +160,6 @@ int main () {
 
     // Check that counts match
     for (auto it = avlTree.reverse_inorder_begin(); it != avlTree.reverse_preorder_end(); it++) {
-        if ((*it).length() == 0) std::cout << "Huh a zero?" << std::endl;
         count--; // If an error occurred, this may underflow. That is not a problem, so long as we don't underflow twice
     }
 
