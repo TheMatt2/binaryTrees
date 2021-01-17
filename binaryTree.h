@@ -574,7 +574,7 @@ protected:
         }
 
         bool operator!=(const queue_iterator &iter) const {
-            return !(*this == iter);
+            return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
         }
 
         virtual const Node* operator*() const {
@@ -639,7 +639,7 @@ protected:
         }
 
         bool operator!=(const stack_iterator &iter) const {
-            return !(*this == iter);
+            return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
         }
 
         virtual T operator*() const {
@@ -706,7 +706,7 @@ protected:
         }
 
         bool operator!=(const queue_iterator &iter) const {
-            return !(*this == iter);
+            return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
         }
 
         virtual T operator*() const {
