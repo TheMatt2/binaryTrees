@@ -144,19 +144,33 @@ int main () {
     }
 
     std::cout << "Inserted " << count << " values in "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
+              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
+              << "ms" << std::endl;
 
-    std::cout << "Removing all values from Group B" << std::endl;
+    std::cout << "Removing " << groupB.size() << " values from Group B" << std::endl;
 
     start = std::chrono::high_resolution_clock::now();
     for (const std::string &domain: groupB) {
-        avlTree.remove(domain);
+        count -= avlTree.remove(domain);
     }
 #ifdef AVLTREE_SANITY_CHECK
     avlTree.sanityCheck();
 #endif
     stop = std::chrono::high_resolution_clock::now();
 
+    // Check that counts match
+    for (auto it = avlTree.reverse_inorder_begin(); it != avlTree.reverse_preorder_end(); it++) {
+        if ((*it).length() == 0) std::cout << "Huh a zero?" << std::endl;
+        count--; // If an error occurred, this may underflow. That is not a problem, so long as we don't underflow twice
+    }
+
+    if (count != 0) {
+        // Something failed
+        std::cerr << "AVLTree changed size unexpectedly during item removal." << std::endl;
+        exit(2);
+    }
+
     std::cout << "Removed all values in Group B in "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms" << std::endl;
+              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
+              << "ms" << std::endl;
 }

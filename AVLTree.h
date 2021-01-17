@@ -48,6 +48,7 @@ class AVLTree: public BinaryTree<T> {
 
   public:
     explicit AVLTree(int (*compare)(const T &a, const T &b)): compare(compare), root(nullptr) {};
+    ~AVLTree() {clearInternal(getRootNode());}
 
     //T popMostLeft();
     //T popMostRight();

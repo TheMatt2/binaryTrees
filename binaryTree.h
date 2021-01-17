@@ -89,6 +89,7 @@ class BinaryTree {
     // Used as a base for the other iterators
     class stack_iterator;
     class queue_iterator;
+
   public:
     // Test if empty
     bool empty() const;
