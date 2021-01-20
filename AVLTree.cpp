@@ -428,9 +428,6 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
     return true;
 }
 
-// TODO find bug that means results after remove disagree with other AVL trees.
-// Possibly related to a double rotation happening when a single rotation should have been done.
-// TODO (possible related) fix invalid state coming from remove
 template <class T>
 bool AVLTree<T>::remove(const T &value) {
     // Find the node to remove in the stack.
@@ -503,13 +500,26 @@ bool AVLTree<T>::remove(const T &value) {
         }
     } else if ((*value_path.top())->left != nullptr) {
         // Since right doesn't exist, left must only be a leaf
-        assert((*value_path.top())->left->left == nullptr &&
-               (*value_path.top())->left->right == nullptr);
 
-        // Replace parent with left. Delete left.
-        (*value_path.top())->value = (*value_path.top())->left->value;
-        delete (*value_path.top())->left;
-        (*value_path.top())->left = nullptr;
+        // Previous version, moved value instead of node.
+        // Replaced so there is no dependency on assignment of the underlying type.
+//        assert((*value_path.top())->left->left == nullptr &&
+//               (*value_path.top())->left->right == nullptr);
+//
+//        // Replace parent with left. Delete left.
+//        (*value_path.top())->value = (*value_path.top())->left->value;
+//        delete (*value_path.top())->left;
+//        (*value_path.top())->left = nullptr;
+
+        assert((*value_path.top())->right == nullptr);
+        Node * const left = (*value_path.top())->left;
+        assert(left->left == nullptr && left->right == nullptr);
+        assert((*value_path.top())->height == 2);
+        assert(left->height == 1);
+
+        left->height++;
+        delete (*value_path.top());
+        *value_path.top() = left;
     } else {
         // Neither left nor right, just delete the node with value.
         delete *value_path.top();
