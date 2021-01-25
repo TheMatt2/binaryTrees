@@ -470,38 +470,22 @@ bool AVLTree<T>::remove(const T &value) {
             replacement_path.push(&(*replacement_path.top())->left);
         }
 
-/* For removal, a node needs to be deleted.
- * Either the node with the value to remove is deleted,
- * or the "replacement" node further down the tree is removed.
- * 
- * The DELETE_REPLACEMENT_ALGORITHM allows for switching between these two algorithms.
- *
- * When set, the replacement node is deleted. This means less pointers most be shifted around,
- * but the value most be copied from one spot in memory to another.
- *
- * With DELETE_REPLACEMENT_ALGORITHM off, a value always remains set its node.
- * However, this requires more pointers to be shifted.
- *
- * In testing, it seems having DELETE_REPLACEMENT_ALGORITHM off
- * is fastest, but there may be a case with smaller values (64 bit and below)
- * that may benefit from the alternative algorithm.
- */
-//#define DELETE_REPLACEMENT_ALGORITHM
-#ifdef DELETE_REPLACEMENT_ALGORITHM
-        // Delete it, replacing with its right branch
-        Node * const right = (*replacement_path.top())->right;
-
-        // Left should be known nullptr
-        assert((*replacement_path.top())->left == nullptr);
-
-        // Now that we have found the most left of the right tree.
-        // Get its value
-        (*value_path.top())->value = (*replacement_path.top())->value;
-
-        delete *replacement_path.top();
-        *replacement_path.top() = right;
-        replacement_path.pop();
-#else
+        /* For removal, a node needs to be deleted.
+         * Either the node with the value to remove is deleted,
+         * or the "replacement" node further down the tree is removed.
+         *
+         * When the replacement node is deleted, this means less pointers most be shifted around,
+         * but the value most be copied from one spot in memory to another.
+         *
+         * When the value node is deleted, more pointers to be shifted.
+         * However, assignment operator is never used of the type class
+         *
+         * In testing, it seems value node deletion is slightly faster (334ms vs. 336ms).
+         * For pointers and larger, value node deletion is favored.
+         * For smaller values, it is possible the replacement node deletion would be faster.
+         * However, since compatibility is more important, sticking with value node deletion.
+         * Likely will revisit this for thread efficiency.
+         */
         // Remove the outer node (with left known to be nullptr)
         Node * const temp = *replacement_path.top();
 
@@ -523,14 +507,9 @@ bool AVLTree<T>::remove(const T &value) {
         // Remove the value node
         delete *value_path.top();
         *value_path.top() = temp;
-#endif
 
         // Unwind this traversal, updating heights.
-#ifdef DELETE_REPLACEMENT_ALGORITHM
-        while (!replacement_path.empty()) {
-#else
         while (replacement_path.size() > 1) {
-#endif
             const auto prev_height = (*replacement_path.top())->height;
             updateHeight(*replacement_path.top());
             rebalance(*replacement_path.top());
@@ -543,7 +522,7 @@ bool AVLTree<T>::remove(const T &value) {
                 replacement_path.pop();
             }
         }
-#ifndef DELETE_REPLACEMENT_ALGORITHM
+
         if (!replacement_path.empty()) {
             // Special case for the last value in replacement stack.
             // The issue is the parent has been deleted.
@@ -553,20 +532,8 @@ bool AVLTree<T>::remove(const T &value) {
             updateHeight((*value_path.top())->right);
             rebalance((*value_path.top())->right);
         }
-#endif
     } else if ((*value_path.top())->left != nullptr) {
         // Since right doesn't exist, left must only be a leaf
-
-        // Previous version, moved value instead of node.
-        // Replaced so there is no dependency on assignment of the underlying type.
-//        assert((*value_path.top())->left->left == nullptr &&
-//               (*value_path.top())->left->right == nullptr);
-//
-//        // Replace parent with left. Delete left.
-//        (*value_path.top())->value = (*value_path.top())->left->value;
-//        delete (*value_path.top())->left;
-//        (*value_path.top())->left = nullptr;
-
         assert((*value_path.top())->right == nullptr);
         Node * const left = (*value_path.top())->left;
         assert(left->left == nullptr && left->right == nullptr);
