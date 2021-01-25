@@ -496,20 +496,10 @@ bool AVLTree<T>::remove(const T &value) {
         *replacement_path.top() = temp->right;
         replacement_path.pop();
 
-        // Move temp into the top of value
-        temp->left = (*value_path.top())->left;
-        temp->right = (*value_path.top())->right;
-
-        // The height may now be incorrect, but by preserving it,
-        // it allows updating to short circuit nothing changed
-        temp->height = (*value_path.top())->height;
-
-        // Remove the value node
-        delete *value_path.top();
-        *value_path.top() = temp;
-
         // Unwind this traversal, updating heights.
-        while (replacement_path.size() > 1) {
+        // Do so before we edit value_path so all pointers are valid
+        // and pointers are correctly propagated.
+        while (!replacement_path.empty()) {
             const auto prev_height = (*replacement_path.top())->height;
             updateHeight(*replacement_path.top());
             rebalance(*replacement_path.top());
@@ -523,15 +513,17 @@ bool AVLTree<T>::remove(const T &value) {
             }
         }
 
-        if (!replacement_path.empty()) {
-            // Special case for the last value in replacement stack.
-            // The issue is the parent has been deleted.
-            // So evaluating the double pointer of the bottom replacement node is
-            // will cause an invalid read.
-            // To fix this, reference node->right instead
-            updateHeight((*value_path.top())->right);
-            rebalance((*value_path.top())->right);
-        }
+        // Move temp into the top of value
+        temp->left = (*value_path.top())->left;
+        temp->right = (*value_path.top())->right;
+
+        // The height may now be incorrect, but by preserving it,
+        // it allows updating to short circuit nothing changed
+        temp->height = (*value_path.top())->height;
+
+        // Remove the value node
+        delete *value_path.top();
+        *value_path.top() = temp;
     } else if ((*value_path.top())->left != nullptr) {
         // Since right doesn't exist, left must only be a leaf
         assert((*value_path.top())->right == nullptr);
