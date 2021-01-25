@@ -46,6 +46,9 @@ class AVLTree: public BinaryTree<T> {
     void rightRotation(Node *&node);
     void rebalance(Node *&node);
 
+//    bool removeInternal(Node *node, const T &value);
+//    Node* popMostLeftInternal(Node *&node);
+
   public:
     explicit AVLTree(int (*compare)(const T &a, const T &b)): compare(compare), root(nullptr) {};
     ~AVLTree() {clearInternal(getRootNode());}

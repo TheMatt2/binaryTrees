@@ -129,7 +129,7 @@ int main () {
     std::cout << "Add Group A into a tree" << std::endl;
 
     start = std::chrono::high_resolution_clock::now();
-    for (const std::string &domain: groupA) {
+    for (auto &domain: groupA) {
         avlTree.insert(domain);
     }
 #ifdef AVLTREE_SANITY_CHECK
@@ -150,7 +150,7 @@ int main () {
     std::cout << "Removing " << groupB.size() << " values from Group B" << std::endl;
 
     start = std::chrono::high_resolution_clock::now();
-    for (const std::string &domain: groupB) {
+    for (auto &domain: groupB) {
         count -= avlTree.remove(domain);
     }
 #ifdef AVLTREE_SANITY_CHECK
