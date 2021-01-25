@@ -469,23 +469,53 @@ bool AVLTree<T>::remove(const T &value) {
         while ((*replacement_path.top())->left != nullptr) {
             replacement_path.push(&(*replacement_path.top())->left);
         }
+// Working version that invokes assignment operator
+//        // Delete it, replacing with its right branch
+//        Node * const right = (*replacement_path.top())->right;
+//
+//        // Left should be known nullptr
+//        assert((*replacement_path.top())->left == nullptr);
+//
+//        // Now that we have found the most left of the right tree.
+//        // Get its value
+//        (*value_path.top())->value = (*replacement_path.top())->value;
+//
+//        delete *replacement_path.top();
+//        *replacement_path.top() = right;
+//        replacement_path.pop();
 
-        // Now that we have found the most left of the right tree.
-        // Get its value
-        (*value_path.top())->value = (*replacement_path.top())->value;
+//        (*replacement_path.top())->left = (*value_path.top())->left;
+//        (*replacement_path.top())->right = (*value_path.top())->right;
+//        Node * const node_to_delete = *value_path.top();
+//        *value_path.top() = *replacement_path.top();
+//        *replacement_path.top() = right;
+//        delete node_to_delete;
+//        replacement_path.pop();
 
-        // Delete it, replacing with its right branch
-        Node * const right = (*replacement_path.top())->right;
+        // Remove the outer node (with left known to be nullptr)
+        Node * const temp = *replacement_path.top();
 
         // Left should be known nullptr
-        assert((*replacement_path.top())->left == nullptr);
+        assert(temp->left == nullptr);
 
-        delete *replacement_path.top();
-        *replacement_path.top() = right;
+        // Replace with right
+        *replacement_path.top() = temp->right;
         replacement_path.pop();
 
+        // Move temp into the top of value
+        temp->left = (*value_path.top())->left;
+        temp->right = (*value_path.top())->right;
+
+        // The height may now be incorrect, but by preserving it,
+        // it allows updating to short circuit nothing changed
+        temp->height = (*value_path.top())->height;
+
+        // Remove the value node
+        delete *value_path.top();
+        *value_path.top() = temp;
+
         // Unwind this traversal, updating heights.
-        while (!replacement_path.empty()) {
+        while (replacement_path.size() > 1) {
             const auto prev_height = (*replacement_path.top())->height;
             updateHeight(*replacement_path.top());
             rebalance(*replacement_path.top());
@@ -497,6 +527,16 @@ bool AVLTree<T>::remove(const T &value) {
                 // Remove the top
                 replacement_path.pop();
             }
+        }
+
+        if (!replacement_path.empty()) {
+            // Special case for the last value in replacement stack.
+            // The issue is the parent has been deleted.
+            // So evaluating the double pointer of the bottom replacement node is
+            // will cause an invalid read.
+            // To fix this, reference node->right instead
+            updateHeight((*value_path.top())->right);
+            rebalance((*value_path.top())->right);
         }
     } else if ((*value_path.top())->left != nullptr) {
         // Since right doesn't exist, left must only be a leaf
@@ -545,19 +585,124 @@ bool AVLTree<T>::remove(const T &value) {
 }
 
 //template <class T>
-//bool AVLTree<T>::remove(const T &value) {
-//    // Inorder to remove the value, it most first be located.
-//    Node *node = findInternal(root, value);
-//    if (node != nullptr) {
-//        // This is the node to remove.
-//
+//typename AVLTree<T>::Node* AVLTree<T>::popMostLeftInternal(Node *&node) {
+//    Node *temp;
+//    if (node->left != nullptr) {
+//        temp = popMostLeftInternal(node->left);
+//        // Update height
+//        updateHeight(node);
+//        rebalance(node);
 //    } else {
-//        // Node was not in tree.
-//        // Can't remove what isn't there.
-//        return false;
+//        // Return node, but null out reference.
+//        temp = node;
+//        node = nullptr;
 //    }
+//    return temp;
 //}
 //
+//template <class T>
+//bool AVLTree<T>::remove(const T &value) {
+//    return removeInternal(root, value);
+//}
+//
+//template <class T>
+//bool AVLTree<T>::removeInternal(Node *node, const T &value) {
+//    // If the stack has a nullptr on top, then failed to find node.
+//    if (node == nullptr) return false;
+//
+//    // Choose which way to keep searching.
+//    auto cmp = compare(value, node->value);
+//
+//    if (cmp < 0) {
+//        // Negative comparison
+//        // value is less than node
+//        // Go left
+//        return removeInternal(node->left, value);
+//    } else if (cmp > 0) {
+//        // Positive comparison
+//        // value is greater than node
+//        // Go right
+//        return removeInternal(node->right, value);
+//    }
+//    // else (cmp == 0)
+//    // This is the value that needs to be removed
+//
+//    // Replace this node with the most left value of its right branch.
+//    // If no right branch, replace with its left (because AVL, if not right the left most be a leaf).
+//    // If neither, just delete this one.
+//    if (node->right != nullptr) {
+//        if (node->right->left != nullptr) {
+//            Node *left_most = popMostLeftInternal(node->right);
+//        }
+//
+//
+//        // Now that we have found the most left of the right tree.
+//        // Get its value
+//        (*value_path.top())->value = (*replacement_path.top())->value;
+//
+//        // Delete it, replacing with its right branch
+//        Node *const right = (*replacement_path.top())->right;
+//
+//        // Left should be known nullptr
+//        assert((*replacement_path.top())->left == nullptr);
+//
+//        delete *replacement_path.top();
+//        *replacement_path.top() = right;
+//        replacement_path.pop();
+//
+//        // Unwind this traversal, updating heights.
+//        while (!replacement_path.empty()) {
+//            const auto prev_height = (*replacement_path.top())->height;
+//            updateHeight(*replacement_path.top());
+//            rebalance(*replacement_path.top());
+//
+//            if ((*replacement_path.top())->height == prev_height) {
+//                // Height did not change, can stop traversal.
+//                break;
+//            } else {
+//                // Remove the top
+//                replacement_path.pop();
+//            }
+//        }
+//    } else if ((*value_path.top())->left != nullptr) {
+//        // Since right doesn't exist, left must only be a leaf
+//
+//        // Previous version, moved value instead of node.
+//        // Replaced so there is no dependency on assignment of the underlying type.
+//
+//        assert((*value_path.top())->right == nullptr);
+//        Node *const left = (*value_path.top())->left;
+//        assert(left->left == nullptr && left->right == nullptr);
+//        assert((*value_path.top())->height == 2);
+//        assert(left->height == 1);
+//
+//        left->height++;
+//        delete (*value_path.top());
+//        *value_path.top() = left;
+//    } else {
+//        // Neither left nor right, just delete the node with value.
+//        delete *value_path.top();
+//        *value_path.top() = nullptr;
+//        value_path.pop();
+//    }
+//
+//    // Unwind this traversal, updating heights.
+//    while (!value_path.empty()) {
+//        const auto prev_height = (*value_path.top())->height;
+//        updateHeight(*value_path.top());
+//        rebalance(*value_path.top());
+//
+//        if ((*value_path.top())->height == prev_height) {
+//            // Height did not change, can stop traversal.
+//            break;
+//        } else {
+//            // Remove the top
+//            value_path.pop();
+//        }
+//    }
+//    return true;
+//}
+
 //template <class T>
 //bool AVLTree<T>::removeInternal(Node *node, const T &value) {
 //    /**
@@ -608,5 +753,4 @@ bool AVLTree<T>::remove(const T &value) {
 //
 //    }
 //}
-
 #endif
