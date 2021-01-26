@@ -429,6 +429,11 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
 }
 
 template <class T>
+T AVLTree<T>::popMostLeft() {
+    popMostLeftInternal(root)->value;
+}
+
+template <class T>
 typename AVLTree<T>::Node* AVLTree<T>::popMostLeftInternal(Node *&node) {
     Node *temp;
     if (node->left != nullptr) {
@@ -440,6 +445,27 @@ typename AVLTree<T>::Node* AVLTree<T>::popMostLeftInternal(Node *&node) {
         // Return node, but remove from tree.
         temp = node;
         node = node->right;
+    }
+    return temp;
+}
+
+template <class T>
+T AVLTree<T>::popMostRight() {
+    popMostRightInternal(root)->value;
+}
+
+template <class T>
+typename AVLTree<T>::Node* AVLTree<T>::popMostRightInternal(Node *&node) {
+    Node *temp;
+    if (node->right != nullptr) {
+        temp = popMostRightInternal(node->right);
+        // Update height
+        updateHeight(node);
+        rebalance(node);
+    } else {
+        // Return node, but remove from tree.
+        temp = node;
+        node = node->left;
     }
     return temp;
 }

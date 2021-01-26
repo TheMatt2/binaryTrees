@@ -48,13 +48,14 @@ class AVLTree: public BinaryTree<T> {
 
     bool removeInternal(Node *&node, const T &value);
     Node* popMostLeftInternal(Node *&node);
+    Node* popMostRightInternal(Node *&node);
 
   public:
     explicit AVLTree(int (*compare)(const T &a, const T &b)): compare(compare), root(nullptr) {};
     ~AVLTree() {clearInternal(getRootNode());}
 
-    //T popMostLeft();
-    //T popMostRight();
+    T popMostLeft();
+    T popMostRight();
 
     bool contains(const T &value) const;
     bool insert(const T &value);
