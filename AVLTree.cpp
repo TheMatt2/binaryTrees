@@ -429,303 +429,92 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
 }
 
 template <class T>
-bool AVLTree<T>::remove(const T &value) {
-    // Find the node to remove in the stack.
-    // Create a stack for processing and (later) unwinding.
-    std::stack<Node**> value_path;
-
-    value_path.push(&root);
-
-    while (true) {
-        // If the stack has a nullptr on top, then failed to find node.
-        if (*value_path.top() == nullptr) return false;
-
-        // Choose which way to keep searching.
-        auto cmp = compare(value, (*value_path.top())->value);
-        if (cmp == 0) {
-            // This is the value that needs to be removed
-            break;
-        } else if (cmp < 0) {
-            // Negative comparison
-            // value is less than node
-            // Go left
-            value_path.push(&((*value_path.top())->left));
-        } else {
-            // Positive comparison
-            // value is greater than node
-            // Go right
-            value_path.push(&((*value_path.top())->right));
-        }
-    }
-
-    // Replace this node with the most left value of its right branch.
-    // If no right branch, replace with its left (because AVL, if not right the left most be a leaf).
-    // If neither, just delete this one.
-    if ((*value_path.top())->right != nullptr) {
-        std::stack<Node**> replacement_path;
-        replacement_path.push(&(*value_path.top())->right);
-
-        // Continue to the most left node.
-        while ((*replacement_path.top())->left != nullptr) {
-            replacement_path.push(&(*replacement_path.top())->left);
-        }
-
-        /* For removal, a node needs to be deleted.
-         * Either the node with the value to remove is deleted,
-         * or the "replacement" node further down the tree is removed.
-         *
-         * When the replacement node is deleted, this means less pointers most be shifted around,
-         * but the value most be copied from one spot in memory to another.
-         *
-         * When the value node is deleted, more pointers to be shifted.
-         * However, assignment operator is never used of the type class
-         *
-         * In testing, it seems value node deletion is slightly faster (334ms vs. 336ms).
-         * For pointers and larger, value node deletion is favored.
-         * For smaller values, it is possible the replacement node deletion would be faster.
-         * However, since compatibility is more important, sticking with value node deletion.
-         * Likely will revisit this for thread efficiency.
-         */
-        // Remove the outer node (with left known to be nullptr)
-        Node * const temp = *replacement_path.top();
-
-        // Left should be known nullptr
-        assert(temp->left == nullptr);
-
-        // Replace with right
-        *replacement_path.top() = temp->right;
-        replacement_path.pop();
-
-        // Unwind this traversal, updating heights.
-        // Do so before we edit value_path so all pointers are valid
-        // and pointers are correctly propagated.
-        while (!replacement_path.empty()) {
-            const auto prev_height = (*replacement_path.top())->height;
-            updateHeight(*replacement_path.top());
-            rebalance(*replacement_path.top());
-
-            if ((*replacement_path.top())->height == prev_height) {
-                // Height did not change, can stop traversal.
-                break;
-            } else {
-                // Remove the top
-                replacement_path.pop();
-            }
-        }
-
-        // Move temp into the top of value
-        temp->left = (*value_path.top())->left;
-        temp->right = (*value_path.top())->right;
-
-        // The height may now be incorrect, but by preserving it,
-        // it allows updating to short circuit nothing changed
-        temp->height = (*value_path.top())->height;
-
-        // Remove the value node
-        delete *value_path.top();
-        *value_path.top() = temp;
-    } else if ((*value_path.top())->left != nullptr) {
-        // Since right doesn't exist, left must only be a leaf
-        assert((*value_path.top())->right == nullptr);
-        Node * const left = (*value_path.top())->left;
-        assert(left->left == nullptr && left->right == nullptr);
-        assert((*value_path.top())->height == 2);
-        assert(left->height == 1);
-
-        left->height++;
-        delete (*value_path.top());
-        *value_path.top() = left;
+typename AVLTree<T>::Node* AVLTree<T>::popMostLeftInternal(Node *&node) {
+    Node *temp;
+    if (node->left != nullptr) {
+        temp = popMostLeftInternal(node->left);
+        // Update height
+        updateHeight(node);
+        rebalance(node);
     } else {
-        // Neither left nor right, just delete the node with value.
-        delete *value_path.top();
-        *value_path.top() = nullptr;
-        value_path.pop();
+        // Return node, but remove from tree.
+        temp = node;
+        node = node->right;
     }
-
-    // Unwind this traversal, updating heights.
-    while (!value_path.empty()) {
-        const auto prev_height = (*value_path.top())->height;
-        updateHeight(*value_path.top());
-        rebalance(*value_path.top());
-
-        if ((*value_path.top())->height == prev_height) {
-            // Height did not change, can stop traversal.
-            break;
-        } else {
-            // Remove the top
-            value_path.pop();
-        }
-    }
-    return true;
+    return temp;
 }
 
-//template <class T>
-//typename AVLTree<T>::Node* AVLTree<T>::popMostLeftInternal(Node *&node) {
-//    Node *temp;
-//    if (node->left != nullptr) {
-//        temp = popMostLeftInternal(node->left);
-//        // Update height
-//        updateHeight(node);
-//        rebalance(node);
-//    } else {
-//        // Return node, but null out reference.
-//        temp = node;
-//        node = nullptr;
-//    }
-//    return temp;
-//}
-//
-//template <class T>
-//bool AVLTree<T>::remove(const T &value) {
-//    return removeInternal(root, value);
-//}
-//
-//template <class T>
-//bool AVLTree<T>::removeInternal(Node *node, const T &value) {
-//    // If the stack has a nullptr on top, then failed to find node.
-//    if (node == nullptr) return false;
-//
-//    // Choose which way to keep searching.
-//    auto cmp = compare(value, node->value);
-//
-//    if (cmp < 0) {
-//        // Negative comparison
-//        // value is less than node
-//        // Go left
-//        return removeInternal(node->left, value);
-//    } else if (cmp > 0) {
-//        // Positive comparison
-//        // value is greater than node
-//        // Go right
-//        return removeInternal(node->right, value);
-//    }
-//    // else (cmp == 0)
-//    // This is the value that needs to be removed
-//
-//    // Replace this node with the most left value of its right branch.
-//    // If no right branch, replace with its left (because AVL, if not right the left most be a leaf).
-//    // If neither, just delete this one.
-//    if (node->right != nullptr) {
-//        if (node->right->left != nullptr) {
-//            Node *left_most = popMostLeftInternal(node->right);
-//        }
-//
-//
-//        // Now that we have found the most left of the right tree.
-//        // Get its value
-//        (*value_path.top())->value = (*replacement_path.top())->value;
-//
-//        // Delete it, replacing with its right branch
-//        Node *const right = (*replacement_path.top())->right;
-//
-//        // Left should be known nullptr
-//        assert((*replacement_path.top())->left == nullptr);
-//
-//        delete *replacement_path.top();
-//        *replacement_path.top() = right;
-//        replacement_path.pop();
-//
-//        // Unwind this traversal, updating heights.
-//        while (!replacement_path.empty()) {
-//            const auto prev_height = (*replacement_path.top())->height;
-//            updateHeight(*replacement_path.top());
-//            rebalance(*replacement_path.top());
-//
-//            if ((*replacement_path.top())->height == prev_height) {
-//                // Height did not change, can stop traversal.
-//                break;
-//            } else {
-//                // Remove the top
-//                replacement_path.pop();
-//            }
-//        }
-//    } else if ((*value_path.top())->left != nullptr) {
-//        // Since right doesn't exist, left must only be a leaf
-//
-//        // Previous version, moved value instead of node.
-//        // Replaced so there is no dependency on assignment of the underlying type.
-//
-//        assert((*value_path.top())->right == nullptr);
-//        Node *const left = (*value_path.top())->left;
-//        assert(left->left == nullptr && left->right == nullptr);
-//        assert((*value_path.top())->height == 2);
-//        assert(left->height == 1);
-//
-//        left->height++;
-//        delete (*value_path.top());
-//        *value_path.top() = left;
-//    } else {
-//        // Neither left nor right, just delete the node with value.
-//        delete *value_path.top();
-//        *value_path.top() = nullptr;
-//        value_path.pop();
-//    }
-//
-//    // Unwind this traversal, updating heights.
-//    while (!value_path.empty()) {
-//        const auto prev_height = (*value_path.top())->height;
-//        updateHeight(*value_path.top());
-//        rebalance(*value_path.top());
-//
-//        if ((*value_path.top())->height == prev_height) {
-//            // Height did not change, can stop traversal.
-//            break;
-//        } else {
-//            // Remove the top
-//            value_path.pop();
-//        }
-//    }
-//    return true;
-//}
+template <class T>
+bool AVLTree<T>::remove(const T &value) {
+    return removeInternal(root, value);
+}
 
-//template <class T>
-//bool AVLTree<T>::removeInternal(Node *node, const T &value) {
-//    /**
-//     * Recursively search for element in tree. Remove it if found.
-//     */
-//    // If node doesn't exist, nothing to remove.
-//    if (node == nullptr) {
-//        return false;
-//    }
-//
-//    // Choose which way to keep searching.
-//    auto cmp = compare(value, node->value);
-//
-//    if (cmp == 0) {
-//        // Value match, this is the node to remove
-//        // Replace this node with the most left value of its right branch.
-//        // If no right branch, replace with its left (because AVL, if not right the left most be a leaf).
-//        // If neither, just delete this one.
-//        if (node->right != nullptr) {
-//            Node *replace_edge = getMostLeftInternal(node->right);
-//            // This edge will exist and won't have a left.
-//            assert(replace_edge != nullptr && replace_edge->left == nullptr);
-//
-//            // Set the value of node to remove
-//            node->value = replace_edge->value;
-//
-//
-//        }
-//        return node;
-//    } else if (cmp < 0) {
-//        // Negative comparison
-//        // value is less than node
-//        // Go left
-//        return removeInternal(node->left, value);
-//    } else {
-//        // Positive comparison
-//        // value is greater than node
-//        // Go right
-//        return removeInternal(node->right, value);
-//    }
-//}
-//
-//template <class T>
-//T& AVLTree<T>::popLeftInternal(Node *node, const T &value) {
-//    // Find most left node and delete it.
-//    // Return the value of that value.
-//    if (node->left != nullptr) {
-//
-//    }
-//}
+template <class T>
+bool AVLTree<T>::removeInternal(Node *&node, const T &value) {
+    // If the stack has a nullptr on top, then failed to find node.
+    if (node == nullptr) return false;
+
+    // Choose which way to keep searching.
+    auto cmp = compare(value, node->value);
+
+    if (cmp == 0) {
+        // This is the value that needs to be removed
+
+        // Replace this node with the most left value of its right branch.
+        // If no right branch, replace with its left (because AVL, if not right the left most be a leaf).
+        // If neither, just delete this one.
+        if (node->right != nullptr) {
+            Node *temp = popMostLeftInternal(node->right);
+
+            // Left should be known nullptr
+            assert(temp->left == nullptr);
+
+            // Note that this is done particularly to
+            // not call assignment on the type.
+            // it is assumed that is more expensive than
+            // moving an extra two pointers (in testing this seems to hold even for primitives)
+
+            // Move temp into the top of value
+            temp->left = node->left;
+            temp->right = node->right;
+            temp->height = node->height;
+
+            // Remove the value node
+            delete node;
+            node = temp;
+            updateHeight(node);
+            rebalance(node);
+        } else if (node->left != nullptr) {
+            // Since right doesn't exist, temp must only be a leaf
+            assert(node->right == nullptr);
+            Node *temp = node->left;
+            assert(temp->left == nullptr && temp->right == nullptr);
+            assert(node->height == 2);
+            assert(temp->height == 1);
+
+            delete node;
+            node = temp;
+            updateHeight(node);
+            rebalance(node);
+        } else {
+            // Neither left nor right, just delete the node with value.
+            delete node;
+            node = nullptr;
+        }
+        return true;
+    }
+
+    // Otherwise handle recursion
+    // If negative, go left.
+    // If positive, go right.
+    Node *&child = cmp < 0 ? node->left : node->right;
+
+    if (!removeInternal(child, value))
+        return false;
+
+    // Otherwise, rebalance
+    updateHeight(node);
+    rebalance(node);
+    return true;
+}
 #endif

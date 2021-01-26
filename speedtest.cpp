@@ -111,7 +111,7 @@ int compare(const std::string &a, const std::string &b) {
     return a.compare(b);
 }
 
-int main () {
+int main() {
     std::cout << "Loading Domains" << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
     loadAllDomains();
