@@ -3,15 +3,15 @@
 
 #include "AVLTree.h"
 
-template <class T>
-void AVLTree<T>::clear() noexcept {
+template <class T, class Node>
+void AVLTree<T, Node>::clear() noexcept {
     // Deallocate all of the memory recursively
     clearInternal(root);
     root = nullptr;
 }
 
-template <class T>
-void AVLTree<T>::clearInternal(AVLTree<T>::Node* const &node) noexcept {
+template <class T, class Node>
+void AVLTree<T, Node>::clearInternal(Node* &node) noexcept {
     // Recurse if node exists
     if (node != nullptr) {
         clearInternal(node->left);
@@ -22,8 +22,8 @@ void AVLTree<T>::clearInternal(AVLTree<T>::Node* const &node) noexcept {
     }
 }
 
-template <class T>
-unsigned int AVLTree<T>::getHeight() const {
+template <class T, class Node>
+unsigned int AVLTree<T, Node>::getHeight() const {
     // Zero if tree is empty
     if (root == nullptr) {
         return 0;
@@ -32,8 +32,8 @@ unsigned int AVLTree<T>::getHeight() const {
     }
 }
 
-template <class T>
-void AVLTree<T>::updateHeight(AVLTree<T>::Node *&node) {
+template <class T, class Node>
+void AVLTree<T, Node>::updateHeight(Node *&node) {
     /**
      * Helper function to recalculate the height after a node is modified.
      */
@@ -59,8 +59,8 @@ void AVLTree<T>::updateHeight(AVLTree<T>::Node *&node) {
     }
 }
 
-template <class T>
-bool AVLTree<T>::contains(const T &value) const {
+template <class T, class Node>
+bool AVLTree<T, Node>::contains(const T &value) const {
     /**
      * Check if value is present in the tree.
      */
@@ -71,9 +71,8 @@ bool AVLTree<T>::contains(const T &value) const {
     return findInternal(root, value) != nullptr;
 }
 
-template <class T>
-const typename AVLTree<T>::Node* AVLTree<T>::findInternal(
-        const AVLTree<T>::Node* const &node, const T &value) {
+template <class T, class Node>
+const Node* AVLTree<T, Node>::findInternal(const Node* const &node, const T &value) {
     /**
      * Recursive search for node in the tree.
      * Return's nullptr if not found.
@@ -106,8 +105,8 @@ const typename AVLTree<T>::Node* AVLTree<T>::findInternal(
     }
 }
 
-template <class T>
-void AVLTree<T>::leftRotation(AVLTree<T>::Node *&node) {
+template <class T, class Node>
+void AVLTree<T, Node>::leftRotation(Node *&node) {
     /**
      * Rotate the tree left about the given node.
      */
@@ -220,8 +219,8 @@ void AVLTree<T>::leftRotation(AVLTree<T>::Node *&node) {
     updateHeight(node);
 }
 
-template <class T>
-void AVLTree<T>::rightRotation(AVLTree<T>::Node *&node){
+template <class T, class Node>
+void AVLTree<T, Node>::rightRotation(Node *&node){
     /**
      * Rotate the tree right about the given node.
      */
@@ -323,8 +322,8 @@ void AVLTree<T>::rightRotation(AVLTree<T>::Node *&node){
     updateHeight(node);
 }
 
-template <class T>
-void AVLTree<T>::rebalance(AVLTree<T>::Node *&node){
+template <class T, class Node>
+void AVLTree<T, Node>::rebalance(Node *&node){
     /**
      * If needed, shifts node, node->left, and node->right
      * will to transformed to balance the node.
@@ -359,16 +358,16 @@ void AVLTree<T>::rebalance(AVLTree<T>::Node *&node){
     // Otherwise, no rotation is needed
 }
 
-template <class T>
-bool AVLTree<T>::insert(const T &value){
+template <class T, class Node>
+bool AVLTree<T, Node>::insert(const T &value){
     /**
      * Insert the a new value into the tree;
      */
     return insertInternal(root, value);
 }
 
-template <class T>
-bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
+template <class T, class Node>
+bool AVLTree<T, Node>::insertInternal(Node *&node, const T &value) {
     /**
      * An internal insert command that inserts a new value recursively.
      *
@@ -378,7 +377,7 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
     // Handle if node does not exist
     if (node == nullptr) {
         // Well, insert the value here.
-        node = new AVLTree<T>::Node(value);
+        node = new Node(value);
         return true;
     }
 
@@ -428,13 +427,13 @@ bool AVLTree<T>::insertInternal(AVLTree<T>::Node *&node, const T &value) {
     return true;
 }
 
-template <class T>
-T AVLTree<T>::popMostLeft() {
+template <class T, class Node>
+T AVLTree<T, Node>::popMostLeft() {
     popMostLeftInternal(root)->value;
 }
 
-template <class T>
-typename AVLTree<T>::Node* AVLTree<T>::popMostLeftInternal(Node *&node) {
+template <class T, class Node>
+Node* AVLTree<T, Node>::popMostLeftInternal(Node *&node) {
     Node *temp;
     if (node->left != nullptr) {
         temp = popMostLeftInternal(node->left);
@@ -449,13 +448,13 @@ typename AVLTree<T>::Node* AVLTree<T>::popMostLeftInternal(Node *&node) {
     return temp;
 }
 
-template <class T>
-T AVLTree<T>::popMostRight() {
+template <class T, class Node>
+T AVLTree<T, Node>::popMostRight() {
     popMostRightInternal(root)->value;
 }
 
-template <class T>
-typename AVLTree<T>::Node* AVLTree<T>::popMostRightInternal(Node *&node) {
+template <class T, class Node>
+Node* AVLTree<T, Node>::popMostRightInternal(Node *&node) {
     Node *temp;
     if (node->right != nullptr) {
         temp = popMostRightInternal(node->right);
@@ -470,13 +469,13 @@ typename AVLTree<T>::Node* AVLTree<T>::popMostRightInternal(Node *&node) {
     return temp;
 }
 
-template <class T>
-bool AVLTree<T>::remove(const T &value) {
+template <class T, class Node>
+bool AVLTree<T, Node>::remove(const T &value) {
     return removeInternal(root, value);
 }
 
-template <class T>
-bool AVLTree<T>::removeInternal(Node *&node, const T &value) {
+template <class T, class Node>
+bool AVLTree<T, Node>::removeInternal(Node *&node, const T &value) {
     // If the stack has a nullptr on top, then failed to find node.
     if (node == nullptr) return false;
 

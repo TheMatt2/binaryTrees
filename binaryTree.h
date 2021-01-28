@@ -14,27 +14,10 @@
 
 #include "clearable_queue.h"
 
-template <class T>
+template <class T, class Node>
 class BinaryTree {
   protected:
-    class Node {
-      public:
-        explicit Node(const T &value): value(value) {}
-
-        // Declare default deconstructor to make g++ happy
-        // -Wdelete-non-abstract-non-virtual-dtor
-        virtual ~Node() = default;
-
-        virtual Node* getLeft() const = 0;
-        virtual Node* getRight() const = 0;
-
-        T value;
-    };
-
-    /**
-     * Get a reference to the root node of the tree
-     */
-    virtual Node* getRootNode() const = 0;
+    Node *root = nullptr;
 
     /**
      * Recursively get the most left node in the tree.

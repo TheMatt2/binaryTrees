@@ -8,15 +8,15 @@
 #include <algorithm>
 #include "binaryTree.h"
 
-template <class T>
-bool BinaryTree<T>::empty() const {
-    return getRootNode() == nullptr;
+template <class T, class Node>
+bool BinaryTree<T, Node>::empty() const {
+    return root == nullptr;
 }
 
-template <class T>
-T BinaryTree<T>::getRoot() const {
+template <class T, class Node>
+T BinaryTree<T, Node>::getRoot() const {
     if (!empty()) {
-        return getRootNode()->value;
+        return root->value;
     } else {
         // Invalid to call this when there is no root.
         throw std::out_of_range("tree is empty");
@@ -24,10 +24,10 @@ T BinaryTree<T>::getRoot() const {
 }
 
 // Implement searches for the further left and right values in the tree.
-template <class T>
-T BinaryTree<T>::getMostLeft() const {
+template <class T, class Node>
+T BinaryTree<T, Node>::getMostLeft() const {
     if (!empty()) {
-        return getMostLeftInternal(getRootNode())->value;
+        return getMostLeftInternal(root)->value;
     } else {
         // There are values, so nothing valid to return
         // Raise out of bounds error
@@ -35,20 +35,20 @@ T BinaryTree<T>::getMostLeft() const {
     }
 }
 
-template <class T>
-const typename BinaryTree<T>::Node* BinaryTree<T>::getMostLeftInternal(const BinaryTree::Node* const &node) const {
-    if (node->getLeft() != nullptr) {
-        return getMostLeftInternal(node->getLeft());
+template <class T, class Node>
+const Node* BinaryTree<T, Node>::getMostLeftInternal(const Node* const &node) const {
+    if (node->left != nullptr) {
+        return getMostLeftInternal(node->left);
     } else {
         // As far left as possible, return result
         return node;
     }
 }
 
-template <class T>
-T BinaryTree<T>::getMostRight() const {
+template <class T, class Node>
+T BinaryTree<T, Node>::getMostRight() const {
     if (!empty()) {
-        return getMostRightInternal(getRootNode())->value;
+        return getMostRightInternal(root)->value;
     } else {
         // There are values, so nothing valid to return
         // Raise out of bounds error
@@ -56,36 +56,36 @@ T BinaryTree<T>::getMostRight() const {
     }
 }
 
-template <class T>
-const typename BinaryTree<T>::Node* BinaryTree<T>::getMostRightInternal(const BinaryTree::Node* const &node) const {
-    if (node->getRight() != nullptr) {
-        return getMostRightInternal(node->getRight());
+template <class T, class Node>
+const Node* BinaryTree<T, Node>::getMostRightInternal(const Node* const &node) const {
+    if (node->right != nullptr) {
+        return getMostRightInternal(node->right);
     } else {
         // As far left as possible, return result
         return node;
     }
 }
 
-template <class T>
-unsigned int BinaryTree<T>::getHeight() const {
+template <class T, class Node>
+unsigned int BinaryTree<T, Node>::getHeight() const {
     // Get the height of the tree.
-    return getHeightInternal(getRootNode());
+    return getHeightInternal(root);
 }
 
-template <class T>
-unsigned int BinaryTree<T>::getHeightInternal(const BinaryTree::Node* const &node) const {
+template <class T, class Node>
+unsigned int BinaryTree<T, Node>::getHeightInternal(const Node* const &node) const {
     if (node == nullptr) {
         // A nullptr node has a height of zero
         return 0;
     } else {
         // Return the max of the children nodes
-        return std::max(getHeightInternal(node->getLeft()), getHeightInternal(node->getRight())) + 1;
+        return std::max(getHeightInternal(node->left), getHeightInternal(node->right)) + 1;
     }
 }
 
-template<class T>
-void BinaryTree<T>::printTree(unsigned int width, const unsigned int height, const char fill, const bool biasLeft,
-                              const bool trailing, const char background, std::ostream &ostream) const {
+template <class T, class Node>
+void BinaryTree<T, Node>::printTree(unsigned int width, const unsigned int height, const char fill, const bool biasLeft,
+                                    const bool trailing, const char background, std::ostream &ostream) const {
     // Spacing is equal to width
     if (width == 0) {
         width = getMaxStringWidth();
@@ -94,8 +94,8 @@ void BinaryTree<T>::printTree(unsigned int width, const unsigned int height, con
     printTreeWithSpacing(width, width, height, fill, biasLeft, trailing, background, ostream);
 }
 
-template <class T>
-void BinaryTree<T>::printTreeWithSpacing(const unsigned int spacing, unsigned int width, unsigned int height,
+template <class T, class Node>
+void BinaryTree<T, Node>::printTreeWithSpacing(const unsigned int spacing, unsigned int width, unsigned int height,
                                          const char fill, const bool biasLeft, const bool trailing,
                                          const char background, std::ostream &ostream) const {
     if (width == 0) {
@@ -188,9 +188,9 @@ void BinaryTree<T>::printTreeWithSpacing(const unsigned int spacing, unsigned in
     }
 }
 
-template <class T>
-void BinaryTree<T>::printTreeInternal(
-        const BinaryTree::Node* const &node,
+template <class T, class Node>
+void BinaryTree<T, Node>::printTreeInternal(
+        const Node* const &node,
         const unsigned int padding_left, const unsigned int padding_right,
         const unsigned int width, const char background, std::ostream &ostream) const {
     // Print left
@@ -207,8 +207,8 @@ void BinaryTree<T>::printTreeInternal(
     for (unsigned int i = 0; i < padding_right; i++) ostream << background;
 }
 
-template <class T>
-unsigned int BinaryTree<T>::getMaxStringWidth() const {
+template <class T, class Node>
+unsigned int BinaryTree<T, Node>::getMaxStringWidth() const {
     // If width is zero, search tree to determine the maximum width.
     unsigned int width = 0;
     for (auto it = preorder_begin(); it != preorder_end(); ++it) {
@@ -256,39 +256,39 @@ unsigned int BinaryTree<T>::getMaxStringWidth() const {
     } \
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_begin() const noexcept {
-    return preorder_iterator(getRootNode());
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::preorder_iterator BinaryTree<T, Node>::preorder_begin() const noexcept {
+    return preorder_iterator(root);
 }
 
-template <class T>
-void BinaryTree<T>::preorder_iterator::advance() {
+template <class T, class Node>
+void BinaryTree<T, Node>::preorder_iterator::advance() {
     /**
      * Advance to the next node along a preorder traversal.
      */
-    ADVANCE_PREORDER(getLeft(), getRight());
+    ADVANCE_PREORDER(left, right);
 }
 
-template<class T>
-constexpr typename BinaryTree<T>::preorder_iterator BinaryTree<T>::preorder_end() const noexcept {
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::preorder_iterator BinaryTree<T, Node>::preorder_end() const noexcept {
     return preorder_iterator(nullptr);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorder_begin() const noexcept {
-    return reverse_preorder_iterator(getRootNode());
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::reverse_preorder_iterator BinaryTree<T, Node>::reverse_preorder_begin() const noexcept {
+    return reverse_preorder_iterator(root);
 }
 
-template <class T>
-void BinaryTree<T>::reverse_preorder_iterator::advance() {
+template <class T, class Node>
+void BinaryTree<T, Node>::reverse_preorder_iterator::advance() {
     /**
      * Advance to the next node along a reverse preorder traversal.
      */
-    ADVANCE_PREORDER(getRight(), getLeft());
+    ADVANCE_PREORDER(right, left);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::reverse_preorder_end() const noexcept {
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::reverse_preorder_iterator BinaryTree<T, Node>::reverse_preorder_end() const noexcept {
     return reverse_preorder_iterator(nullptr);
 }
 
@@ -327,55 +327,55 @@ constexpr typename BinaryTree<T>::reverse_preorder_iterator BinaryTree<T>::rever
     } \
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_begin() const noexcept {
-    return postorder_iterator(getRootNode());
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::postorder_iterator BinaryTree<T, Node>::postorder_begin() const noexcept {
+    return postorder_iterator(root);
 }
 
-template <class T>
-void BinaryTree<T>::postorder_iterator::advanceToNext() {
+template <class T, class Node>
+void BinaryTree<T, Node>::postorder_iterator::advanceToNext() {
     /**
      * "Fall" down the tree to a leaf node.
      */
-    ADVANCE_TO_NEXT_POSTORDER(getLeft(), getRight());
+    ADVANCE_TO_NEXT_POSTORDER(left, right);
 }
 
-template <class T>
-void BinaryTree<T>::postorder_iterator::advance() {
+template <class T, class Node>
+void BinaryTree<T, Node>::postorder_iterator::advance() {
     /**
      * Advance to the next node along a postorder traversal.
      */
-    ADVANCE_POSTORDER(getLeft(), getRight());
+    ADVANCE_POSTORDER(left, right);
 }
 
-template<class T>
-constexpr typename BinaryTree<T>::postorder_iterator BinaryTree<T>::postorder_end() const noexcept {
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::postorder_iterator BinaryTree<T, Node>::postorder_end() const noexcept {
     return postorder_iterator(nullptr);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postorder_begin() const noexcept {
-    return reverse_postorder_iterator(getRootNode());
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::reverse_postorder_iterator BinaryTree<T, Node>::reverse_postorder_begin() const noexcept {
+    return reverse_postorder_iterator(root);
 }
 
-template <class T>
-void BinaryTree<T>::reverse_postorder_iterator::advanceToNext() {
+template <class T, class Node>
+void BinaryTree<T, Node>::reverse_postorder_iterator::advanceToNext() {
     /**
      * Advance to the first leaf in the tree.
      */
-    ADVANCE_TO_NEXT_POSTORDER(getRight(), getLeft());
+    ADVANCE_TO_NEXT_POSTORDER(right, left);
 }
 
-template <class T>
-void BinaryTree<T>::reverse_postorder_iterator::advance() {
+template <class T, class Node>
+void BinaryTree<T, Node>::reverse_postorder_iterator::advance() {
     /**
      * Advance to the next node along a reverse postorder traversal.
      */
-    ADVANCE_POSTORDER(getRight(), getLeft());
+    ADVANCE_POSTORDER(right, left);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reverse_postorder_end() const noexcept {
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::reverse_postorder_iterator BinaryTree<T, Node>::reverse_postorder_end() const noexcept {
     return reverse_postorder_iterator(nullptr);
 }
 
@@ -421,55 +421,55 @@ constexpr typename BinaryTree<T>::reverse_postorder_iterator BinaryTree<T>::reve
     } \
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_begin() const noexcept {
-    return inorder_iterator(getRootNode());
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::inorder_iterator BinaryTree<T, Node>::inorder_begin() const noexcept {
+    return inorder_iterator(root);
 }
 
-template <class T>
-void BinaryTree<T>::inorder_iterator::advanceToNext() {
+template <class T, class Node>
+void BinaryTree<T, Node>::inorder_iterator::advanceToNext() {
     /**
      * Advance to the left most node in this subtree.
      */
-    ADVANCE_TO_NEXT_INORDER(getLeft(), geRight());
+    ADVANCE_TO_NEXT_INORDER(left, right());
 }
 
-template <class T>
-void BinaryTree<T>::inorder_iterator::advance() {
+template <class T, class Node>
+void BinaryTree<T, Node>::inorder_iterator::advance() {
     /**
      * Advance to the next node along an inorder traversal.
      */
-    ADVANCE_INORDER(getLeft(), getRight());
+    ADVANCE_INORDER(left, right);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::inorder_iterator BinaryTree<T>::inorder_end() const noexcept {
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::inorder_iterator BinaryTree<T, Node>::inorder_end() const noexcept {
     return inorder_iterator(nullptr);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_begin() const noexcept {
-    return reverse_inorder_iterator(getRootNode());
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::reverse_inorder_iterator BinaryTree<T, Node>::reverse_inorder_begin() const noexcept {
+    return reverse_inorder_iterator(root);
 }
 
-template <class T>
-void BinaryTree<T>::reverse_inorder_iterator::advanceToNext() {
+template <class T, class Node>
+void BinaryTree<T, Node>::reverse_inorder_iterator::advanceToNext() {
     /**
      * Advance to the right most node in this subtree.
      */
-    ADVANCE_TO_NEXT_INORDER(getRight(), getLeft());
+    ADVANCE_TO_NEXT_INORDER(right, left);
 }
 
-template <class T>
-void BinaryTree<T>::reverse_inorder_iterator::advance() {
+template <class T, class Node>
+void BinaryTree<T, Node>::reverse_inorder_iterator::advance() {
     /**
      * Advance to the next node along a reverse inorder traversal.
      */
-    ADVANCE_INORDER(getRight(), getLeft());
+    ADVANCE_INORDER(right, left);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::reverse_inorder_end() const noexcept {
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::reverse_inorder_iterator BinaryTree<T, Node>::reverse_inorder_end() const noexcept {
     return reverse_inorder_iterator(nullptr);
 }
 
@@ -481,39 +481,39 @@ constexpr typename BinaryTree<T>::reverse_inorder_iterator BinaryTree<T>::revers
     if (current_node->second != nullptr) queue.push(current_node->second); \
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::level_order_iterator BinaryTree<T>::level_order_begin() const noexcept {
-    return level_order_iterator(getRootNode());
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::level_order_iterator BinaryTree<T, Node>::level_order_begin() const noexcept {
+    return level_order_iterator(root);
 }
 
-template <class T>
-void BinaryTree<T>::level_order_iterator::advance() {
+template <class T, class Node>
+void BinaryTree<T, Node>::level_order_iterator::advance() {
     /**
      * Advance to the next node along a level order traversal.
      */
-    ADVANCE_LEVEL_ORDER(getLeft(), getRight());
+    ADVANCE_LEVEL_ORDER(left, right);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::level_order_iterator BinaryTree<T>::level_order_end() const noexcept {
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::level_order_iterator BinaryTree<T, Node>::level_order_end() const noexcept {
     return level_order_iterator(nullptr);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_begin() const noexcept {
-    return reverse_level_order_iterator(getRootNode());
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::reverse_level_order_iterator BinaryTree<T, Node>::reverse_level_order_begin() const noexcept {
+    return reverse_level_order_iterator(root);
 }
 
-template <class T>
-void BinaryTree<T>::reverse_level_order_iterator::advance() {
+template <class T, class Node>
+void BinaryTree<T, Node>::reverse_level_order_iterator::advance() {
     /**
      * Advance to the next node along a reverse level order traversal.
      */
-    ADVANCE_LEVEL_ORDER(getRight(), getLeft());
+    ADVANCE_LEVEL_ORDER(right, left);
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::reverse_level_order_end() const noexcept {
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::reverse_level_order_iterator BinaryTree<T, Node>::reverse_level_order_end() const noexcept {
     return reverse_level_order_iterator(nullptr);
 }
 
@@ -530,17 +530,17 @@ constexpr typename BinaryTree<T>::reverse_level_order_iterator BinaryTree<T>::re
     } \
 }
 
-template <class T>
-constexpr typename BinaryTree<T>::level_order_print_iterator BinaryTree<T>::level_order_print_begin() const noexcept {
-    return level_order_print_iterator(getRootNode());
+template <class T, class Node>
+constexpr typename BinaryTree<T, Node>::level_order_print_iterator BinaryTree<T, Node>::level_order_print_begin() const noexcept {
+    return level_order_print_iterator(root);
 }
 
-template <class T>
-void BinaryTree<T>::level_order_print_iterator::advance() {
+template <class T, class Node>
+void BinaryTree<T, Node>::level_order_print_iterator::advance() {
     /**
      * Advance to the next node along a level order traversal.
      */
-    ADVANCE_LEVEL_ORDER_DEFAULT(getLeft(), getRight());
+    ADVANCE_LEVEL_ORDER_DEFAULT(left, right);
 }
 
 //template <class T>

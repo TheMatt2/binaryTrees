@@ -12,30 +12,24 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 template <class T>
-class AVLTree: public BinaryTree<T> {
+struct AVLTreeNode {
+    explicit AVLTreeNode(const T &value): left(nullptr), right(nullptr), height(1), value(value) {}
+
+    AVLTreeNode *left;
+    AVLTreeNode *right;
+    unsigned int height;
+
+    T value;
+};
+
+template <class T, class Node = AVLTreeNode<T>>
+class AVLTree: public BinaryTree<T, Node> {
+    using BinaryTree<T, Node>::root;
   protected:
-    class Node: public BinaryTree<T>::Node {
-      public:
-        explicit Node(const T &value): BinaryTree<T>::Node::Node(value), left(nullptr), right(nullptr), height(1) {}
-
-        // Functions allow for traversal algorithms from parent
-        Node* getLeft() const override {return left;}
-        Node* getRight() const override {return right;}
-
-        // Members allows for modification by this class
-        Node *left;
-        Node *right;
-        unsigned int height;
-    };
-
     // Comparison function
     int (*compare)(const T &a, const T &b);
 
-    Node *root;
-
-    Node* getRootNode() const override {return root;};
-
-    void clearInternal(Node* const &node) noexcept;
+    void clearInternal(Node* &node) noexcept;
 
     const Node* findInternal(const Node* const &node, const T &value);
 
@@ -51,8 +45,8 @@ class AVLTree: public BinaryTree<T> {
     Node* popMostRightInternal(Node *&node);
 
   public:
-    explicit AVLTree(int (*compare)(const T &a, const T &b)): compare(compare), root(nullptr) {};
-    ~AVLTree() {clearInternal(getRootNode());}
+    explicit AVLTree(int (*compare)(const T &a, const T &b)): compare(compare) {};
+    ~AVLTree() {clearInternal(BinaryTree<T, Node>::root);}
 
     T popMostLeft();
     T popMostRight();
