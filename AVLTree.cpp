@@ -23,7 +23,7 @@ void AVLTree<T, Node>::clearInternal(Node* &node) noexcept {
 }
 
 template <class T, class Node>
-unsigned int AVLTree<T, Node>::getHeight() const {
+unsigned int AVLTree<T, Node>::getHeight() const noexcept {
     // Zero if tree is empty
     if (root == nullptr) {
         return 0;
@@ -60,7 +60,7 @@ void AVLTree<T, Node>::updateHeight(Node *&node) {
 }
 
 template <class T, class Node>
-bool AVLTree<T, Node>::contains(const T &value) const {
+bool AVLTree<T, Node>::contains(const T &value) const noexcept {
     /**
      * Check if value is present in the tree.
      */
@@ -68,11 +68,11 @@ bool AVLTree<T, Node>::contains(const T &value) const {
         // Empty, not there.
         return false;
 
-    return findInternal(root, value) != nullptr;
+    return containsInternal(root, value) != nullptr;
 }
 
 template <class T, class Node>
-const Node* AVLTree<T, Node>::findInternal(const Node* const &node, const T &value) {
+const Node* AVLTree<T, Node>::containsInternal(const Node* const &node, const T &value) const {
     /**
      * Recursive search for node in the tree.
      * Return's nullptr if not found.
@@ -91,7 +91,7 @@ const Node* AVLTree<T, Node>::findInternal(const Node* const &node, const T &val
         // value is less than node
         // Go left
         if (node->left != nullptr)
-            return findInternal(node->left, value);
+            return containsInternal(node->left, value);
         else
             return nullptr;
     } else {
@@ -99,7 +99,7 @@ const Node* AVLTree<T, Node>::findInternal(const Node* const &node, const T &val
         // value is greater than node
         // Go right
         if (node->right != nullptr)
-            return findInternal(node->right, value);
+            return containsInternal(node->right, value);
         else
             return nullptr;
     }
@@ -359,7 +359,7 @@ void AVLTree<T, Node>::rebalance(Node *&node){
 }
 
 template <class T, class Node>
-bool AVLTree<T, Node>::insert(const T &value){
+bool AVLTree<T, Node>::insert(const T &value) noexcept {
     /**
      * Insert the a new value into the tree;
      */
@@ -470,7 +470,7 @@ Node* AVLTree<T, Node>::popMostRightInternal(Node *&node) {
 }
 
 template <class T, class Node>
-bool AVLTree<T, Node>::remove(const T &value) {
+bool AVLTree<T, Node>::remove(const T &value) noexcept {
     return removeInternal(root, value);
 }
 

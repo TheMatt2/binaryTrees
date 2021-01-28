@@ -31,7 +31,7 @@ class AVLTree: public BinaryTree<T, Node> {
 
     void clearInternal(Node* &node) noexcept;
 
-    const Node* findInternal(const Node* const &node, const T &value);
+    const Node* containsInternal(const Node* const &node, const T &value) const;
 
     bool insertInternal(Node *&node, const T &value);
 
@@ -51,9 +51,9 @@ class AVLTree: public BinaryTree<T, Node> {
     T popMostLeft();
     T popMostRight();
 
-    bool contains(const T &value) const;
-    bool insert(const T &value);
-    bool remove(const T &value);
+    bool contains(const T &value) const noexcept;
+    bool insert(const T &value) noexcept;
+    bool remove(const T &value) noexcept;
 
     /**
      * Clear all values in the tree.
@@ -61,7 +61,7 @@ class AVLTree: public BinaryTree<T, Node> {
     void clear() noexcept;
 
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
-    unsigned int getHeight() const override;
+    unsigned int getHeight() const noexcept override;
 
 #ifdef AVLTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
