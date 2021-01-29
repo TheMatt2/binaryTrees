@@ -1,6 +1,7 @@
 #ifndef AVLTREE_CPP
 #define AVLTREE_CPP
 
+#include <cassert>
 #include "AVLTree.h"
 
 // Helper function for maximum
