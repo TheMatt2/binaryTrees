@@ -27,13 +27,13 @@ class SplayTree: public BinaryTree<T, Node> {
     using BinaryTree<T, Node>::root;
     using BinaryTree<T, Node>::compare;
 
-    Node<T>* containsInternal(const T &value);
+    Node* containsInternal(const T &value);
 
-    bool insertInternal(Node<T> *&node, const T &value);
+    bool insertInternal(Node *&node, const T &value);
 
-    void makeSplay(Node<T> *&node, const T &value);
-    void leftRotate(Node<T> *&node);
-    void rightRotate(Node<T> *&node);
+    void makeSplay(Node *&node, const T &value);
+    void leftRotate(Node *&node);
+    void rightRotate(Node *&node);
   public:
     using BinaryTree<T, Node>::BinaryTree;
 
