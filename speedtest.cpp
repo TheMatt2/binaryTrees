@@ -5,7 +5,7 @@
 #include <iostream>
 
 #define AVLTREE_SANITY_CHECK
-#define AVLTREE_EXTENDED_SANITY_CHECK
+//#define AVLTREE_EXTENDED_SANITY_CHECK
 #include "AVLTree.h"
 
 // The files to load data from

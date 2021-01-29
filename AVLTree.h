@@ -62,7 +62,7 @@ class AVLTree: public BinaryTree<T, Node> {
 
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
     unsigned int getHeight() const noexcept override;
-#define AVLTREE_SANITY_CHECK
+
 #ifdef AVLTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
     // Throws assertion errors if anything is wrong
