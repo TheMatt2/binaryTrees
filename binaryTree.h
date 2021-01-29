@@ -22,6 +22,9 @@ class BinaryTree {
 
     Node *root;
 
+    /**
+     * Recusively deallocate the values in the tree.
+     */
     void clearInternal(Node* &node) noexcept;
 
     /**
@@ -35,7 +38,7 @@ class BinaryTree {
     const Node* getMostRightInternal(const Node* const &node) const;
 
     /**
-     * Recursively get the height of from the tree.
+     * Recursively get the height from the tree.
      * This assumes the tree may be of any shape, and tries all branches.
      *
      */
