@@ -121,19 +121,20 @@ bool SplayTree<T, Node>::insertInternal(Node *&node, const T &value) {
      * Traverse down and contains the insertion point.
      * Do it in a loop, since we don't have a recursive function.
      */
-    Node *localRoot = root;
     bool exists;
 
     // If the node is null, just set it.
-    if (localRoot == nullptr) {
+    if (node == nullptr) {
         // Simply insert
-        root = new Node(value);
+        node = new Node(value);
         return true;
     }
 
+    Node *current = node;
+
     while (true) {
         // Choose a direction.
-        int cmp = compare(value, localRoot->value);
+        int cmp = compare(value, current->value);
 
         if (cmp == 0) {
             // This is the point
@@ -143,24 +144,24 @@ bool SplayTree<T, Node>::insertInternal(Node *&node, const T &value) {
         } else if (cmp < 0) {
             // Negative compare, the key less than the node.
             // Go left.
-            if (localRoot->left != nullptr) {
+            if (current->left != nullptr) {
                 // Loop
-                localRoot = localRoot->left;
+                current = current->left;
             } else {
                 // This is nullptr, insert.
+                current->left = new Node(value);
                 exists = false;
-                localRoot->left = new Node(value);
                 break;
             }
         } else {
             // Positive compare, traverse right.
-            if (localRoot->right != nullptr) {
+            if (current->right != nullptr) {
                 // Loop
-                localRoot = localRoot->right;
+                current = current->right;
             } else {
                 // This is nullptr, insert
+                current->right = new Node(value);
                 exists = false;
-                localRoot->right = new Node(value);
                 break;
             }
         }
@@ -169,11 +170,8 @@ bool SplayTree<T, Node>::insertInternal(Node *&node, const T &value) {
     // Now the node definitely exists now, do splay operations to bring it up.
     contains(value);
 
-    if (root->value != value)
-        exit(1);
-
     // Return if a new node was just created
-    return exists;
+    return !exists;
 }
 
 template <class T, class Node>
