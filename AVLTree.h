@@ -29,8 +29,6 @@ class AVLTree: public BinaryTree<T, Node> {
     // Comparison function
     int (*compare)(const T &a, const T &b);
 
-    void clearInternal(Node* &node) noexcept;
-
     const Node* containsInternal(const Node* const &node, const T &value) const;
 
     bool insertInternal(Node *&node, const T &value);
@@ -46,7 +44,7 @@ class AVLTree: public BinaryTree<T, Node> {
 
   public:
     explicit AVLTree(int (*compare)(const T &a, const T &b)): compare(compare) {};
-    ~AVLTree() {clearInternal(BinaryTree<T, Node>::root);}
+    ~AVLTree() {this->clearInternal(root);}
 
     T popMostLeft();
     T popMostRight();
@@ -54,11 +52,6 @@ class AVLTree: public BinaryTree<T, Node> {
     virtual bool contains(const T &value) const noexcept;
     virtual bool insert(const T &value) noexcept;
     virtual bool remove(const T &value) noexcept;
-
-    /**
-     * Clear all values in the tree.
-     */
-    virtual void clear() noexcept;
 
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
     unsigned int getHeight() const noexcept override;

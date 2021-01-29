@@ -19,6 +19,8 @@ class BinaryTree {
   protected:
     Node *root = nullptr;
 
+    void clearInternal(Node* &node) noexcept;
+
     /**
      * Recursively get the most left node in the tree.
      */
@@ -74,6 +76,11 @@ class BinaryTree {
     class queue_iterator;
 
   public:
+    /**
+     * Clear all values in the tree.
+     */
+    virtual void clear() noexcept;
+
     // Test if empty
     bool empty() const;
 

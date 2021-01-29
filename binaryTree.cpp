@@ -9,6 +9,25 @@
 #include "binaryTree.h"
 
 template <class T, class Node>
+void BinaryTree<T, Node>::clear() noexcept {
+    // Deallocate all of the memory recursively
+    clearInternal(root);
+    root = nullptr;
+}
+
+template <class T, class Node>
+void BinaryTree<T, Node>::clearInternal(Node* &node) noexcept {
+    // Recurse if node exists
+    if (node != nullptr) {
+        clearInternal(node->left);
+        clearInternal(node->right);
+
+        // Afterward, delete this node.
+        delete node;
+    }
+}
+
+template <class T, class Node>
 bool BinaryTree<T, Node>::empty() const {
     return root == nullptr;
 }

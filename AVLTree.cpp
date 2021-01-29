@@ -4,25 +4,6 @@
 #include "AVLTree.h"
 
 template <class T, class Node>
-void AVLTree<T, Node>::clear() noexcept {
-    // Deallocate all of the memory recursively
-    clearInternal(root);
-    root = nullptr;
-}
-
-template <class T, class Node>
-void AVLTree<T, Node>::clearInternal(Node* &node) noexcept {
-    // Recurse if node exists
-    if (node != nullptr) {
-        clearInternal(node->left);
-        clearInternal(node->right);
-
-        // Afterward, delete this node.
-        delete node;
-    }
-}
-
-template <class T, class Node>
 unsigned int AVLTree<T, Node>::getHeight() const noexcept {
     // Zero if tree is empty
     if (root == nullptr) {
