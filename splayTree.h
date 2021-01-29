@@ -65,7 +65,7 @@ class SplayTreeCountable: public SplayTree<T, Node> {
     using SplayTree<T, Node>::root;
     using SplayTree<T, Node>::preorder_begin;
     using SplayTree<T, Node>::preorder_end;
-public:
+  public:
     explicit SplayTreeCountable(int (*compare)(const T &a, const T &b)): SplayTree<T, Node>::SplayTree(compare), _count(0) {};
 
     bool insert(const T &value) noexcept override;
