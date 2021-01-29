@@ -38,6 +38,7 @@ class AVLTree: public BinaryTree<T, Node> {
 
   public:
     using BinaryTree<T, Node>::BinaryTree;
+
     bool contains(const T &value) const noexcept override;
     bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
@@ -48,18 +49,10 @@ class AVLTree: public BinaryTree<T, Node> {
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
     unsigned int getHeight() const noexcept override;
 
-#ifdef AVLTREE_SANITY_CHECK
-    // Only define sanity check if compile flag is specified.
-    // Throws errors if anything is wrong
-    virtual void sanityCheck() const {
-        sanityCheck(root);
-    }
-  private:
-    void sanityCheck(const Node* const &node) const {
-        if (node == nullptr) {
-            // That is fine.
-            return;
-        }
+#ifdef BINARYTREE_SANITY_CHECK
+  protected:
+    void sanityCheckInternal(const Node* const &node) const override {
+        BinaryTree<T, Node>::sanityCheckInternal(node);
 
         if (node->height == 1) {
             // This is a leaf node with no children
@@ -72,18 +65,12 @@ class AVLTree: public BinaryTree<T, Node> {
                 if (node->right == nullptr) throw std::logic_error("Node of height 2 should have at least one child");
                 if (node->right->height != 1)
                     throw std::logic_error("Node of height 2 should have at least one child with height 1");
-                // Check right is greater than parent
-                if (compare(node->value, node->right->value) >= 0)
-                    throw std::logic_error("Node is greater than or equal to its right value");
             }
 
             if (node->right == nullptr) {
                 if (node->left == nullptr) throw std::logic_error("Node of height 2 should have at least one child");
                 if (node->left->height != 1)
                     throw std::logic_error("Node of height 2 should have at least one child with height 1");
-                // Check left is less than parent
-                if (compare(node->value, node->left->value) <= 0)
-                    throw std::logic_error("Node is less than or equal to its left value");
             }
         } else {
             // Height is greater than 2
@@ -108,18 +95,7 @@ class AVLTree: public BinaryTree<T, Node> {
                 if (node->right->height != node->height - 2)
                     throw std::logic_error("Neither left nor right has a height two less than parent");
             }
-
-            // Left is less than parent.
-            // Right is greater than parent.
-            if (compare(node->value, node->left->value) <= 0)
-                throw std::logic_error("Node is less than or equal to its left value");
-            if (compare(node->value, node->right->value) >= 0)
-                throw std::logic_error("Node is greater than or equal to its right value");
         }
-
-        // Check the nodes recursively
-        sanityCheck(node->left);
-        sanityCheck(node->right);
     }
 #endif
 };
@@ -139,11 +115,11 @@ class AVLTreeCountable: public AVLTree<T, Node> {
     void clear() noexcept override;
     unsigned int count() const noexcept;
 
-#ifdef AVLTREE_SANITY_CHECK
+#ifdef BINARYTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
     // Throws errors if anything is wrong
     void sanityCheck() const override {
-        AVLTree<T, Node>::sanityCheck();
+        BinaryTree<T, Node>::sanityCheck();
 
         // Add additional check for the count variable (expensive)
         unsigned int count = 0;

@@ -5,8 +5,7 @@
 
 template <class T, class Node>
 void SplayTree<T, Node>::makeSplay(Node *&node, const T &value) {
-	/*
-	 * Find a node in the tree, and perform a splay operation on
+	/* Find a node in the tree, and perform a splay operation on
 	 * the tree while doing so.
 	 */
 	// If this node does not exist, return a nullptr

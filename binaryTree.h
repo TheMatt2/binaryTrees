@@ -737,6 +737,39 @@ protected:
         // Internally track nodes in a queue.
         std::queue<const Node*> queue;
     };
+
+    // Add internal sanity checks that can enabled if requested.
+    // Make sure the tree maintains a valid state.
+#ifdef BINARYTREE_SANITY_CHECK
+  public:
+    // Only define sanity check if compile flag is specified.
+    // Throws errors if anything is wrong
+    virtual void sanityCheck() const {
+        sanityCheckInternal(root);
+    }
+  protected:
+    virtual void sanityCheckInternal(const Node* const &node) const {
+        assert(node != nullptr); // Should be a valid pointer
+
+        if (node->left != nullptr) {
+            // Check that the left pointer is less then node.
+            if (compare(node->value, node->left->value) <= 0)
+                throw std::logic_error("Node is less than or equal to its left value");
+
+            // Recursive checks
+            sanityCheckInternal(node->left);
+        }
+
+        if (node->right != nullptr) {
+            // Check the the right pointer is greater than node.
+            if (compare(node->value, node->right->value) >= 0)
+                throw std::logic_error("Node is greater than or equal to its right value");
+
+            // Recursive checks
+            sanityCheckInternal(node->right);
+        }
+    }
+#endif
 };
 #include "binaryTree.cpp"
 #endif

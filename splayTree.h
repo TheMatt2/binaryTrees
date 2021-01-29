@@ -1,10 +1,5 @@
 /**
- * A splay tree implementation for holding objects.
- * The splay tree allows for data to be held in a binary tree
- *
- * Insertion: ln(n)
- * Deletion: ln(n)
- * Find: ln(n)
+ * A splay tree implementation of a binary tree.
  */
 #ifndef SPLAYTREE_H
 #define SPLAYTREE_H
@@ -40,27 +35,11 @@ class SplayTree: public BinaryTree<T, Node> {
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
-
-#ifdef SPLAYTREE_SANITY_CHECK
-    // Only define sanity check if compile flag is specified.
-    // Throws errors if anything is wrong
-    virtual void sanityCheck() const {
-        sanityCheck(root);
-    }
-  private:
-    void sanityCheck(const Node* const &node) const {
-        // Only thing that can be check is the tree is "valid" in that it does not have infinte recursion.
-        if (node == nullptr) return;
-
-        sanityCheck(node->left);
-        sanityCheck(node->right);
-    }
-#endif
 };
 
 // A specialized SplayTree that tracks the count of elements in the tree.
 // This uses another integer, but makes an O(1) count() function
-template <class T, class Node = AVLTreeNode<T>>
+template <class T, class Node = SplayTreeNode<T>>
 class SplayTreeCountable: public SplayTree<T, Node> {
     using SplayTree<T, Node>::root;
     using SplayTree<T, Node>::preorder_begin;
@@ -73,11 +52,9 @@ class SplayTreeCountable: public SplayTree<T, Node> {
     void clear() noexcept override;
     unsigned int count() const noexcept;
 
-#ifdef SPLAYTREE_SANITY_CHECK
-    // Only define sanity check if compile flag is specified.
-    // Throws errors if anything is wrong
+#ifdef BINARYTREE_SANITY_CHECK
     void sanityCheck() const override {
-        SplayTree<T, Node>::sanityCheck();
+        BinaryTree<T, Node>::sanityCheck();
 
         // Add additional check for the count variable (expensive)
         unsigned int count = 0;
