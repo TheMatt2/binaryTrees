@@ -39,7 +39,7 @@ class AVLTree: public BinaryTree<T, Node> {
   public:
     using BinaryTree<T, Node>::BinaryTree;
 
-    bool contains(const T &value) const noexcept override;
+    bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
 

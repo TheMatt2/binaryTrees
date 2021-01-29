@@ -85,7 +85,7 @@ class BinaryTree {
     explicit BinaryTree(int (*compare)(const T &a, const T &b)): compare(compare), root(nullptr) {};
     virtual ~BinaryTree() {clearInternal(root);}
 
-    virtual bool contains(const T &value) const noexcept = 0;
+    virtual bool contains(const T &value) noexcept = 0;
     virtual bool insert(const T &value) noexcept = 0;
     virtual bool remove(const T &value) noexcept = 0;
 

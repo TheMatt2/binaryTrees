@@ -46,7 +46,7 @@ void AVLTree<T, Node>::updateHeight(Node *&node) {
 }
 
 template <class T, class Node>
-bool AVLTree<T, Node>::contains(const T &value) const noexcept {
+bool AVLTree<T, Node>::contains(const T &value) noexcept {
     /**
      * Check if value is present in the tree.
      */
