@@ -1,66 +1,63 @@
+#ifndef SPLAYTREE_CPP
+#define SPLAYTREE_CPP
+
 #include "splayTree.h"
 
-SplayTree::SplayTree() {_root = nullptr;}
-
-SplayTree::~SplayTree(){
-	/* Unallocated all memory */
-    clearInternal(_root);
-}
-
-template <class T>
-void SplayTree::makeSplay(SplayTreeNode<T> *&root, const T &value) {
+template <class T, class Node>
+void SplayTree::makeSplay(SplayTreeNode<T> *&node, const T &value) {
 	/*
 	 * Find a node in the tree, and perform a splay operation on
 	 * the tree while doing so.
 	 */
-	// If this root does not exist, return a nullptr
-	if (root == nullptr)
-	    return root;
+	// If this node does not exist, return a nullptr
+	if (node == nullptr)
+	    return node;
 
 	// First, traverse to the node, then change it.
-	int cmp = root->_key.compare(key);
+	int cmp = node->_key.compare(key);
 	BNode* book;
 	if (cmp == 0) {
-        // If this is already the root, there is no need to do further
+        // If this is already the node, there is no need to do further
         // changes
-	    return root;
+	    return node;
 
 	} else if (cmp < 0) {
-	    // The key is less than the root
+	    // The key is less than the node
 	    // Traverse left.
-	    book = makeSplay(root->_left, key);
+	    book = makeSplay(node->_left, key);
 
         // If the book is a nullptr, then the key didn't exit, and we should just return
         if (book == nullptr)
             return book;
 
         // Otherwise, move book to _left
-        root->_left = book;
+        node->_left = book;
 
-        // Move _left to root
+        // Move _left to node
         // I hear-by declare this a "zig"
-        return leftRotate(root);
+        return leftRotate(node);
 	} else {
-	    // Greater than, so input is greater than the root
+	    // Greater than, so input is greater than the node
 	    // Traverse right.
-	    book = makeSplay(root->_right, key);
+	    book = makeSplay(node->_right, key);
 
         // If the book is a nullptr, then the key didn't exit, and we should just return
         if (book == nullptr)
             return book;
 
         // Otherwise, move book to _right
-        root->_right = book;
+        node->_right = book;
 
-        // Move _right to root
+        // Move _right to node
         // I hear-by declare this a "zag"
-        return rightRotate(root);
+        return rightRotate(node);
 	}
 }
 
-void SplayTree::rightRotate(SplayTreeNode<T> *&root){
+template <class T, class Node>
+void SplayTree::rightRotate(Node<T> *&node){
     /*
-     * Bring the right node up to the root.
+     * Bring the right node up to the node.
      * A "zag"
      *
      *                B
@@ -77,18 +74,18 @@ void SplayTree::rightRotate(SplayTreeNode<T> *&root){
      *             / \
      *            A   C
      */
-    SplayTreeNode<T> *new_root = root->_right; // New root
+    SplayTreeNode<T> *new_root = node->_right; // New node
     // Move C
-    root->_right = new_root->_left;
+    node->_right = new_root->_left;
 
     // Move B
-    new_root->_left = root;
-    root = new_root;
+    new_root->_left = node;
+    node = new_root;
 }
 
-void SplayTree::leftRotate(SplayTreeNode<T> *&root){
+void SplayTree::leftRotate(Node<T> *&node){
     /*
-     * Bring the left node up to the root.
+     * Bring the left node up to the node.
      * A "zig"
      *
      *                  D
@@ -105,16 +102,16 @@ void SplayTree::leftRotate(SplayTreeNode<T> *&root){
      *                   / \
      *                  C   E
      */
-    BNode *new_root = root->_left; // New root
+    BNode *new_root = node->_left; // New node
     // Move C
-    root->_left = new_root->_right;
+    node->_left = new_root->_right;
 
     // Move D
-    new_root->_right = root;
-    root = new_root;
+    new_root->_right = node;
+    node = new_root;
 }
 
-bool SplayTree::insertInternal(SplayTreeNode<T> &root, const T &value) {
+bool SplayTree::insertInternal(Node<T> &node, const T &value) {
     /*
      * Insert a book into the tree.
      *
@@ -124,7 +121,7 @@ bool SplayTree::insertInternal(SplayTreeNode<T> &root, const T &value) {
     BNode *localRoot = _root;
     bool exists;
 
-    // If the root is null, just set it.
+    // If the node is null, just set it.
     if (localRoot == nullptr) {
         // Simply insert
         _root = new BNode(key, author, text);
@@ -141,7 +138,7 @@ bool SplayTree::insertInternal(SplayTreeNode<T> &root, const T &value) {
             exists = true;
             break;
         } else if (cmp < 0) {
-            // Negative compare, the key less than the root.
+            // Negative compare, the key less than the node.
             // Go left.
             if (localRoot->_left != nullptr) {
                 // Loop
@@ -167,7 +164,7 @@ bool SplayTree::insertInternal(SplayTreeNode<T> &root, const T &value) {
     }
 
     // Now the node definitely exists now, do splay operations to bring it up.
-    _root = find(key);
+    _root = contains(key);
 
     if (_root->_key != key)
         exit(1);
@@ -176,34 +173,34 @@ bool SplayTree::insertInternal(SplayTreeNode<T> &root, const T &value) {
     return exists;
 }
 
-void SplayTree::clearInternal(SplayTreeNode<T> *&root) {
+void SplayTree::clearInternal(Node<T> *&node) {
 	/*
 	 * Clear all values from the tree
 	 */
-	if (root != nullptr) {
-        clearInternal(root->_left);
-	    root->_left = nullptr;
+	if (node != nullptr) {
+        clearInternal(node->_left);
+        node->_left = nullptr;
 
-        clearInternal(root->_right);
-	    root->_right = nullptr;
+        clearInternal(node->_right);
+        node->_right = nullptr;
 
-	    delete root;
-	    root = nullptr;
+	    delete node;
+        node = nullptr;
 	}
 }
 
-bool SplayTree::find(const string title) {
+bool SplayTree::contains(const T &value) {
     /*
      * Find key in the tree,
      * Doing splay operation changes.
      */
-    _root = makeSplay(_root, title);
+    _root = makeSplay(_root, value);
     return _root;
 }
 
-int SplayTree::findInternal(const T &value) {
+int SplayTree::containsInternal(const T &value) {
 	/* Get the frequency of word in book of name title */
-    BNode* book = find(title);
+    BNode* book = contains(title);
     if (book != nullptr) {
         return book->findFrequency(word);
     } else {
@@ -211,3 +208,4 @@ int SplayTree::findInternal(const T &value) {
         return 0;
     }
 }
+#endif
