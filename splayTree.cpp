@@ -1,6 +1,7 @@
 #ifndef SPLAYTREE_CPP
 #define SPLAYTREE_CPP
 
+#include <cassert>
 #include "splayTree.h"
 
 template <class T, class Node>
@@ -42,34 +43,6 @@ bool SplayTree<T, Node>::makeSplay(Node *&node, const T &value) {
 	return true;
 }
 
-template <class T, class Node>
-void SplayTree<T, Node>::rightRotate(Node *&node) {
-    /*
-     * Bring the right node up to the node.
-     * A "zag"
-     *
-     *                B
-     *               / \
-     * May Exist -> A   D <- Must Exist
-     *                 / \
-     *   May Exist -> C   E <- May Exist
-     *
-     * Goes to:
-     *
-     *                D
-     *               / \
-     *              B   E
-     *             / \
-     *            A   C
-     */
-    Node *new_root = node->right; // New node
-    // Move C
-    node->right = new_root->left;
-
-    // Move B
-    new_root->left = node;
-    node = new_root;
-}
 
 template <class T, class Node>
 void SplayTree<T, Node>::leftRotate(Node *&node) {
@@ -91,13 +64,48 @@ void SplayTree<T, Node>::leftRotate(Node *&node) {
      *                   / \
      *                  C   E
      */
-    Node *new_root = node->left; // New node
+    assert(node != nullptr);
+    assert(node->left != nullptr);
+
+    Node *temp = node->left;
     // Move C
-    node->left = new_root->right;
+    node->left = temp->right;
 
     // Move D
-    new_root->right = node;
-    node = new_root;
+    temp->right = node;
+    node = temp;
+}
+
+template <class T, class Node>
+void SplayTree<T, Node>::rightRotate(Node *&node) {
+    /*
+     * Bring the right node up to the node.
+     * A "zag"
+     *
+     *                B
+     *               / \
+     * May Exist -> A   D <- Must Exist
+     *                 / \
+     *   May Exist -> C   E <- May Exist
+     *
+     * Goes to:
+     *
+     *                D
+     *               / \
+     *              B   E
+     *             / \
+     *            A   C
+     */
+    assert(node != nullptr);
+    assert(node->right != nullptr);
+
+    Node *temp = node->right;
+    // Move C
+    node->right = temp->left;
+
+    // Move B
+    temp->left = node;
+    node = temp;
 }
 
 template<class T, class Node>
