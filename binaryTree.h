@@ -17,7 +17,10 @@
 template <class T, class Node>
 class BinaryTree {
   protected:
-    Node *root = nullptr;
+    // Comparison function
+    int (*compare)(const T &a, const T &b);
+
+    Node *root;
 
     void clearInternal(Node* &node) noexcept;
 
@@ -76,6 +79,16 @@ class BinaryTree {
     class queue_iterator;
 
   public:
+    explicit BinaryTree(int (*compare)(const T &a, const T &b)): compare(compare), root(nullptr) {};
+    virtual ~BinaryTree() {clearInternal(root);}
+
+    virtual bool contains(const T &value) const noexcept = 0;
+    virtual bool insert(const T &value) noexcept = 0;
+    virtual bool remove(const T &value) noexcept = 0;
+
+    virtual T popMostLeft() = 0;
+    virtual T popMostRight() = 0;
+
     /**
      * Clear all values in the tree.
      */

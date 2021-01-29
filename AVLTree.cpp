@@ -410,7 +410,7 @@ bool AVLTree<T, Node>::insertInternal(Node *&node, const T &value) {
 
 template <class T, class Node>
 T AVLTree<T, Node>::popMostLeft() {
-    popMostLeftInternal(root)->value;
+    return popMostLeftInternal(root)->value;
 }
 
 template <class T, class Node>
@@ -431,7 +431,7 @@ Node* AVLTree<T, Node>::popMostLeftInternal(Node *&node) {
 
 template <class T, class Node>
 T AVLTree<T, Node>::popMostRight() {
-    popMostRightInternal(root)->value;
+    return popMostRightInternal(root)->value;
 }
 
 template <class T, class Node>

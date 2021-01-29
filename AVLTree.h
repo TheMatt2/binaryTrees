@@ -26,8 +26,7 @@ template <class T, class Node = AVLTreeNode<T>>
 class AVLTree: public BinaryTree<T, Node> {
   protected:
     using BinaryTree<T, Node>::root;
-    // Comparison function
-    int (*compare)(const T &a, const T &b);
+    using BinaryTree<T, Node>::compare;
 
     const Node* containsInternal(const Node* const &node, const T &value) const;
 
@@ -43,15 +42,13 @@ class AVLTree: public BinaryTree<T, Node> {
     Node* popMostRightInternal(Node *&node);
 
   public:
-    explicit AVLTree(int (*compare)(const T &a, const T &b)): compare(compare) {};
-    ~AVLTree() {this->clearInternal(root);}
+    using BinaryTree<T, Node>::BinaryTree;
+    bool contains(const T &value) const noexcept override;
+    bool insert(const T &value) noexcept override;
+    bool remove(const T &value) noexcept override;
 
-    T popMostLeft();
-    T popMostRight();
-
-    virtual bool contains(const T &value) const noexcept;
-    virtual bool insert(const T &value) noexcept;
-    virtual bool remove(const T &value) noexcept;
+    T popMostLeft() override;
+    T popMostRight() override;
 
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
     unsigned int getHeight() const noexcept override;
