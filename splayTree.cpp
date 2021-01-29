@@ -173,22 +173,6 @@ bool SplayTree::insertInternal(Node<T> &node, const T &value) {
     return exists;
 }
 
-void SplayTree::clearInternal(Node<T> *&node) {
-	/*
-	 * Clear all values from the tree
-	 */
-	if (node != nullptr) {
-        clearInternal(node->_left);
-        node->_left = nullptr;
-
-        clearInternal(node->_right);
-        node->_right = nullptr;
-
-	    delete node;
-        node = nullptr;
-	}
-}
-
 bool SplayTree::contains(const T &value) {
     /*
      * Find key in the tree,
