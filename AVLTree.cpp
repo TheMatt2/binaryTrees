@@ -3,6 +3,10 @@
 
 #include "AVLTree.h"
 
+// Helper function for maximum
+// From http://www.cplusplus.com/articles/1AUq5Di1/
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
 template <class T, class Node>
 unsigned int AVLTree<T, Node>::getHeight() const noexcept {
     // Zero if tree is empty

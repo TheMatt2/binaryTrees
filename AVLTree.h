@@ -6,10 +6,6 @@
 
 #include "binaryTree.h"
 
-// Helper function for maximum
-// From http://www.cplusplus.com/articles/1AUq5Di1/
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-
 template <class T>
 struct AVLTreeNode {
     explicit AVLTreeNode(const T &value): left(nullptr), right(nullptr), height(1), value(value) {}
