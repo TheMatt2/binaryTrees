@@ -26,7 +26,7 @@ class SplayTree: public BinaryTree<T, Node> {
 
     bool insertInternal(Node *&node, const T &value);
 
-    void makeSplay(Node *&node, const T &value);
+    bool makeSplay(Node *&node, const T &value);
     void leftRotate(Node *&node);
     void rightRotate(Node *&node);
   public:
@@ -35,6 +35,9 @@ class SplayTree: public BinaryTree<T, Node> {
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
+
+    virtual T popMostLeft() override {};
+    virtual T popMostRight() override {};
 };
 
 // A specialized SplayTree that tracks the count of elements in the tree.

@@ -4,16 +4,16 @@
 #include "splayTree.h"
 
 template <class T, class Node>
-void SplayTree<T, Node>::makeSplay(Node *&node, const T &value) {
+bool SplayTree<T, Node>::makeSplay(Node *&node, const T &value) {
 	/* Find a node in the tree, and perform a splay operation on
 	 * the tree while doing so.
 	 */
 	// If this node does not exist, return a nullptr
-	if (node == nullptr) return node;
+	if (node == nullptr) return false;
 
 	// First, traverse to the node, then change it.
 	int cmp = compare(node->value, value);
-	Node *temp;
+
 	if (cmp == 0) {
         // If this is already the node, there is no need to do further
         // changes
@@ -21,33 +21,25 @@ void SplayTree<T, Node>::makeSplay(Node *&node, const T &value) {
 	} else if (cmp < 0) {
 	    // The key is less than the node
 	    // Traverse left.
-	    temp = makeSplay(node->left, value);
+	    bool result = makeSplay(node->left, value);
 
-        // If the temp is a nullptr, then the key didn't exit, and we should just return
-        if (temp == nullptr)
-            return temp;
+        // If value not found, return
+        if (!result) return false;
 
-        // Otherwise, move temp to left
-        node->left = temp;
-
-        // Move _left to node
-        // I hear-by declare this a "zig"
-        return leftRotate(node);
+        // Move left to node: a "zig"
+        leftRotate(node);
 	} else {
 	    // Greater than, so input is greater than the node
 	    // Traverse right.
-	    temp = makeSplay(node->right, value);
+	    bool result = makeSplay(node->right, value);
 
-        // If the temp is a nullptr, then the key didn't exit, and we should just return
-        if (temp == nullptr) return temp;
+        // If value not found, return
+        if (!result) return false;
 
-        // Otherwise, move temp to right
-        node->right = temp;
-
-        // Move right to node
-        // I hear-by declare this a "zag"
-        return rightRotate(node);
+        // Move right to node: a "zag"
+        rightRotate(node);
 	}
+	return true;
 }
 
 template <class T, class Node>
@@ -70,12 +62,12 @@ void SplayTree<T, Node>::rightRotate(Node *&node) {
      *             / \
      *            A   C
      */
-    SplayTreeNode<T> *new_root = node->right; // New node
+    Node *new_root = node->right; // New node
     // Move C
-    node->_right = new_root->_left;
+    node->right = new_root->left;
 
     // Move B
-    new_root->_left = node;
+    new_root->left = node;
     node = new_root;
 }
 
@@ -101,10 +93,10 @@ void SplayTree<T, Node>::leftRotate(Node *&node) {
      */
     Node *new_root = node->left; // New node
     // Move C
-    node->_left = new_root->right;
+    node->left = new_root->right;
 
     // Move D
-    new_root->_right = node;
+    new_root->right = node;
     node = new_root;
 }
 
@@ -177,8 +169,7 @@ bool SplayTree<T, Node>::contains(const T &value) noexcept {
      * Find key in the tree,
      * Doing splay operation changes.
      */
-    root = makeSplay(root, value);
-    return root;
+    return makeSplay(root, value);
 }
 
 template <class T, class Node>
