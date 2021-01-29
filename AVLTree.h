@@ -4,7 +4,6 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 
-#include <cassert>
 #include "binaryTree.h"
 
 // Helper function for maximum
@@ -55,7 +54,7 @@ class AVLTree: public BinaryTree<T, Node> {
 
 #ifdef AVLTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
-    // Throws assertion errors if anything is wrong
+    // Throws errors if anything is wrong
     virtual void sanityCheck() const {
         sanityCheck(root);
     }
@@ -146,7 +145,7 @@ class AVLTreeCountable: public AVLTree<T, Node> {
 
 #ifdef AVLTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
-    // Throws assertion errors if anything is wrong
+    // Throws errors if anything is wrong
     void sanityCheck() const override {
         AVLTree<T, Node>::sanityCheck();
 
