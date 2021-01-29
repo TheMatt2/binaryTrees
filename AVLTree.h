@@ -24,8 +24,8 @@ struct AVLTreeNode {
 
 template <class T, class Node = AVLTreeNode<T>>
 class AVLTree: public BinaryTree<T, Node> {
-    using BinaryTree<T, Node>::root;
   protected:
+    using BinaryTree<T, Node>::root;
     // Comparison function
     int (*compare)(const T &a, const T &b);
 
@@ -51,22 +51,22 @@ class AVLTree: public BinaryTree<T, Node> {
     T popMostLeft();
     T popMostRight();
 
-    bool contains(const T &value) const noexcept;
-    bool insert(const T &value) noexcept;
-    bool remove(const T &value) noexcept;
+    virtual bool contains(const T &value) const noexcept;
+    virtual bool insert(const T &value) noexcept;
+    virtual bool remove(const T &value) noexcept;
 
     /**
      * Clear all values in the tree.
      */
-    void clear() noexcept;
+    virtual void clear() noexcept;
 
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
     unsigned int getHeight() const noexcept override;
-
+#define AVLTREE_SANITY_CHECK
 #ifdef AVLTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
     // Throws assertion errors if anything is wrong
-    void sanityCheck() const {
+    virtual void sanityCheck() const {
         sanityCheck(root);
     }
   private:
@@ -137,6 +137,41 @@ class AVLTree: public BinaryTree<T, Node> {
         sanityCheck(node->right);
     }
 #endif
+};
+
+// A specialized AVLTree that tracks the count of elements in the tree.
+// This uses another integer, but makes an O(1) count() function
+template <class T, class Node = AVLTreeNode<T>>
+class AVLTreeCountable: public AVLTree<T, Node> {
+    using AVLTree<T, Node>::root;
+    using AVLTree<T, Node>::preorder_begin;
+    using AVLTree<T, Node>::preorder_end;
+  public:
+    explicit AVLTreeCountable(int (*compare)(const T &a, const T &b)): AVLTree<T, Node>::AVLTree(compare), _count(0) {};
+
+    bool insert(const T &value) noexcept override;
+    bool remove(const T &value) noexcept override;
+    void clear() noexcept override;
+    unsigned int count() const noexcept;
+
+#ifdef AVLTREE_SANITY_CHECK
+    // Only define sanity check if compile flag is specified.
+    // Throws assertion errors if anything is wrong
+    void sanityCheck() const override {
+        AVLTree<T, Node>::sanityCheck();
+
+        // Add additional check for the count variable (expensive)
+        unsigned int count = 0;
+        for (auto it = preorder_begin(); it != preorder_end(); it++) {
+            count++;
+        }
+
+        if (count != _count)
+            throw std::logic_error("AVLTree count does not match number of elements");
+    }
+#endif
+  protected:
+    unsigned int _count;
 };
 #include "AVLTree.cpp"
 #endif

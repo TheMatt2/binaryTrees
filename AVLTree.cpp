@@ -542,4 +542,29 @@ bool AVLTree<T, Node>::removeInternal(Node *&node, const T &value) {
     rebalance(node);
     return true;
 }
+
+template <class T, class Node>
+bool AVLTreeCountable<T, Node>::insert(const T &value) noexcept {
+    bool result = AVLTree<T, Node>::insert(value);
+    _count += result;
+    return result;
+}
+
+template <class T, class Node>
+bool AVLTreeCountable<T, Node>::remove(const T &value) noexcept {
+    bool result = AVLTree<T, Node>::remove(value);
+    _count -= result;
+    return result;
+}
+
+template <class T, class Node>
+void AVLTreeCountable<T, Node>::clear() noexcept {
+    AVLTree<T, Node>::clear();
+    _count = 0;
+}
+
+template <class T, class Node>
+unsigned int AVLTreeCountable<T, Node>::count() const noexcept {
+    return _count;
+}
 #endif

@@ -5,6 +5,7 @@
 #include <iostream>
 
 #define AVLTREE_SANITY_CHECK
+#define AVLTREE_EXTENDED_SANITY_CHECK
 #include "AVLTree.h"
 
 // The files to load data from
@@ -124,12 +125,15 @@ int main() {
     std::cout << "Loaded " << groupA.size() << " domains into Group A" << std::endl;
     std::cout << "Loaded " << groupB.size() << " domains into Group B" << std::endl;
 
-    AVLTree<std::string> avlTree(compare);
+    AVLTreeCountable<std::string> avlTree = AVLTreeCountable<std::string>(compare);
 
     std::cout << "Add Group A into a tree" << std::endl;
 
     start = std::chrono::high_resolution_clock::now();
     for (auto &domain: groupA) {
+#ifdef AVLTREE_EXTENDED_SANITY_CHECK
+        avlTree.sanityCheck();
+#endif
         avlTree.insert(domain);
     }
 #ifdef AVLTREE_SANITY_CHECK
@@ -138,10 +142,7 @@ int main() {
     stop = std::chrono::high_resolution_clock::now();
 
     // Count values
-    unsigned int count = 0;
-    for (auto it = avlTree.preorder_begin(); it != avlTree.preorder_end(); it++) {
-        count++;
-    }
+    unsigned int count = avlTree.count();
 
     std::cout << "Inserted " << count << " values in "
               << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
@@ -151,6 +152,9 @@ int main() {
 
     start = std::chrono::high_resolution_clock::now();
     for (auto &domain: groupB) {
+#ifdef AVLTREE_EXTENDED_SANITY_CHECK
+        avlTree.sanityCheck();
+#endif
         count -= avlTree.remove(domain);
     }
 #ifdef AVLTREE_SANITY_CHECK
@@ -159,9 +163,7 @@ int main() {
     stop = std::chrono::high_resolution_clock::now();
 
     // Check that counts match
-    for (auto it = avlTree.reverse_inorder_begin(); it != avlTree.reverse_preorder_end(); it++) {
-        count--; // If an error occurred, this may underflow. That is not a problem, so long as we don't underflow twice
-    }
+    count -= avlTree.count();
 
     if (count != 0) {
         // Something failed
