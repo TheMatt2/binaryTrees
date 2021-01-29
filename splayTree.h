@@ -34,7 +34,7 @@ class SplayTree: public BinaryTree<T, Node> {
 
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
-    bool remove(const T &value) noexcept override;
+    bool remove(const T &value) noexcept override {};
 
     virtual T popMostLeft() override {};
     virtual T popMostRight() override {};

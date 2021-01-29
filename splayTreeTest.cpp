@@ -1,6 +1,7 @@
 /*
  * Test cases for testing the sanity of the AVLTree
  */
+#define BINARYTREE_SANITY_CHECK
 
 #include <iostream>
 #include "splayTree.h"
@@ -102,6 +103,8 @@ int main() {
 
     }
     cout << endl;
+
+    tree.sanityCheck();
 
     tree.clear();
 }

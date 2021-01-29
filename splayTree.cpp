@@ -12,7 +12,7 @@ bool SplayTree<T, Node>::makeSplay(Node *&node, const T &value) {
 	if (node == nullptr) return false;
 
 	// First, traverse to the node, then change it.
-	int cmp = compare(node->value, value);
+	int cmp = compare(value, node->value);
 
 	if (cmp == 0) {
         // If this is already the node, there is no need to do further
@@ -100,6 +100,11 @@ void SplayTree<T, Node>::leftRotate(Node *&node) {
     node = new_root;
 }
 
+template<class T, class Node>
+bool SplayTree<T, Node>::insert(const T &value) noexcept {
+    return insertInternal(root, value);
+}
+
 template <class T, class Node>
 bool SplayTree<T, Node>::insertInternal(Node *&node, const T &value) {
     /*
@@ -120,7 +125,7 @@ bool SplayTree<T, Node>::insertInternal(Node *&node, const T &value) {
 
     while (true) {
         // Choose a direction.
-        int cmp = compare(localRoot->value, value);
+        int cmp = compare(value, localRoot->value);
 
         if (cmp == 0) {
             // This is the point
@@ -130,9 +135,9 @@ bool SplayTree<T, Node>::insertInternal(Node *&node, const T &value) {
         } else if (cmp < 0) {
             // Negative compare, the key less than the node.
             // Go left.
-            if (localRoot->_left != nullptr) {
+            if (localRoot->left != nullptr) {
                 // Loop
-                localRoot = localRoot->_left;
+                localRoot = localRoot->left;
             } else {
                 // This is nullptr, insert.
                 exists = false;
@@ -141,9 +146,9 @@ bool SplayTree<T, Node>::insertInternal(Node *&node, const T &value) {
             }
         } else {
             // Positive compare, traverse right.
-            if (localRoot->_right != nullptr) {
+            if (localRoot->right != nullptr) {
                 // Loop
-                localRoot = localRoot->_right;
+                localRoot = localRoot->right;
             } else {
                 // This is nullptr, insert
                 exists = false;
@@ -154,7 +159,7 @@ bool SplayTree<T, Node>::insertInternal(Node *&node, const T &value) {
     }
 
     // Now the node definitely exists now, do splay operations to bring it up.
-    root = contains(value);
+    contains(value);
 
     if (root->value != value)
         exit(1);
@@ -170,17 +175,5 @@ bool SplayTree<T, Node>::contains(const T &value) noexcept {
      * Doing splay operation changes.
      */
     return makeSplay(root, value);
-}
-
-template <class T, class Node>
-Node* SplayTree<T, Node>::containsInternal(const T &value) {
-	/* Get the frequency of word in book of name title */
-    Node *book = contains(value);
-    if (book != nullptr) {
-        return book;
-    } else {
-        // Chris said this should be zero
-        return 0;
-    }
 }
 #endif
