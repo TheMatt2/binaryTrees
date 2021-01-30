@@ -22,22 +22,25 @@ class SplayTree: public BinaryTree<T, Node> {
     using BinaryTree<T, Node>::root;
     using BinaryTree<T, Node>::compare;
 
-    Node* containsInternal(const T &value);
-
     bool insertInternal(Node *&node, const T &value);
 
     bool makeSplay(Node *&node, const T &value);
     void leftRotate(Node *&node);
     void rightRotate(Node *&node);
+
+    bool removeInternal(Node *&node, const T &value);
+    Node* popMostLeftInternal(Node *&node);
+    Node* popMostRightInternal(Node *&node);
+
   public:
     using BinaryTree<T, Node>::BinaryTree;
 
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
-    bool remove(const T &value) noexcept override {};
+    bool remove(const T &value) noexcept override;
 
-    virtual T popMostLeft() override {};
-    virtual T popMostRight() override {};
+    T popMostLeft() override;
+    T popMostRight() override;
 };
 
 // A specialized SplayTree that tracks the count of elements in the tree.
