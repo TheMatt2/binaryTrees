@@ -762,7 +762,7 @@ protected:
 
         if (node->right != nullptr) {
             // Check the the right pointer is greater than node.
-            if (compare(node->value, node->right->value) >= 0)
+            if (string_compare(node->value, node->right->value) >= 0)
                 throw std::logic_error("Node is greater than or equal to its right value");
 
             // Recursive checks

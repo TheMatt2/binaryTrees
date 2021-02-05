@@ -16,10 +16,10 @@ add_executable(
 )
 
 add_executable(
-        Speedtest
+        churntest
         binaryTree.cpp
         AVLTree.cpp
-        speedtest.cpp
+        churnPerformanceTest.cpp
 )
 
 add_executable(
