@@ -10,20 +10,30 @@ SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_WALL} ${GCC_SANITIZE_ADDRESS} ${G
 
 add_executable(
         AVLTreeTest
-        binaryTree.cpp
-        AVLTree.cpp
         AVLTreeTest.cpp
-)
-
-add_executable(
-        churntest
-        binaryTree.cpp
         AVLTree.cpp
-        churnPerformanceTest.cpp
+        binaryTree.cpp
 )
 
 add_executable(
         splayTreeTest
-        splayTree.cpp
         splayTreeTest.cpp
+        splayTree.cpp
+        binaryTree.cpp
+)
+
+add_executable(
+        churntest
+        churnPerformanceTest.cpp
+        AVLTree.cpp
+        splayTree.cpp
+        binaryTree.cpp
+)
+
+add_executable(
+        speedtest
+        speedtest.cpp
+        AVLTree.cpp
+        splayTree.cpp
+        binaryTree.cpp
 )

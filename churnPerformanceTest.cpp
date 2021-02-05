@@ -97,7 +97,6 @@ int main(int argc, char *argv[]) {
     generator = std::default_random_engine(seed);
 
     std::cout << "Loading Dataset" << std::endl;
-    auto start = std::chrono::high_resolution_clock::now();
 
     char *filename;
     if (argc == 2) {
@@ -105,9 +104,11 @@ int main(int argc, char *argv[]) {
         filename = argv[1];
     } else {
         // No file specified
-        std::cerr << "No dataset file specified." << std::endl;
+        std::cerr << "No database specified." << std::endl;
         exit(1);
     }
+
+    auto start = std::chrono::high_resolution_clock::now();
 
     std::vector<std::string> dataset;
 
@@ -155,7 +156,7 @@ int main(int argc, char *argv[]) {
             tree.insert(dataset[i]);
         }
 
-        // https://stackoverflow.com/a/3093470 states this is safe
+        // https://stackoverflow.com/a/3093470 shows this is safe because a vector will be continuous
         auto duration = performanceTest(tree, dataset.size(), &dataset[0], split_index);
 
         std::cout << churn * 100 << "% churn\t: "
