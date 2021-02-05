@@ -55,7 +55,7 @@ long performanceTest(Tree &tree, size_t iterations, T* testset, size_t length) {
             result = tree.insert(testset[i]);
         else
             result = tree.remove(testset[i]);
-        if (!result) throw std::logic_error("tree manipulation failed\n");
+        if (!result) throw std::logic_error("tree manipulation failed");
 #else
         if (insertion)
             tree.insert(testset[i]);
