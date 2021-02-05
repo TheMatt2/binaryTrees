@@ -8,20 +8,15 @@
 //#define BINARYTREE_EXTENDED_SANITY_CHECK
 #include "AVLTree.h"
 
-static bool loadDatabase(const std::string &filename, std::vector<std::string> &domains) {
+void loadDataset(const char *filename, std::vector<std::string> &dataset) {
     // Load the values from the file into a vector.
-    std::ifstream domains_file(filename);
+    std::ifstream dataset_file(filename);
 
-    if (domains_file.is_open()) {
-        std::string domain;
-        while (domains_file >> domain) {
-            // If the first character in domain is #, or blank, then ignore
-            if (!domain.empty() && domain[0] != '#') {
-                domains.push_back(domain);
-                domains_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            }
+    if (dataset_file.is_open()) {
+        std::string value;
+        while (dataset_file >> value) {
+            dataset.push_back(value);
         }
-        return true;
     } else {
         // Failed to load file.
         std::cerr << "Failed to open file: " << filename << std::endl;
@@ -52,7 +47,7 @@ int main(int argc, char *argv[]) {
     // Big table all domains will end up in
     std::vector<std::string> database;
 
-    loadDatabase(filename, database);
+    loadDataset(filename, database);
     database.shrink_to_fit();
 
     // Split the database in half into two groups.

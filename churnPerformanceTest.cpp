@@ -39,8 +39,6 @@ inline int stringCompare(const std::string &a, const std::string &b) {
     return a.compare(b);
 }
 
-std::default_random_engine generator;
-
 template <class T, class Tree>
 long performanceTest(Tree &tree, size_t iterations, T* testset, size_t length) {
     // Returns count of nanoseconds taken
@@ -84,7 +82,7 @@ template <class T, class Tree>
 void churntest(Tree &tree, T* dataset, size_t size) {
     // Testing at "0" churn is meaningless, since nothing would be added or removed.
     // Test at 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100%
-
+    assert(tree.empty());
     // Use part of the dataset as churn data, the rest is loaded into the tree.
     for (float churn: {.1, .2, .3, .4, .5, .6, .7, .8, .9, 1.0}) {
         size_t split_index = size * churn;
@@ -97,7 +95,7 @@ void churntest(Tree &tree, T* dataset, size_t size) {
         auto duration = performanceTest(tree, size, &dataset[0], split_index);
 
         std::cout << churn * 100 << "% churn\t: "
-                  << duration / 1000000 // million nanoseconds in a millisecond
+                  << duration / 1000000.0 // million nanoseconds in a millisecond
                   << "ms" << std::endl;
 
         tree.clear();
@@ -107,7 +105,7 @@ int main(int argc, char *argv[]) {
     // Setup random generator
     unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
 
-    generator = std::default_random_engine(seed);
+    std::default_random_engine generator = std::default_random_engine(seed);
 
     std::cout << "Loading Dataset" << std::endl;
 
@@ -157,9 +155,17 @@ int main(int argc, char *argv[]) {
     std::cout << "Loaded " << dataset.size() << " domains into dataset." << std::endl;
 
     std::cout << "AVL Tree Tests" << std::endl;
-    auto avltree = AVLTreeCountable<std::string>(stringCompare);
+    std::cout.setf(std::ios::fixed);
+    std::cout.precision(4);
+    auto avltree = AVLTree<std::string>(stringCompare);
+
     // Convert vector to pointer
     churntest(avltree, &dataset[0], dataset.size());
+
+//    std::cout << "Countable AVL Tree Tests" << std::endl;
+//    auto avltreecount = AVLTreeCountable<std::string>(stringCompare);
+//    // Convert vector to pointer
+//    churntest(avltreecount, &dataset[0], dataset.size());
 
     std::cout << "Splay Tree Tests" << std::endl;
     auto splaytree = SplayTree<std::string>(stringCompare);
