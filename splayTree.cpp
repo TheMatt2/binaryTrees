@@ -241,70 +241,75 @@ bool SplayTree<T, Node>::remove(const T &value) noexcept {
 
 template <class T, class Node>
 bool SplayTree<T, Node>::removeInternal(Node *&node, const T &value) {
-    // If the stack has a nullptr on top, then failed to find node.
-    if (node == nullptr) return false;
-
-    // Choose which way to keep searching.
-    auto cmp = compare(value, node->value);
-
-    if (cmp == 0) {
-        // This is the value that needs to be removed
-
-        // Replace this node with the most left value of its right branch.
-        // If no right branch, replace with its left (because AVL, if not right the left most be a leaf).
-        // If neither, just delete this one.
-        if (node->right != nullptr) {
-            Node *temp = popMostLeftInternal(node->right);
-
-            // Left should be known nullptr
-            assert(temp->left == nullptr);
-
-            // Note that this is done particularly to
-            // not call assignment on the type.
-            // it is assumed that is more expensive than
-            // moving an extra two pointers (in testing this seems to hold even for primitives)
-
-            // Move temp into the top of value
-            temp->left = node->left;
-            temp->right = node->right;
-            temp->height = node->height;
-
-            // Remove the value node
-            delete node;
-            node = temp;
-            updateHeight(node);
-            rebalance(node);
-        } else if (node->left != nullptr) {
-            // Since right doesn't exist, temp must only be a leaf
-            assert(node->right == nullptr);
-            Node *temp = node->left;
-            assert(temp->left == nullptr && temp->right == nullptr);
-            assert(node->height == 2);
-            assert(temp->height == 1);
-
-            delete node;
-            node = temp;
-            updateHeight(node);
-            rebalance(node);
-        } else {
-            // Neither left nor right, just delete the node with value.
-            delete node;
-            node = nullptr;
-        }
-        return true;
-    }
-
-    // Otherwise handle recursion
-    // If negative, go left.
-    // If positive, go right.
-    Node *&child = cmp < 0 ? node->left : node->right;
-
-    if (!removeInternal(child, value))
-        return false;
-
-    // Otherwise, rebalance
-    updateHeight(node);
-    rebalance(node);
-    return true;
+    return false;
 }
+
+//template <class T, class Node>
+//bool SplayTree<T, Node>::removeInternal(Node *&node, const T &value) {
+//    // If the stack has a nullptr on top, then failed to find node.
+//    if (node == nullptr) return false;
+//
+//    // Choose which way to keep searching.
+//    auto cmp = compare(value, node->value);
+//
+//    if (cmp == 0) {
+//        // This is the value that needs to be removed
+//
+//        // Replace this node with the most left value of its right branch.
+//        // If no right branch, replace with its left (because AVL, if not right the left most be a leaf).
+//        // If neither, just delete this one.
+//        if (node->right != nullptr) {
+//            Node *temp = popMostLeftInternal(node->right);
+//
+//            // Left should be known nullptr
+//            assert(temp->left == nullptr);
+//
+//            // Note that this is done particularly to
+//            // not call assignment on the type.
+//            // it is assumed that is more expensive than
+//            // moving an extra two pointers (in testing this seems to hold even for primitives)
+//
+//            // Move temp into the top of value
+//            temp->left = node->left;
+//            temp->right = node->right;
+//            temp->height = node->height;
+//
+//            // Remove the value node
+//            delete node;
+//            node = temp;
+//            updateHeight(node);
+//            rebalance(node);
+//        } else if (node->left != nullptr) {
+//            // Since right doesn't exist, temp must only be a leaf
+//            assert(node->right == nullptr);
+//            Node *temp = node->left;
+//            assert(temp->left == nullptr && temp->right == nullptr);
+//            assert(node->height == 2);
+//            assert(temp->height == 1);
+//
+//            delete node;
+//            node = temp;
+//            updateHeight(node);
+//            rebalance(node);
+//        } else {
+//            // Neither left nor right, just delete the node with value.
+//            delete node;
+//            node = nullptr;
+//        }
+//        return true;
+//    }
+//
+//    // Otherwise handle recursion
+//    // If negative, go left.
+//    // If positive, go right.
+//    Node *&child = cmp < 0 ? node->left : node->right;
+//
+//    if (!removeInternal(child, value))
+//        return false;
+//
+//    // Otherwise, rebalance
+//    updateHeight(node);
+//    rebalance(node);
+//    return true;
+//}
 #endif

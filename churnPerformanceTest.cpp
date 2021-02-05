@@ -41,18 +41,8 @@ inline int stringCompare(const std::string &a, const std::string &b) {
 
 std::default_random_engine generator;
 
-//template <class T>
-//void constructTest(T dataset[], size_t dataset_length, T *testset[], size_t testset_length) {
-//    // Make a list of actions from only dataset_length elements.
-//    std::uniform_int_distribution<size_t> distribution(0, dataset_length - 1);
-//
-//    for (size_t i = 0; i < testset_length; i++) {
-//        testset[i] = &dataset[distribution(generator)];
-//    }
-//}
-
-template <class T, class Collection>
-long performanceTest(Collection &tree, size_t iterations, T* testset, size_t length) {
+template <class T, class Tree>
+long performanceTest(Tree &tree, size_t iterations, T* testset, size_t length) {
     // Returns count of nanoseconds taken
     // Take the collection and list of actions.
     // Then execute the actions, returning the time taken.
@@ -90,6 +80,29 @@ long performanceTest(Collection &tree, size_t iterations, T* testset, size_t len
     return std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
 }
 
+template <class T, class Tree>
+void churntest(Tree &tree, T* dataset, size_t size) {
+    // Testing at "0" churn is meaningless, since nothing would be added or removed.
+    // Test at 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100%
+
+    // Use part of the dataset as churn data, the rest is loaded into the tree.
+    for (float churn: {.1, .2, .3, .4, .5, .6, .7, .8, .9, 1.0}) {
+        size_t split_index = size * churn;
+
+        for (size_t i = split_index; i < size; i++) {
+            tree.insert(dataset[i]);
+        }
+
+        // https://stackoverflow.com/a/3093470 shows this is safe because a vector will be continuous
+        auto duration = performanceTest(tree, size, &dataset[0], split_index);
+
+        std::cout << churn * 100 << "% churn\t: "
+                  << duration / 1000000 // million nanoseconds in a millisecond
+                  << "ms" << std::endl;
+
+        tree.clear();
+    }
+}
 int main(int argc, char *argv[]) {
     // Setup random generator
     unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -143,31 +156,12 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Loaded " << dataset.size() << " domains into dataset." << std::endl;
 
-    auto tree = AVLTreeCountable<std::string>(stringCompare);
+    std::cout << "AVL Tree Tests" << std::endl;
+    auto avltree = AVLTreeCountable<std::string>(stringCompare);
+    // Convert vector to pointer
+    churntest(avltree, &dataset[0], dataset.size());
 
-    // Testing at "0" churn is meaningless, since nothing would be added or removed.
-    // Test at 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100%
-
-    // Use part of the dataset as churn data, the rest is loaded into the tree.
-    for (float churn: {.1, .2, .3, .4, .5, .6, .7, .8, .9, 1.0}) {
-        size_t split_index = dataset.size() * churn;
-
-        for (size_t i = split_index; i < dataset.size(); i++) {
-            tree.insert(dataset[i]);
-        }
-
-        // https://stackoverflow.com/a/3093470 shows this is safe because a vector will be continuous
-        auto duration = performanceTest(tree, dataset.size(), &dataset[0], split_index);
-
-        std::cout << churn * 100 << "% churn\t: "
-                  << duration / 1000000 // million nanoseconds in a millisecond
-                  << "ms" << std::endl;
-
-        tree.clear();
-    }
-
-//
-//    std::cout << "Removed all values in Group B in "
-//              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
-//              << "ms" << std::endl;
+    std::cout << "Splay Tree Tests" << std::endl;
+    auto splaytree = SplayTree<std::string>(stringCompare);
+    churntest(splaytree, &dataset[0], dataset.size());
 }
