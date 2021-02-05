@@ -56,7 +56,7 @@ long performanceTest(Tree &tree, size_t iterations, T* testset, size_t length) {
             result = tree.insert(testset[i]);
         else
             result = tree.remove(testset[i]);
-        assert(result);
+        if (!result) throw std::logic_error("tree manipulation failed\n");
 #else
         if (insertion)
             tree.insert(testset[i]);
@@ -70,6 +70,7 @@ long performanceTest(Tree &tree, size_t iterations, T* testset, size_t length) {
         if (i == length) {
             // Restart to the beginning of list.
             insertion = !insertion;
+            i = 0;
         }
     }
 
@@ -101,6 +102,7 @@ void churntest(Tree &tree, T* dataset, size_t size) {
         tree.clear();
     }
 }
+
 int main(int argc, char *argv[]) {
     // Setup random generator
     unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();

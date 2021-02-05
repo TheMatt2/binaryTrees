@@ -23,7 +23,7 @@ class BinaryTree {
     Node *root;
 
     /**
-     * Recusively deallocate the values in the tree.
+     * Recursively deallocate the values in the tree.
      */
     void clearInternal(Node* &node) noexcept;
 
@@ -762,7 +762,7 @@ protected:
 
         if (node->right != nullptr) {
             // Check the the right pointer is greater than node.
-            if (string_compare(node->value, node->right->value) >= 0)
+            if (compare(node->value, node->right->value) >= 0)
                 throw std::logic_error("Node is greater than or equal to its right value");
 
             // Recursive checks
