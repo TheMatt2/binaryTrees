@@ -12,7 +12,6 @@
 #include <iostream>
 #include <algorithm>
 
-
 //#define BINARYTREE_SANITY_CHECK
 //#define BINARYTREE_EXTENDED_SANITY_CHECK
 #include "AVLTree.h"
