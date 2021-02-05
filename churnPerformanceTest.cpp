@@ -34,7 +34,7 @@ void loadDataset(const char *filename, std::vector<std::string> &dataset) {
     }
 }
 
-// Set up for tree, a stringCompare function
+// Set up for tree, a compare function
 inline int stringCompare(const std::string &a, const std::string &b) {
     return a.compare(b);
 }
@@ -127,7 +127,6 @@ int main(int argc, char *argv[]) {
     loadDataset(filename, dataset);
 
     // Sort the data in the vector for deduplicating
-    //std::sort(dataset.begin(), dataset.end(), stringCompare);
     std::sort(dataset.begin(), dataset.end());
 
     // Save size
@@ -152,7 +151,7 @@ int main(int argc, char *argv[]) {
         std::cerr << "Warning: " << init_size - dataset.size() << " duplicates were removed from the dataset." << std::endl;
     }
 
-    std::cout << "Loaded " << dataset.size() << " domains into dataset." << std::endl;
+    std::cout << "Loaded " << dataset.size() << " data points into dataset." << std::endl;
 
     std::cout << "AVL Tree Tests" << std::endl;
     std::cout.setf(std::ios::fixed);
