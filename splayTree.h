@@ -25,8 +25,8 @@ class SplayTree: public BinaryTree<T, Node> {
     bool insertInternal(Node *&node, const T &value);
 
     bool makeSplay(Node *&node, const T &value);
-    void leftRotate(Node *&node);
-    void rightRotate(Node *&node);
+    void rotateLeft(Node *&node);
+    void rotateRight(Node *&node);
 
     bool removeInternal(Node *&node, const T &value);
     Node* popMostLeftInternal(Node *&node);

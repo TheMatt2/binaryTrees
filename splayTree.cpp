@@ -28,7 +28,7 @@ bool SplayTree<T, Node>::makeSplay(Node *&node, const T &value) {
         if (!result) return false;
 
         // Move left to node: a "zig"
-        leftRotate(node);
+        rotateLeft(node);
 	} else {
 	    // Greater than, so input is greater than the node
 	    // Traverse right.
@@ -38,14 +38,14 @@ bool SplayTree<T, Node>::makeSplay(Node *&node, const T &value) {
         if (!result) return false;
 
         // Move right to node: a "zag"
-        rightRotate(node);
+        rotateRight(node);
 	}
 	return true;
 }
 
 
 template <class T, class Node>
-void SplayTree<T, Node>::leftRotate(Node *&node) {
+void SplayTree<T, Node>::rotateLeft(Node *&node) {
     /*
      * Bring the left node up to the node.
      * A "zig"
@@ -77,7 +77,7 @@ void SplayTree<T, Node>::leftRotate(Node *&node) {
 }
 
 template <class T, class Node>
-void SplayTree<T, Node>::rightRotate(Node *&node) {
+void SplayTree<T, Node>::rotateRight(Node *&node) {
     /*
      * Bring the right node up to the node.
      * A "zag"
@@ -196,7 +196,7 @@ Node* SplayTree<T, Node>::popMostLeftInternal(Node *&node) {
 
         // Bring left down to the root
         if (node->left != nullptr)
-            leftRotate(node);
+            rotateLeft(node);
     } else {
         // Return node, but remove from tree.
         temp = node;
@@ -218,7 +218,7 @@ Node* SplayTree<T, Node>::popMostRightInternal(Node *&node) {
 
         // Bring left down to the root
         if (node->right != nullptr)
-            rightRotate(node);
+            rotateRight(node);
     } else {
         // Return node, but remove from tree.
         temp = node;
@@ -274,9 +274,9 @@ bool SplayTree<T, Node>::removeInternal(Node *&node, const T &value) {
             node = temp;
         } else if (node->left != nullptr) {
             // Since right doesn't exist, temp must only be a leaf
+            // TODO fix this
             assert(node->right == nullptr);
             Node *temp = node->left;
-            assert(temp->left == nullptr && temp->right == nullptr);
 
             delete node;
             node = temp;
@@ -296,7 +296,7 @@ bool SplayTree<T, Node>::removeInternal(Node *&node, const T &value) {
         if (node->left != nullptr) {
             success = removeInternal(node->left, value);
             // Move left to root
-            leftRotate(node->left);
+            rotateLeft(node->left);
         } else {
             success = false;
         }
@@ -304,7 +304,7 @@ bool SplayTree<T, Node>::removeInternal(Node *&node, const T &value) {
         if (node->right != nullptr) {
             success = removeInternal(node->right, value);
             // Move right to root
-            rightRotate(node->right);
+            rotateRight(node->right);
         } else {
             success = false;
         }
