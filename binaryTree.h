@@ -14,6 +14,25 @@
 
 #include "clearable_queue.h"
 
+// Default comparator functions
+template <class T>
+inline int _compare(const T &a, const T &b) {
+    if (a < b)  return -1;
+    if (a == b) return  0;
+    else        return  1;
+}
+
+template <>
+inline int _compare(const std::string &a, const std::string &b) {
+    return a.compare(b);
+}
+
+// All integer types have a simple compare function
+template <> inline int _compare(const int &a, const int &b) {return a - b;}
+template <> inline int _compare(const char &a, const char &b) {return a - b;}
+template <> inline int _compare(const short &a, const short &b) {return a - b;}
+//template <> int _compare(const long &a, const long &b) {return a - b;} // TODO safe long compare
+
 template <class T, class Node>
 class BinaryTree {
   protected:
@@ -82,7 +101,7 @@ class BinaryTree {
     class queue_iterator;
 
   public:
-    explicit BinaryTree(int (*compare)(const T &a, const T &b)): compare(compare), root(nullptr) {};
+    explicit BinaryTree(int (*compare)(const T &a, const T &b) = _compare): compare(compare), root(nullptr) {};
     virtual ~BinaryTree() {clearInternal(root);}
 
     virtual bool contains(const T &value) noexcept = 0;
