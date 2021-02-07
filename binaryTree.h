@@ -12,32 +12,61 @@
 #include <iostream>
 #include <stdexcept>
 
+#if __cplusplus > 201703L
+#include <compare>
+#define _Compare_Type std::weak_ordering
+#define _Compat_Compare_Type int
+#else
+#define _Compare_Type int
+#endif
+
 #include "clearable_queue.h"
 
 // Default comparator functions
 template <class T>
-inline int _compare(const T &a, const T &b) {
-    if (a < b)  return -1;
-    if (a == b) return  0;
-    else        return  1;
+inline _Compare_Type default_compare(const T &a, const T &b) noexcept {
+// Make use of c++2a compare if available
+#if __cplusplus > 201703L
+    // C++2a (and later) code
+    return a <=> b;
+#else
+    if (a < b)       return -1;
+    else if (a == b) return  0;
+    else             return  1;
+#endif
 }
 
-template <>
-inline int _compare(const std::string &a, const std::string &b) {
-    return a.compare(b);
-}
+#if __cplusplus <= 201703L
+template <> inline _Compare_Type default_compare(const std::string &a, const std::string &b) noexcept {return a.compare(b);}
 
 // All integer types have a simple compare function
-template <> inline int _compare(const int &a, const int &b) {return a - b;}
-template <> inline int _compare(const char &a, const char &b) {return a - b;}
-template <> inline int _compare(const short &a, const short &b) {return a - b;}
-//template <> int _compare(const long &a, const long &b) {return a - b;} // TODO safe long compare
+template <> inline _Compare_Type default_compare(const int &a, const int &b) noexcept {return a - b;}
+template <> inline _Compare_Type default_compare(const char &a, const char &b) noexcept {return a - b;}
+template <> inline _Compare_Type default_compare(const short &a, const short &b) noexcept {return a - b;}
+//template <> int default_compare(const long &a, const long &b) noexcept {return a - b;} // TODO safe long compare
+#else
+template <class T>
+class CompatibilityCompare {
+    _Compat_Compare_Type (*compare)(const T &a, const T &b);
+  public:
+    explicit CompatibilityCompare(_Compat_Compare_Type (*compare)(const T &a, const T &b)): compare(compare) {};
+
+    _Compare_Type operator()(const T &a, const T &b) {return compare(a, b) <=> 0;}
+
+};
+
+// std::string should have <=> operator, but does not in c++2a
+#if __cplusplus < 202002L
+// greater than c++17, c++20. Therefore c++2a
+template <> inline _Compare_Type default_compare(const std::string &a, const std::string &b) noexcept {return a.compare(b) <=> 0;}
+#endif
+#endif
 
 template <class T, class Node>
 class BinaryTree {
   protected:
     // Comparison function
-    int (*compare)(const T &a, const T &b);
+    _Compare_Type (*compare)(const T &a, const T &b);
 
     Node *root;
 
@@ -101,7 +130,13 @@ class BinaryTree {
     class queue_iterator;
 
   public:
-    explicit BinaryTree(int (*compare)(const T &a, const T &b) = _compare): compare(compare), root(nullptr) {};
+    explicit BinaryTree(_Compare_Type (*compare)(const T &a, const T &b) = default_compare): compare(compare), root(nullptr) {};
+
+#if __cplusplus > 201703L
+    // Add a compatibility constructor for compare functions that return int
+    explicit BinaryTree(_Compat_Compare_Type (*compare)(const T &a, const T &b)): BinaryTree(CompatibilityCompare(compare)) {};
+#endif
+
     virtual ~BinaryTree() {clearInternal(root);}
 
     virtual bool contains(const T &value) noexcept = 0;
