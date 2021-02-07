@@ -29,6 +29,36 @@ int compare(const std::string &a, const std::string &b) {
     return a.compare(b);
 }
 
+template <class T, class Tree>
+long insertAll(Tree &tree, T *elements, size_t size) {
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for (size_t i = 0; i < size; i++) {
+        tree.insert(elements[i]);
+#ifdef BINARYTREE_EXTENDED_SANITY_CHECK
+        avlTree.sanityCheck();
+#endif
+    }
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
+}
+
+template <class T, class Tree>
+long removeAll(Tree &tree, T *elements, size_t size) {
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for (size_t i = 0; i < size; i++) {
+        tree.remove(elements[i]);
+#ifdef BINARYTREE_EXTENDED_SANITY_CHECK
+        avlTree.sanityCheck();
+#endif
+    }
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
+}
+
 int main(int argc, char *argv[]) {
     std::cout << "Loading Database" << std::endl;
 
@@ -43,8 +73,6 @@ int main(int argc, char *argv[]) {
     }
 
     auto start = std::chrono::high_resolution_clock::now();
-
-    // Big table all domains will end up in
     std::vector<std::string> database;
 
     loadDataset(filename, database);
@@ -67,53 +95,26 @@ int main(int argc, char *argv[]) {
     std::cout << "Loaded " << groupA_size << " data points into Group A" << std::endl;
     std::cout << "Loaded " << groupB_size << " data points into Group B" << std::endl;
 
-    AVLTreeCountable<std::string> avlTree = AVLTreeCountable<std::string>(compare);
+    AVLTree<std::string> avlTree = AVLTree<std::string>(compare);
 
-    std::cout << "Add Group A into a tree" << std::endl;
+    std::cout.setf(std::ios::fixed);
+    std::cout.precision(4);
 
-    start = std::chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < groupA_size; i++) {
-#ifdef AVLTREE_EXTENDED_SANITY_CHECK
-        avlTree.sanityCheck();
-#endif
-        avlTree.insert(groupA[i]);
-    }
-#ifdef AVLTREE_SANITY_CHECK
-    avlTree.sanityCheck();
-#endif
-    stop = std::chrono::high_resolution_clock::now();
+    std::cout << "Insert Group A: ";
+    auto duration = insertAll(avlTree, groupA, groupA_size);
+    std::cout << duration / 1000000.0 << "ms" << std::endl;
 
-    // Count values
-    unsigned int count = avlTree.count();
+    std::cout << "Insert Group B: ";
+    duration = insertAll(avlTree, groupB, groupB_size);
+    std::cout << duration / 1000000.0 << "ms" << std::endl;
 
-    std::cout << "Inserted " << count << " data points in "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
-              << "ms" << std::endl;
+    std::cout << "Remove Group A: ";
+    duration = removeAll(avlTree, groupA, groupA_size);
+    std::cout << duration / 1000000.0 << "ms" << std::endl;
 
-    std::cout << "Removing " << groupB_size << " values from Group B" << std::endl;
+    std::cout << "Remove Group B: ";
+    duration = removeAll(avlTree, groupB, groupB_size);
+    std::cout << duration / 1000000.0 << "ms" << std::endl;
 
-    start = std::chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < groupB_size; i++) {
-#ifdef AVLTREE_EXTENDED_SANITY_CHECK
-        avlTree.sanityCheck();
-#endif
-        count -= avlTree.remove(groupB[i]);
-    }
-#ifdef AVLTREE_SANITY_CHECK
-    avlTree.sanityCheck();
-#endif
-    stop = std::chrono::high_resolution_clock::now();
-
-    // Check that counts match
-    count -= avlTree.count();
-
-    if (count != 0) {
-        // Something failed
-        std::cerr << "AVLTree changed size unexpectedly during item removal." << std::endl;
-        exit(2);
-    }
-
-    std::cout << "Removed all data points in Group B in "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count()
-              << "ms" << std::endl;
+    assert(avlTree.empty());
 }
