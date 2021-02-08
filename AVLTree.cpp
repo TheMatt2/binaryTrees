@@ -315,22 +315,17 @@ void AVLTree<T, Node>::rebalance(Node *&node){
      * If needed, shifts node, node->left, and node->right
      * will to transformed to balance the node.
      */
-    int heightLeft, heightRight;
+    int cmp = 0;
 
     // Get the heightLeft, 0 if null
     if (node->left != nullptr)
-        heightLeft = node->left->height;
-    else
-        heightLeft = 0;
+        cmp += node->left->height;
 
     // Get the heightRight, 0 if null
     if (node->right != nullptr)
-        heightRight = node->right->height;
-    else
-        heightRight = 0;
+        cmp -= node->right->height;
 
     // If the difference between left and right is greater than 1, we need to rebalance.
-    int cmp = heightLeft - heightRight;
     if (cmp >= 2) {
         // HeightLeft is not null
         // And right is too much lower than left, (and might be null)
