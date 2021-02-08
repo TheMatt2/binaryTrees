@@ -36,10 +36,10 @@ void AVLTree<T, Node>::updateHeight(Node *&node) {
     } else {
         // Left does not exist
         if (node->right != nullptr) {
-            // Right exists, right does not
+            // Right exists, left does not
             node->height = node->right->height + 1;
         } else {
-            // Neither left or right exist
+            // Neither left nor right exist
             node->height = 1;
         }
     }
