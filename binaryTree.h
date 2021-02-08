@@ -762,7 +762,8 @@ protected:
     // Only define sanity check if compile flag is specified.
     // Throws errors if anything is wrong
     virtual void sanityCheck() const {
-        sanityCheckInternal(root);
+        if (root != nullptr)
+            sanityCheckInternal(root);
     }
   protected:
     virtual void sanityCheckInternal(const Node* const &node) const {
