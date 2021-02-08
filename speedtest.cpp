@@ -24,11 +24,6 @@ void loadDataset(const char *filename, std::vector<std::string> &dataset) {
     }
 }
 
-// Set up for tree, a compare function
-int compare(const std::string &a, const std::string &b) {
-    return a.compare(b);
-}
-
 template <class T, class Tree>
 long insertAll(Tree &tree, T *elements, size_t size) {
     auto start = std::chrono::high_resolution_clock::now();
@@ -95,7 +90,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Loaded " << groupA_size << " data points into Group A" << std::endl;
     std::cout << "Loaded " << groupB_size << " data points into Group B" << std::endl;
 
-    AVLTree<std::string> avlTree = AVLTree<std::string>(compare);
+    AVLTree<std::string> avlTree = AVLTree<std::string>();
 
     std::cout.setf(std::ios::fixed);
     std::cout.precision(4);
