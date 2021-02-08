@@ -4,8 +4,8 @@
 #include <fstream>
 #include <iostream>
 
-//#define BINARYTREE_SANITY_CHECK
-//#define BINARYTREE_EXTENDED_SANITY_CHECK
+#define BINARYTREE_SANITY_CHECK
+#define BINARYTREE_EXTENDED_SANITY_CHECK
 #include "AVLTree.h"
 
 void loadDataset(const char *filename, std::vector<std::string> &dataset) {
@@ -31,7 +31,7 @@ long insertAll(Tree &tree, T *elements, size_t size) {
     for (size_t i = 0; i < size; i++) {
         tree.insert(elements[i]);
 #ifdef BINARYTREE_EXTENDED_SANITY_CHECK
-        avlTree.sanityCheck();
+        tree.sanityCheck();
 #endif
     }
 
@@ -46,7 +46,7 @@ long removeAll(Tree &tree, T *elements, size_t size) {
     for (size_t i = 0; i < size; i++) {
         tree.remove(elements[i]);
 #ifdef BINARYTREE_EXTENDED_SANITY_CHECK
-        avlTree.sanityCheck();
+        tree.sanityCheck();
 #endif
     }
 
