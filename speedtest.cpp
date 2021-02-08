@@ -4,8 +4,8 @@
 #include <fstream>
 #include <iostream>
 
-#define BINARYTREE_SANITY_CHECK
-#define BINARYTREE_EXTENDED_SANITY_CHECK
+//#define BINARYTREE_SANITY_CHECK
+//#define BINARYTREE_EXTENDED_SANITY_CHECK
 #include "AVLTree.h"
 
 void loadDataset(const char *filename, std::vector<std::string> &dataset) {
