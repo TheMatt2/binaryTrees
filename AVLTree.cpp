@@ -199,7 +199,7 @@ void AVLTree<T, Node>::leftRotation(Node *&node) {
     }
 
     // Recalculate heights
-    // Recalculate for node->left, node->right, and node;
+    // Recalculate for node->left, node->right, and node
     updateHeight(node->left);
     updateHeight(node->right);
     updateHeight(node);
@@ -302,7 +302,8 @@ void AVLTree<T, Node>::rightRotation(Node *&node){
     }
 
     // Recalculate heights
-    // Recalculate for node->left, node->right, and node;
+    // Recalculate for node->left, node->right, and node
+
     updateHeight(node->left);
     updateHeight(node->right);
     updateHeight(node);
