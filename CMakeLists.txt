@@ -25,7 +25,7 @@ add_executable(
 
 add_executable(
         churntest
-        churnPerformanceTest.cpp
+        churntest.cpp
         AVLTree.cpp
         splayTree.cpp
         binaryTree.cpp
