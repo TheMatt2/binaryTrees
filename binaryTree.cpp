@@ -28,7 +28,7 @@ void BinaryTree<T, Node>::clearInternal(Node* &node) noexcept {
 }
 
 template <class T, class Node>
-bool BinaryTree<T, Node>::empty() const {
+bool BinaryTree<T, Node>::empty() const noexcept {
     return root == nullptr;
 }
 

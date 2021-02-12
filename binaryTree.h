@@ -115,7 +115,7 @@ class BinaryTree {
     virtual void clear() noexcept;
 
     // Test if empty
-    bool empty() const;
+    bool empty() const noexcept;
 
     // Get the value at the root
     virtual T getRoot() const;
