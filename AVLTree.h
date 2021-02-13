@@ -4,6 +4,7 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 
+#include <cstdint>
 #include "binaryTree.h"
 
 template <class T>
@@ -12,7 +13,10 @@ struct AVLTreeNode {
 
     AVLTreeNode *left;
     AVLTreeNode *right;
-    unsigned int height;
+
+    // a byte is plenty for the height
+    // That is sufficient for 2 ^ (2 ^ 8)) elements ~ 10 ^ 77 ~ many many yottabytes of data
+    uint8_t height;
 
     T value;
 };

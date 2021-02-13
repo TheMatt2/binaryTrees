@@ -373,7 +373,7 @@ bool AVLTree<T, Node>::insertInternal(Node *&node, const T &value) {
     }
 
     // else
-    unsigned int child_height;
+    uint8_t child_height;
     if (cmp < 0) {
         // value is less than node
         // So insert value left
