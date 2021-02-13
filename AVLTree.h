@@ -104,8 +104,8 @@ class AVLTree: public BinaryTree<T, Node> {
 #endif
 };
 
-// A specialized AVLTree that tracks the count of elements in the tree.
-// This uses another integer, but makes an O(1) count() function
+// A specialized AVLTree that tracks the size of elements in the tree.
+// This uses another integer, but makes an O(1) size() function
 template <class T, class Node = AVLTreeNode<T>>
 class AVLTreeCountable: public AVLTree<T, Node> {
     using AVLTree<T, Node>::root;
@@ -117,7 +117,7 @@ class AVLTreeCountable: public AVLTree<T, Node> {
     bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
     void clear() noexcept override;
-    unsigned int count() const noexcept;
+    unsigned int size() const noexcept;
 
 #ifdef BINARYTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
@@ -132,7 +132,7 @@ class AVLTreeCountable: public AVLTree<T, Node> {
         }
 
         if (count != _count)
-            throw std::logic_error("AVLTree count does not match number of elements");
+            throw std::logic_error("AVLTree size does not match number of elements");
     }
 #endif
   protected:

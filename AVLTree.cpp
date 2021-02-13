@@ -546,7 +546,7 @@ void AVLTreeCountable<T, Node>::clear() noexcept {
 }
 
 template <class T, class Node>
-unsigned int AVLTreeCountable<T, Node>::count() const noexcept {
+unsigned int AVLTreeCountable<T, Node>::size() const noexcept {
     return _count;
 }
 #endif

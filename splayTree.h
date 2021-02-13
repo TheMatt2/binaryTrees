@@ -43,8 +43,8 @@ class SplayTree: public BinaryTree<T, Node> {
     T popMostRight() override;
 };
 
-// A specialized SplayTree that tracks the count of elements in the tree.
-// This uses another integer, but makes an O(1) count() function
+// A specialized SplayTree that tracks the size of elements in the tree.
+// This uses another integer, but makes an O(1) size() function
 template <class T, class Node = SplayTreeNode<T>>
 class SplayTreeCountable: public SplayTree<T, Node> {
     using SplayTree<T, Node>::root;
@@ -56,7 +56,7 @@ class SplayTreeCountable: public SplayTree<T, Node> {
     bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
     void clear() noexcept override;
-    unsigned int count() const noexcept;
+    unsigned int size() const noexcept;
 
 #ifdef BINARYTREE_SANITY_CHECK
     void sanityCheck() const override {
@@ -69,10 +69,10 @@ class SplayTreeCountable: public SplayTree<T, Node> {
         }
 
         if (count != _count)
-            throw std::logic_error("SplayTree count does not match number of elements");
+            throw std::logic_error("SplayTree size does not match number of elements");
     }
 #endif
-protected:
+  protected:
     unsigned int _count;
 };
 #include "splayTree.cpp"
