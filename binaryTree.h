@@ -132,7 +132,7 @@ class BinaryTree {
 
     /**
      * Print a text visualization of the binary tree.
-     * Prints out a tree with showing each value and its relation to other
+     * Prints out a tree showing each value and its relation to other
      * values in the tree.
      *
      * If a value in the tree does not exist, the `fill` character is used to represent it.
@@ -192,7 +192,7 @@ class BinaryTree {
 
     /**
      * Print a text visualization of the binary tree.
-     * Prints out a tree with showing each value and its relation to other
+     * Prints out a tree showing each value and its relation to other
      * values in the tree.
      *
      * If a value in the tree does not exist, the `fill` character is used to represent it.
@@ -264,6 +264,24 @@ class BinaryTree {
     void printTreeWithSpacing(unsigned int spacing, unsigned int width = 0, unsigned int height = 0,
                               char fill = ' ', bool biasLeft = true, bool trailing = false,
                               char background = ' ', std::ostream &ostream = std::cout) const;
+
+    /**
+     * Print a text visualization of the binary tree.
+     * Prints out a tree with showing each value and its relation to other
+     * values in the tree.
+     *
+     * Example:
+     *        3
+     *    1       7
+     *  0   2   5   8
+     *         4 6   9
+     *
+     * This is a simplified caller that allows for only specifying the output stream.
+     *
+     * @param ostream
+     * Output stream to print the tree to.
+     */
+    void printTree(std::ostream &ostream) const;
 
     // iterators
     class preorder_iterator;

@@ -103,6 +103,11 @@ unsigned int BinaryTree<T, Node>::getHeightInternal(const Node* const &node) con
 }
 
 template <class T, class Node>
+void BinaryTree<T, Node>::printTree(std::ostream &ostream) const {
+    printTree(0, 0, ' ', true, false, ' ', ostream);
+}
+
+template <class T, class Node>
 void BinaryTree<T, Node>::printTree(unsigned int width, const unsigned int height, const char fill, const bool biasLeft,
                                     const bool trailing, const char background, std::ostream &ostream) const {
     // Spacing is equal to width
