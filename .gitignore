@@ -2,3 +2,9 @@
 cmake-build-debug/
 cmake-build-debug-coverage/
 
+# Testing build tools
+new/
+old/
+breakdown.sh
+cleaner.py
+cleaner_objdump.py
