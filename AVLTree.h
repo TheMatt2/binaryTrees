@@ -132,7 +132,7 @@ class AVLTreeCountable: public AVLTree<T, Node> {
         }
 
         if (count != _count)
-            throw std::logic_error("AVLTree size does not match number of elements");
+            throw std::logic_error("AVLTree size does not match count of elements");
     }
 #endif
   protected:
