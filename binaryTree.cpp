@@ -59,7 +59,7 @@ void replaceNode(Node *&node, Node * const other) {
         // Preserve pointers to next
         Node *left = node->left;
         Node *right = node->right;
-        node = other;
+        *node = *other;
         node->left = left;
         node->right = right;
 
