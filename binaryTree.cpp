@@ -76,7 +76,7 @@ BinaryTree<T, Node>::BinaryTree(const BinaryTree &tree): compare(tree.compare) {
 
 // Assignment constructor
 template <class T, class Node>
-BinaryTree<T, Node>& BinaryTree<T, Node>::operator= (const BinaryTree<T, Node> &tree) { // NOLINT: Despite what the linter thinks, this properly handles self assignment
+BinaryTree<T, Node>& BinaryTree<T, Node>::operator=(const BinaryTree<T, Node> &tree) { // NOLINT: Despite what the linter thinks, this properly handles self assignment
     compare = tree.compare;
     replaceNode(root, tree.root);
     return *this;
