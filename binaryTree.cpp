@@ -27,6 +27,61 @@ void BinaryTree<T, Node>::clearInternal(Node* &node) noexcept {
     }
 }
 
+template <class Node>
+Node* copyNode(const Node * const node) {
+    if (node == nullptr) {
+        return nullptr;
+    }
+    Node *newNode = new Node(*node);
+
+    // Copy left and right
+    newNode->left = copyNode(node->left);
+    newNode->right = copyNode(node->right);
+
+    return newNode;
+}
+
+template <class Node>
+void replaceNode(Node *&node, Node * const other) {
+    // Create node, delete node, or assign, depending in need
+    if (other == nullptr) {
+        // Delete
+        delete node;
+        node = other;
+    } else if (node == nullptr) {
+        // Create
+        node = new Node(*other);
+        node->left = copyNode(other->left);
+        node->right = copyNode(other->right);
+    } else {
+        // Assign
+
+        // Preserve pointers to next
+        Node *left = node->left;
+        Node *right = node->right;
+        node = other;
+        node->left = left;
+        node->right = right;
+
+        replaceNode(node->left, other->left);
+        replaceNode(node->right, other->right);
+    }
+}
+
+// Copy constructor
+template <class T, class Node>
+BinaryTree<T, Node>::BinaryTree(const BinaryTree &tree): compare(tree.compare) {
+    root = copyNode(tree.root);
+}
+
+// Assignment constructor
+template <class T, class Node>
+BinaryTree<T, Node>& BinaryTree<T, Node>::operator= (const BinaryTree<T, Node> &tree) { // NOLINT: Despite what the linter thinks, this properly handles self assignment
+    compare = tree.compare;
+    replaceNode(root, tree.root);
+    return *this;
+}
+
 template <class T, class Node>
 bool BinaryTree<T, Node>::empty() const noexcept {
     return root == nullptr;

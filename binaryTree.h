@@ -100,6 +100,12 @@ class BinaryTree {
   public:
     explicit BinaryTree(int (*compare)(const T &a, const T &b) = default_compare): compare(compare), root(nullptr) {};
 
+    // Copy constructor
+    BinaryTree(const BinaryTree &tree);
+
+    // Assignment constructor
+    BinaryTree& operator= (const BinaryTree &tree);
+
     virtual ~BinaryTree() {clearInternal(root);}
 
     virtual bool contains(const T &value) noexcept = 0;

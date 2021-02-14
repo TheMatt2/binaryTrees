@@ -11,6 +11,9 @@ template <class T>
 struct AVLTreeNode {
     explicit AVLTreeNode(const T &value): left(nullptr), right(nullptr), height(1), value(value) {}
 
+    // Copy constructor
+    AVLTreeNode(const AVLTreeNode &tree) = default;
+
     AVLTreeNode *left;
     AVLTreeNode *right;
 

@@ -19,6 +19,14 @@ int main() {
 
     AVLTree<int> tree(compare);
 
+    AVLTree<int> tree2(compare);
+
+    for (int i = 0; i < 11; i++) {
+        tree2.insert(i);
+    }
+    tree2 = tree2;
+    tree = tree2;
+
     tree.insert(3);
     tree.insert(2);
     tree.insert(6);
