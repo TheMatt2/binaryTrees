@@ -525,6 +525,14 @@ bool AVLTree<T, Node>::removeInternal(Node *&node, const T &value) {
     return true;
 }
 
+// Assignment constructor
+template <class T, class Node>
+AVLTreeCountable<T, Node>& AVLTreeCountable<T, Node>::operator=(const AVLTreeCountable<T, Node> &tree) {
+    AVLTree<T, Node>::operator=(tree);
+    _count = tree._count;
+    return *this;
+}
+
 template <class T, class Node>
 bool AVLTreeCountable<T, Node>::insert(const T &value) noexcept {
     bool result = AVLTree<T, Node>::insert(value);
@@ -539,14 +547,23 @@ bool AVLTreeCountable<T, Node>::remove(const T &value) noexcept {
     return result;
 }
 
+//template <class T, class Node>
+//void AVLTreeCountable<T, Node>::clear() noexcept {
+//    AVLTree<T, Node>::clear();
+//    _count = 0;
+//}
+
 template <class T, class Node>
-void AVLTreeCountable<T, Node>::clear() noexcept {
-    AVLTree<T, Node>::clear();
-    _count = 0;
+T AVLTreeCountable<T, Node>::popMostLeft() {
+    const T &result = AVLTree<T, Node>::popMostLeft();
+    _count--;
+    return result;
 }
 
 template <class T, class Node>
-unsigned int AVLTreeCountable<T, Node>::size() const noexcept {
-    return _count;
+T AVLTreeCountable<T, Node>::popMostRight() {
+    const T &result = AVLTree<T, Node>::popMostRight();
+    _count--;
+    return result;
 }
 #endif

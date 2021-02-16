@@ -25,7 +25,7 @@ struct AVLTreeNode {
 };
 
 template <class T, class Node = AVLTreeNode<T>>
-class AVLTree: public BinaryTree<T, Node> {
+class AVLTree: virtual public BinaryTree<T, Node> {
   protected:
     using BinaryTree<T, Node>::root;
     using BinaryTree<T, Node>::compare;
@@ -110,36 +110,23 @@ class AVLTree: public BinaryTree<T, Node> {
 // A specialized AVLTree that tracks the size of elements in the tree.
 // This uses another integer, but makes an O(1) size() function
 template <class T, class Node = AVLTreeNode<T>>
-class AVLTreeCountable: public AVLTree<T, Node> {
-    using AVLTree<T, Node>::root;
-    using AVLTree<T, Node>::preorder_begin;
-    using AVLTree<T, Node>::preorder_end;
+class AVLTreeCountable: public AVLTree<T, Node>, public BinaryTreeCountable<T, Node> {
+  protected:
+    using BinaryTreeCountable<T, Node>::_count;
   public:
-    explicit AVLTreeCountable(int (*compare)(const T &a, const T &b)): AVLTree<T, Node>::AVLTree(compare), _count(0) {};
+    explicit AVLTreeCountable(int (*compare)(const T &a, const T &b) = default_compare): AVLTree<T, Node>::AVLTree(compare) {}
+
+    // Copy constructor
+    AVLTreeCountable(const AVLTreeCountable &tree) {AVLTree<T, Node>::AVLTree(tree); _count = tree._count;};
+
+    // Assignment constructor
+    AVLTreeCountable& operator=(const AVLTreeCountable &tree);
 
     bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
-    void clear() noexcept override;
-    unsigned int size() const noexcept;
 
-#ifdef BINARYTREE_SANITY_CHECK
-    // Only define sanity check if compile flag is specified.
-    // Throws errors if anything is wrong
-    void sanityCheck() const override {
-        BinaryTree<T, Node>::sanityCheck();
-
-        // Add additional check for the count variable (expensive)
-        unsigned int count = 0;
-        for (auto it = preorder_begin(); it != preorder_end(); it++) {
-            count++;
-        }
-
-        if (count != _count)
-            throw std::logic_error("AVLTree size does not match count of elements");
-    }
-#endif
-  protected:
-    unsigned int _count;
+    T popMostLeft() override;
+    T popMostRight() override;
 };
 #include "AVLTree.cpp"
 #endif

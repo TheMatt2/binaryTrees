@@ -104,7 +104,7 @@ class BinaryTree {
     BinaryTree(const BinaryTree &tree);
 
     // Assignment constructor
-    BinaryTree& operator= (const BinaryTree &tree);
+    BinaryTree& operator=(const BinaryTree &tree);
 
     virtual ~BinaryTree() {clearInternal(root);}
 
@@ -812,6 +812,46 @@ protected:
         }
     }
 #endif
+};
+
+// A specialized BinaryTree that tracks the size the tree.
+// This uses another integer, but makes an O(1) size() function
+template <class T, class Node>
+class BinaryTreeCountable: virtual public BinaryTree<T, Node> {
+  public:
+    // Copy constructor and Assignment constructor
+    // need to be implemented
+
+    using BinaryTree<T, Node>::preorder_begin;
+    using BinaryTree<T, Node>::preorder_end;
+
+    bool insert(const T &value) noexcept override = 0;
+    bool remove(const T &value) noexcept override = 0;
+    void clear() noexcept override {BinaryTree<T, Node>::clear(); _count = 0;};
+
+    T popMostLeft() override = 0;
+    T popMostRight() override = 0;
+
+    unsigned int size() const noexcept {return _count;};
+
+#ifdef BINARYTREE_SANITY_CHECK
+    // Only define sanity check if compile flag is specified.
+    // Throws errors if anything is wrong
+    void sanityCheck() const override {
+        BinaryTree<T, Node>::sanityCheck();
+
+        // Add additional check for the count variable (expensive)
+        unsigned int count = 0;
+        for (auto it = preorder_begin(); it != preorder_end(); it++) {
+            count++;
+        }
+
+        if (count != _count)
+            throw std::logic_error("BinaryTree size does not match count of elements");
+    }
+#endif
+  protected:
+    unsigned int _count = 0;
 };
 #include "binaryTree.cpp"
 #endif
