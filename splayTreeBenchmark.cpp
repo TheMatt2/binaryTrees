@@ -1,7 +1,7 @@
 /*
  * Performance Benchmark for AVLTree
  *
- * g++ AVLTreeBenchmark.cpp -Wall -pedantic -std=c++14 -mtune=native -march=native -O3 -DNDEBUG -lbenchmark -lpthread -o AVLTreeBenchmark
+ * g++ splayTreeBenchmark.cpp -Wall -pedantic -std=c++14 -mtune=native -march=native -O3 -DNDEBUG -lbenchmark -lpthread -o splayTreeBenchmark
  *
  * Concepts taken from https://github.com/google/benchmark/blob/master/test/benchmark_test.cc
  */
@@ -15,12 +15,12 @@
 #include <fstream>
 #include <iostream>
 
-//#define BINARYTREE_SANITY_CHECK
+#define BINARYTREE_SANITY_CHECK
 
 // Default test parameters
 #define TESTS Ranges({{1 << 10, 8 << 10}, {128, 512}})->Complexity()->Threads(1)->ThreadPerCpu()
 
-#include "AVLTree.h"
+#include "splayTree.h"
 
 inline int RandomNumber() {
     return rand();
@@ -40,8 +40,8 @@ inline void ConstructRandomTree(Tree &tree, size_t size) {
 #endif
 }
 
-static void BM_AVLTreeInsert(benchmark::State &state) {
-    AVLTree<int> tree;
+static void BM_SplayTreeInsert(benchmark::State &state) {
+    SplayTree<int> tree;
     for (auto _ : state) {
         state.PauseTiming();
         ConstructRandomTree(tree, state.range(0));
@@ -52,10 +52,10 @@ static void BM_AVLTreeInsert(benchmark::State &state) {
     }
     state.SetComplexityN(state.range(0));
 }
-BENCHMARK(BM_AVLTreeInsert)->TESTS;
+BENCHMARK(BM_SplayTreeInsert)->TESTS;
 
-static void BM_AVLTreeRemove(benchmark::State &state) {
-    AVLTree<int> tree;
+static void BM_SplayTreeRemove(benchmark::State &state) {
+    SplayTree<int> tree;
     for (auto _ : state) {
         state.PauseTiming();
         ConstructRandomTree(tree, state.range(0));
@@ -66,10 +66,10 @@ static void BM_AVLTreeRemove(benchmark::State &state) {
     }
     state.SetComplexityN(state.range(0));
 }
-BENCHMARK(BM_AVLTreeRemove)->TESTS;
+BENCHMARK(BM_SplayTreeRemove)->TESTS;
 
-static void BM_AVLTreeContains(benchmark::State &state) {
-    AVLTree<int> tree;
+static void BM_SplayTreeContains(benchmark::State &state) {
+    SplayTree<int> tree;
     for (auto _ : state) {
         state.PauseTiming();
         ConstructRandomTree(tree, state.range(0));
@@ -80,10 +80,10 @@ static void BM_AVLTreeContains(benchmark::State &state) {
     }
     state.SetComplexityN(state.range(0));
 }
-BENCHMARK(BM_AVLTreeContains)->TESTS;
+BENCHMARK(BM_SplayTreeContains)->TESTS;
 
-static void BM_AVLTreeCountableInsert(benchmark::State &state) {
-    AVLTreeCountable<int> tree;
+static void BM_SplayTreeCountableInsert(benchmark::State &state) {
+    SplayTreeCountable<int> tree;
     for (auto _ : state) {
         state.PauseTiming();
         ConstructRandomTree(tree, state.range(0));
@@ -94,10 +94,10 @@ static void BM_AVLTreeCountableInsert(benchmark::State &state) {
     }
     state.SetComplexityN(state.range(0));
 }
-BENCHMARK(BM_AVLTreeCountableInsert)->TESTS;
+BENCHMARK(BM_SplayTreeCountableInsert)->TESTS;
 
-static void BM_AVLTreeCountableRemove(benchmark::State &state) {
-    AVLTreeCountable<int> tree;
+static void BM_SplayTreeCountableRemove(benchmark::State &state) {
+    SplayTreeCountable<int> tree;
     for (auto _ : state) {
         state.PauseTiming();
         ConstructRandomTree(tree, state.range(0));
@@ -108,10 +108,10 @@ static void BM_AVLTreeCountableRemove(benchmark::State &state) {
     }
     state.SetComplexityN(state.range(0));
 }
-BENCHMARK(BM_AVLTreeCountableRemove)->TESTS;
+BENCHMARK(BM_SplayTreeCountableRemove)->TESTS;
 
-static void BM_AVLTreeCountableContains(benchmark::State &state) {
-    AVLTreeCountable<int> tree;
+static void BM_SplayTreeCountableContains(benchmark::State &state) {
+    SplayTreeCountable<int> tree;
     for (auto _ : state) {
         state.PauseTiming();
         ConstructRandomTree(tree, state.range(0));
@@ -122,6 +122,6 @@ static void BM_AVLTreeCountableContains(benchmark::State &state) {
     }
     state.SetComplexityN(state.range(0));
 }
-BENCHMARK(BM_AVLTreeCountableContains)->TESTS;
+BENCHMARK(BM_SplayTreeCountableContains)->TESTS;
 
 BENCHMARK_MAIN();

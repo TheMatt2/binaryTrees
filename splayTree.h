@@ -17,7 +17,7 @@ struct SplayTreeNode {
 };
 
 template <class T, class Node = SplayTreeNode<T>>
-class SplayTree: public BinaryTree<T, Node> {
+class SplayTree: virtual public BinaryTree<T, Node> {
   protected:
     using BinaryTree<T, Node>::root;
     using BinaryTree<T, Node>::compare;
@@ -46,34 +46,23 @@ class SplayTree: public BinaryTree<T, Node> {
 // A specialized SplayTree that tracks the size of elements in the tree.
 // This uses another integer, but makes an O(1) size() function
 template <class T, class Node = SplayTreeNode<T>>
-class SplayTreeCountable: public SplayTree<T, Node> {
-    using SplayTree<T, Node>::root;
-    using SplayTree<T, Node>::preorder_begin;
-    using SplayTree<T, Node>::preorder_end;
+class SplayTreeCountable: public SplayTree<T, Node>, public BinaryTreeCountable<T, Node> {
+protected:
+    using BinaryTreeCountable<T, Node>::_count;
   public:
-    explicit SplayTreeCountable(int (*compare)(const T &a, const T &b)): SplayTree<T, Node>::SplayTree(compare), _count(0) {};
+    explicit SplayTreeCountable(int (*compare)(const T &a, const T &b) = default_compare): SplayTree<T, Node>::SplayTree(compare) {};
+
+    // Copy constructor
+    SplayTreeCountable(const SplayTreeCountable &tree) {SplayTree<T, Node>::SplayTree(tree); _count = tree._count;};
+
+    // Assignment constructor
+    SplayTreeCountable& operator=(const SplayTreeCountable &tree);
 
     bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
-    void clear() noexcept override;
-    unsigned int size() const noexcept;
 
-#ifdef BINARYTREE_SANITY_CHECK
-    void sanityCheck() const override {
-        BinaryTree<T, Node>::sanityCheck();
-
-        // Add additional check for the count variable (expensive)
-        unsigned int count = 0;
-        for (auto it = preorder_begin(); it != preorder_end(); it++) {
-            count++;
-        }
-
-        if (count != _count)
-            throw std::logic_error("SplayTree size does not match number of elements");
-    }
-#endif
-  protected:
-    unsigned int _count;
+    T popMostLeft() override;
+    T popMostRight() override;
 };
 #include "splayTree.cpp"
 #endif
