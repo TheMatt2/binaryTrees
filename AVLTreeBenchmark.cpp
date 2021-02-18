@@ -49,6 +49,7 @@ static void BM_AVLTreeInsert(benchmark::State &state) {
         for (int j = 0; j < state.range(1); j++)
             tree.insert(RandomNumber());
         benchmark::DoNotOptimize(tree);
+        benchmark::ClobberMemory();
     }
     state.SetComplexityN(state.range(0));
 }
@@ -63,6 +64,7 @@ static void BM_AVLTreeRemove(benchmark::State &state) {
         for (int j = 0; j < state.range(1); j++)
             tree.remove(RandomNumber());
         benchmark::DoNotOptimize(tree);
+        benchmark::ClobberMemory();
     }
     state.SetComplexityN(state.range(0));
 }
@@ -91,6 +93,7 @@ static void BM_AVLTreeCountableInsert(benchmark::State &state) {
         for (int j = 0; j < state.range(1); j++)
             tree.insert(RandomNumber());
         benchmark::DoNotOptimize(tree);
+        benchmark::ClobberMemory();
     }
     state.SetComplexityN(state.range(0));
 }
@@ -105,6 +108,7 @@ static void BM_AVLTreeCountableRemove(benchmark::State &state) {
         for (int j = 0; j < state.range(1); j++)
             tree.remove(RandomNumber());
         benchmark::DoNotOptimize(tree);
+        benchmark::ClobberMemory();
     }
     state.SetComplexityN(state.range(0));
 }
