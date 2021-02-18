@@ -8,6 +8,7 @@
 #define BINARYTREE_H
 #include <stack>
 #include <queue>
+#include <cassert>
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
