@@ -38,3 +38,23 @@ add_executable(
         splayTree.cpp
         binaryTree.cpp
 )
+
+find_package(benchmark REQUIRED)
+
+add_executable(
+        AVLTreeBenchmark
+        AVLTreeBenchmark.cpp
+        AVLTree.cpp
+        binaryTree.cpp
+)
+
+target_link_libraries(AVLTreeBenchmark benchmark::benchmark)
+
+add_executable(
+        splayTreeBenchmark
+        splayTreeBenchmark.cpp
+        splayTree.cpp
+        binaryTree.cpp
+)
+
+target_link_libraries(splayTreeBenchmark benchmark::benchmark)
