@@ -111,5 +111,12 @@ int main() {
     }
     cout << endl;
 
-    tree.clear();
+    // And some memory handling checks
+    // make sure Assignment does not leak
+    AVLTree<int> tree_a, tree_b;
+
+    for (size_t i = 0; i < 5; ++i) tree_a.insert(rand());
+    tree_b = tree_a;
+    tree_a.clear();
+    tree_b = tree_a;
 }
