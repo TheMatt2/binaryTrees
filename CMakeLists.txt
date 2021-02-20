@@ -39,22 +39,24 @@ add_executable(
         binaryTree.cpp
 )
 
-find_package(benchmark REQUIRED)
+# Only build benchmarks if library available
+find_package(benchmark QUIET)
+if (benchmark_FOUND)
+    add_executable(
+            AVLTreeBenchmark
+            AVLTreeBenchmark.cpp
+            AVLTree.cpp
+            binaryTree.cpp
+    )
 
-add_executable(
-        AVLTreeBenchmark
-        AVLTreeBenchmark.cpp
-        AVLTree.cpp
-        binaryTree.cpp
-)
+    target_link_libraries(AVLTreeBenchmark benchmark::benchmark)
 
-target_link_libraries(AVLTreeBenchmark benchmark::benchmark)
+    add_executable(
+            splayTreeBenchmark
+            splayTreeBenchmark.cpp
+            splayTree.cpp
+            binaryTree.cpp
+    )
 
-add_executable(
-        splayTreeBenchmark
-        splayTreeBenchmark.cpp
-        splayTree.cpp
-        binaryTree.cpp
-)
-
-target_link_libraries(splayTreeBenchmark benchmark::benchmark)
+    target_link_libraries(splayTreeBenchmark benchmark::benchmark)
+endif()
