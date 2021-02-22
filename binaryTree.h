@@ -47,12 +47,12 @@ class BinaryTree {
     /**
      * Recursively duplicate the passed node.
      */
-    Node* copyNode(const Node * const node);
+    Node* copyNode(const Node* const &node);
 
     /**
      * Recursively copy values from value. Reusing node if present.
      */
-    void replaceNode(Node *&node, Node * const other);
+    void replaceNode(Node *&node, const Node* const &other);
 
     /**
      * Recursively get the most left node in the tree.
