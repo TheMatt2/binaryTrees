@@ -10,6 +10,7 @@
 #include <queue>
 #include <cassert>
 #include <cstdlib>
+#include <iterator>
 #include <iostream>
 #include <stdexcept>
 
@@ -118,6 +119,20 @@ class BinaryTree {
     BinaryTree& operator=(const BinaryTree &tree);
 
     virtual ~BinaryTree() {clearInternal(root);}
+
+    // Equality operator
+    /**
+     * Check equality of two binary trees.
+     *
+     * Two binary trees may differ in actual structure, but still be equal.
+     * That includes having different roots.
+     *
+     * They are equal if they contain the same number of elements.
+     *
+     * @param tree to compare against
+     */
+    bool operator==(const BinaryTree &tree);
+    bool operator!=(const BinaryTree &tree);
 
     virtual bool contains(const T &value) noexcept = 0;
     virtual bool insert(const T &value) noexcept = 0;
@@ -301,6 +316,7 @@ class BinaryTree {
     void printTree(std::ostream &ostream) const;
 
     // iterators
+    // TODO implement bidirectional iteration (retreat())
     class preorder_iterator;
     class reverse_preorder_iterator;
     class postorder_iterator;
@@ -598,6 +614,14 @@ protected:
         friend class BinaryTree;
 
       public:
+        // Iterator traits
+        // Makes this iterator "official" in the eyes of the stl functions
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using difference_type = void;
+        using pointer = T*;
+        using reference = T&;
+
         // Copy constructor
         level_order_print_iterator(const level_order_print_iterator &iter): queue(iter.queue) {}
 
@@ -663,6 +687,14 @@ protected:
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
       public:
+        // Iterator traits
+        // Makes this iterator "official" in the eyes of the stl functions
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using difference_type = void;
+        using pointer = T*;
+        using reference = T&;
+
         // Copy constructor
         stack_iterator(const stack_iterator &iter): stack(iter.stack) {}
 
@@ -730,6 +762,14 @@ protected:
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
       public:
+        // Iterator traits
+        // Makes this iterator "official" in the eyes of the stl functions
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using difference_type = void;
+        using pointer = T*;
+        using reference = T&;
+
         // Copy constructor
         queue_iterator(const queue_iterator &iter): queue(iter.queue) {}
 

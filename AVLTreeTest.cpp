@@ -25,8 +25,10 @@ int main() {
         tree2.insert(i);
     }
     tree2 = tree2;
-    tree = tree2;
 
+    assert(tree != tree2);
+    tree = tree2;
+    assert(tree == tree2);
     tree.insert(3);
     tree.insert(2);
     tree.insert(6);
@@ -117,6 +119,8 @@ int main() {
 
     for (size_t i = 0; i < 5; ++i) tree_a.insert(rand());
     tree_b = tree_a;
+    assert(tree_a == tree_b);
     tree_a.clear();
     tree_b = tree_a;
+    assert(tree_b == tree_a);
 }
