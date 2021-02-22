@@ -81,13 +81,13 @@ BinaryTree<T, Node>& BinaryTree<T, Node>::operator=(const BinaryTree<T, Node> &t
 }
 
 template<class T, class Node>
-bool BinaryTree<T, Node>::operator==(const BinaryTree &tree) {
+bool BinaryTree<T, Node>::operator==(const BinaryTree &tree) const noexcept {
     // Use inorder iterator to compare. Identical if the iterators are identical
     return std::equal(inorder_begin(), inorder_end(), tree.inorder_begin(), tree.inorder_end());
 }
 
 template<class T, class Node>
-bool BinaryTree<T, Node>::operator!=(const BinaryTree &tree) {
+bool BinaryTree<T, Node>::operator!=(const BinaryTree &tree) const noexcept {
     // Simply use equality check
     return !BinaryTree<T, Node>::operator==(tree);
 }

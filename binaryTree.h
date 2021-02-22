@@ -131,8 +131,8 @@ class BinaryTree {
      *
      * @param tree to compare against
      */
-    bool operator==(const BinaryTree &tree);
-    bool operator!=(const BinaryTree &tree);
+    bool operator==(const BinaryTree &tree) const noexcept;
+    bool operator!=(const BinaryTree &tree) const noexcept;
 
     virtual bool contains(const T &value) noexcept = 0;
     virtual bool insert(const T &value) noexcept = 0;
@@ -875,6 +875,18 @@ class BinaryTreeCountable: virtual public BinaryTree<T, Node> {
 
     using BinaryTree<T, Node>::preorder_begin;
     using BinaryTree<T, Node>::preorder_end;
+
+    bool operator==(const BinaryTreeCountable &tree) const noexcept {
+        // Size must match first
+        if (_count != tree._count) return false;
+
+        // Fallback to normal equality
+        return BinaryTree<T, Node>::operator==(tree);
+    }
+
+    bool operator!=(const BinaryTreeCountable &tree) const noexcept {
+        return !operator==(tree);
+    }
 
     bool insert(const T &value) noexcept override = 0;
     bool remove(const T &value) noexcept override = 0;
