@@ -27,8 +27,8 @@ void BinaryTree<T, Node>::clearInternal(Node* &node) noexcept {
     }
 }
 
-template <class Node>
-Node* copyNode(const Node * const node) {
+template <class T, class Node>
+Node* BinaryTree<T, Node>::copyNode(const Node * const node) {
     if (node == nullptr) {
         return nullptr;
     }
@@ -41,12 +41,12 @@ Node* copyNode(const Node * const node) {
     return newNode;
 }
 
-template <class Node>
-void replaceNode(Node *&node, Node * const other) {
+template <class T, class Node>
+void BinaryTree<T, Node>::replaceNode(Node *&node, Node * const other) {
     // Create node, delete node, or assign, depending in need
     if (other == nullptr) {
         // Delete
-        delete node;
+        clearInternal(node);
         node = other;
     } else if (node == nullptr) {
         // Create
@@ -54,9 +54,7 @@ void replaceNode(Node *&node, Node * const other) {
         node->left = copyNode(other->left);
         node->right = copyNode(other->right);
     } else {
-        // Assign
-
-        // Preserve pointers to next
+        // Assign/Preserve pointers to children
         Node *left = node->left;
         Node *right = node->right;
         *node = *other;

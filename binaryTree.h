@@ -45,6 +45,16 @@ class BinaryTree {
     void clearInternal(Node* &node) noexcept;
 
     /**
+     * Recursively duplicate the passed node.
+     */
+    Node* copyNode(const Node * const node);
+
+    /**
+     * Recursively copy values from value. Reusing node if present.
+     */
+    void replaceNode(Node *&node, Node * const other);
+
+    /**
      * Recursively get the most left node in the tree.
      */
     const Node* getMostLeftInternal(const Node* const &node) const;
