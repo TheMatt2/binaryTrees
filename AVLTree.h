@@ -7,6 +7,10 @@
 #include <cstdint>
 #include "binaryTree.h"
 
+#ifdef BINARYTREE_SANITY_CHECK
+#include <stdexcept> // For sanity error handling
+#endif
+
 template <class T>
 struct AVLTreeNode {
     explicit AVLTreeNode(const T &value): left(nullptr), right(nullptr), height(1), value(value) {}
