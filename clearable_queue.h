@@ -13,7 +13,7 @@
 template <class T, class Container = std::deque<T>>
 class clearable_queue: public std::queue<T, Container> {
 public:
-    void clear() {
+    void clear() noexcept {
         std::queue<T, Container>::c.clear();
     }
 };

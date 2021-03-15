@@ -13,7 +13,7 @@
 template <class T, class Container = std::deque<T>>
 class clearable_stack: public std::stack<T, Container> {
   public:
-    void clear() {
+    void clear() noexcept {
         std::stack<T, Container>::c.clear();
     }
 };
