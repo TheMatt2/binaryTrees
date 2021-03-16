@@ -2,11 +2,8 @@
 #define AVLTREE_CPP
 
 #include <cassert>
+#include <algorithm>
 #include "AVLTree.h"
-
-// Helper function for maximum
-// From http://www.cplusplus.com/articles/1AUq5Di1/
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 template <class T, class Node>
 unsigned int AVLTree<T, Node>::getHeight() const noexcept {
@@ -28,7 +25,7 @@ void AVLTree<T, Node>::updateHeight(Node *&node) {
     if (node->left != nullptr) {
         if (node->right != nullptr) {
             // Max with both existing
-            node->height = MAX(node->left->height, node->right->height) + 1;
+            node->height = std::max(node->left->height, node->right->height) + 1;
         } else {
             // Left exists, right does not
             node->height = node->left->height + 1;
