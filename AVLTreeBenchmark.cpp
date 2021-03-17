@@ -9,12 +9,6 @@
 // Google benchmark, https://github.com/google/benchmark
 #include <benchmark/benchmark.h>
 
-#include <chrono>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <iostream>
-
 //#define BINARYTREE_SANITY_CHECK
 
 // Default test parameters
