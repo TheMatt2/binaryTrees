@@ -120,7 +120,7 @@ T BinaryTree<T, Node>::getMostLeft() const {
 }
 
 template <class T, class Node>
-const Node* BinaryTree<T, Node>::getMostLeftInternal(const Node* const &node) const {
+const Node* BinaryTree<T, Node>::getMostLeftInternal(const Node* const &node) const noexcept {
     if (node->left != nullptr) {
         return getMostLeftInternal(node->left);
     } else {
@@ -141,7 +141,7 @@ T BinaryTree<T, Node>::getMostRight() const {
 }
 
 template <class T, class Node>
-const Node* BinaryTree<T, Node>::getMostRightInternal(const Node* const &node) const {
+const Node* BinaryTree<T, Node>::getMostRightInternal(const Node* const &node) const noexcept {
     if (node->right != nullptr) {
         return getMostRightInternal(node->right);
     } else {
@@ -151,13 +151,13 @@ const Node* BinaryTree<T, Node>::getMostRightInternal(const Node* const &node) c
 }
 
 template <class T, class Node>
-unsigned int BinaryTree<T, Node>::getHeight() const {
+unsigned int BinaryTree<T, Node>::getHeight() const noexcept {
     // Get the height of the tree.
     return getHeightInternal(root);
 }
 
 template <class T, class Node>
-unsigned int BinaryTree<T, Node>::getHeightInternal(const Node* const &node) const {
+unsigned int BinaryTree<T, Node>::getHeightInternal(const Node* const &node) const noexcept {
     if (node == nullptr) {
         // A nullptr node has a height of zero
         return 0;
@@ -168,13 +168,23 @@ unsigned int BinaryTree<T, Node>::getHeightInternal(const Node* const &node) con
 }
 
 template <class T, class Node>
-void BinaryTree<T, Node>::printTree(std::ostream &ostream) const {
+unsigned int BinaryTree<T, Node>::size() const noexcept {
+    return std::distance(preorder_begin(), preorder_end());
+}
+
+template <class T, class Node>
+void BinaryTree<T, Node>::printTree() const noexcept {
+    printTree(std::cout);
+}
+
+template <class T, class Node>
+void BinaryTree<T, Node>::printTree(std::ostream &ostream) const noexcept {
     printTree(0, 0, ' ', true, false, ' ', ostream);
 }
 
 template <class T, class Node>
 void BinaryTree<T, Node>::printTree(unsigned int width, const unsigned int height, const char fill, const bool biasLeft,
-                                    const bool trailing, const char background, std::ostream &ostream) const {
+                                    const bool trailing, const char background, std::ostream &ostream) const noexcept {
     // Spacing is equal to width
     if (width == 0) {
         width = getMaxStringWidth();
@@ -186,7 +196,7 @@ void BinaryTree<T, Node>::printTree(unsigned int width, const unsigned int heigh
 template <class T, class Node>
 void BinaryTree<T, Node>::printTreeWithSpacing(const unsigned int spacing, unsigned int width, unsigned int height,
                                          const char fill, const bool biasLeft, const bool trailing,
-                                         const char background, std::ostream &ostream) const {
+                                         const char background, std::ostream &ostream) const noexcept {
     if (width == 0) {
         width = getMaxStringWidth();
     }
@@ -281,9 +291,9 @@ template <class T, class Node>
 void BinaryTree<T, Node>::printTreeInternal(
         const Node* const &node,
         const unsigned int padding_left, const unsigned int padding_right,
-        const unsigned int width, const char background, std::ostream &ostream) const {
+        const unsigned int width, const char background, std::ostream &ostream) const noexcept {
     // Print left
-    for (unsigned int i = 0; i < padding_left; i++) ostream << background;
+    for (unsigned int i = 0; i < padding_left; ++i) ostream << background;
 
     // Print object
     ostream << std::setw((int) width);
@@ -293,11 +303,11 @@ void BinaryTree<T, Node>::printTreeInternal(
         ostream << "";
 
     // Print right
-    for (unsigned int i = 0; i < padding_right; i++) ostream << background;
+    for (unsigned int i = 0; i < padding_right; ++i) ostream << background;
 }
 
 template <class T, class Node>
-unsigned int BinaryTree<T, Node>::getMaxStringWidth() const {
+unsigned int BinaryTree<T, Node>::getMaxStringWidth() const noexcept {
     // If width is zero, search tree to determine the maximum width.
     unsigned int width = 0;
     for (auto it = preorder_begin(); it != preorder_end(); ++it) {

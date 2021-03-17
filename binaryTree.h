@@ -2,6 +2,8 @@
  * Base Binary Tree structure that implements iterators for a sorted binary.
  *
  * This class presents facilities to iterate over a tree and print a visual representation of it.
+ *
+ * While this does contain any explicit checks, this binary tree should be stable up to MAX_UINT elements
  */
 
 #ifndef BINARYTREE_H
@@ -58,25 +60,25 @@ class BinaryTree {
     /**
      * Recursively get the most left node in the tree.
      */
-    const Node* getMostLeftInternal(const Node* const &node) const;
+    const Node* getMostLeftInternal(const Node* const &node) const noexcept;
 
     /**
      * Recursively get the most left node in the tree.
      */
-    const Node* getMostRightInternal(const Node* const &node) const;
+    const Node* getMostRightInternal(const Node* const &node) const noexcept;
 
     /**
      * Recursively get the height from the tree.
      * This assumes the tree may be of any shape, and tries all branches.
      *
      */
-    virtual unsigned int getHeightInternal(const Node* const &node) const;
+    virtual unsigned int getHeightInternal(const Node* const &node) const noexcept;
 
     /**
      * Internal function only used for determining how to print
      * the tree.
      */
-    virtual unsigned int getMaxStringWidth() const;
+    virtual unsigned int getMaxStringWidth() const noexcept;
 
     /**
      * Internally print out part of the tree.
@@ -102,7 +104,7 @@ class BinaryTree {
      */
     void printTreeInternal(const Node* const &node,
                            unsigned int padding_left, unsigned int padding_right,
-                           unsigned int width, char background, std::ostream &ostream) const;
+                           unsigned int width, char background, std::ostream &ostream) const noexcept;
 
     // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
     // Used as a base for the other iterators
@@ -160,7 +162,15 @@ class BinaryTree {
      * Get the height of the tree.
      * A height of zero indicates an empty tree.
      */
-    virtual unsigned int getHeight() const;
+    virtual unsigned int getHeight() const noexcept;
+
+    /**
+     * Get the number of elements within the tree.
+     *
+     * This will be linear time or better.
+     * @return size of trees
+     */
+    virtual unsigned int size() const noexcept;
 
     /**
      * Print a text visualization of the binary tree.
@@ -219,8 +229,8 @@ class BinaryTree {
      * @param ostream
      * Output stream to print the tree to.
      */
-    void printTree(unsigned int width = 0, unsigned int height = 0, char fill = ' ', bool biasLeft = true,
-                   bool trailing = false, char background = ' ', std::ostream &ostream = std::cout) const;
+    void printTree(unsigned int width, unsigned int height = 0, char fill = ' ', bool biasLeft = true,
+                   bool trailing = false, char background = ' ', std::ostream &ostream = std::cout) const noexcept;
 
     /**
      * Print a text visualization of the binary tree.
@@ -295,7 +305,7 @@ class BinaryTree {
      */
     void printTreeWithSpacing(unsigned int spacing, unsigned int width = 0, unsigned int height = 0,
                               char fill = ' ', bool biasLeft = true, bool trailing = false,
-                              char background = ' ', std::ostream &ostream = std::cout) const;
+                              char background = ' ', std::ostream &ostream = std::cout) const noexcept;
 
     /**
      * Print a text visualization of the binary tree.
@@ -313,10 +323,26 @@ class BinaryTree {
      * @param ostream
      * Output stream to print the tree to.
      */
-    void printTree(std::ostream &ostream) const;
+    void printTree(std::ostream &ostream) const noexcept;
+
+    // Because the debugger is happier with a print function that does not take any parameters
+    /**
+     * Print a text visualization of the binary tree.
+     * Prints out a tree with showing each value and its relation to other
+     * values in the tree.
+     *
+     * Example:
+     *        3
+     *    1       7
+     *  0   2   5   8
+     *         4 6   9
+     *
+     * This is a simplified caller that requires no parameters.
+     */
+    void printTree() const noexcept;
 
     // iterators
-    // TODO implement bidirectional iteration (retreat())
+    // TODO implement bidirectional iterators (retreat())
     class preorder_iterator;
     class reverse_preorder_iterator;
     class postorder_iterator;
@@ -618,7 +644,7 @@ protected:
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
         using value_type = T;
-        using difference_type = void;
+        using difference_type = void; // infinite iterator, no type big enough
         using pointer = T*;
         using reference = T&;
 
@@ -691,7 +717,8 @@ protected:
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
         using value_type = T;
-        using difference_type = void;
+        using size_type = unsigned int;
+        using difference_type = long; // Issue is this requires signed, but we may have unsigned int elements
         using pointer = T*;
         using reference = T&;
 
@@ -766,7 +793,8 @@ protected:
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
         using value_type = T;
-        using difference_type = void;
+        using size_type = unsigned int;
+        using difference_type = long; // Issue is this requires signed, but we may have unsigned int elements
         using pointer = T*;
         using reference = T&;
 
@@ -895,7 +923,7 @@ class BinaryTreeCountable: virtual public BinaryTree<T, Node> {
     T popMostLeft() override = 0;
     T popMostRight() override = 0;
 
-    unsigned int size() const noexcept {return _count;};
+    unsigned int size() const noexcept override {return _count;};
 
 #ifdef BINARYTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
