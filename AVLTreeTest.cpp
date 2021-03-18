@@ -378,7 +378,7 @@ template <class It>
 void test_iterator_increment(It first1, It last1) {
     // Make sure ++it and it++ match
     It first2 = first1;
-    It last2 = last1;
+    It last2 = last1; // NOLINT: its test code
 
     // Make sure they start at the same place
     if (first1 != first2) {
