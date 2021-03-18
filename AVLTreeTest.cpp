@@ -15,13 +15,6 @@
 
 using namespace std;
 
-int compare(const int &a, const int &b) {
-    return a - b;
-    if (a < b)  return -1;
-    if (a == b) return  0;
-    else        return  1;
-}
-
 template <class T>
 bool check_equivalent(const AVLTree<T> &treeA, const AVLTree<T> &treeB) {
     // Check that both trees are equivalent.
@@ -360,8 +353,8 @@ bool check_size(const unsigned int size, const AVLTree<T> forest[], size_t len) 
     return true;
 }
 
-template <class T>
-bool check_height(const unsigned int height, const AVLTree<T> forest[], size_t len) {
+template <class Tree>
+bool check_height(const unsigned int height, Tree forest[], size_t len) {
     // Check that the size of all trees is the same as expected
     for (size_t i = 0; i < len; ++i) {
         if (height != forest[i].getHeight()) {
@@ -369,6 +362,69 @@ bool check_height(const unsigned int height, const AVLTree<T> forest[], size_t l
         }
     }
     return true;
+}
+
+// Number of values in a last
+template <class It>
+unsigned int size(It first, It last) {
+    unsigned int n = 0;
+    for (; first != last; ++first) {
+        n++;
+    }
+    return n;
+}
+
+template <class It>
+void test_iterator_increment(It first1, It last1) {
+    // Make sure ++it and it++ match
+    It first2 = first1;
+    It last2 = last1;
+
+    // Make sure they start at the same place
+    if (first1 != first2) {
+        throw std::logic_error("Moved iterator does not match");
+    }
+
+    for (; first1 != last1;) {
+
+        // Make sure the values match, as they should
+        if (*first1 != *first2) {
+            throw std::logic_error("Iterators did not match");
+        }
+
+        if (first1 != first2++)
+            throw std::logic_error("Iterator incorrectly post incremented");
+        if (++first1 != first2)
+            throw std::logic_error("Iterator incorrectly pre incremented");
+    }
+
+    // Make sure they both stop at the same place.
+    if (first2 != last2) {
+        throw std::logic_error("Iterator 1 exhausted before iterator 2");
+    }
+
+    // And last1 and last2 match
+    if (last1 != last2) {
+        throw std::logic_error("Iterator ends do not match");
+    }
+}
+
+template <class ForwardIt, class ReverseIt>
+bool check_forward_reverse_iterators(
+        ForwardIt forward_first, ForwardIt forward_last,
+        ReverseIt reverse_first, ReverseIt reverse_last) {
+
+    static_assert(std::is_same<
+            typename ForwardIt::value_type,
+            typename ReverseIt::value_type>::value,
+            "Forward and Reverse iterators are for different types");
+
+    typedef typename ForwardIt::value_type T;
+
+    std::vector<T> forward(forward_first, forward_last);
+
+    return std::equal(forward.rbegin(), forward.rend(),
+                      reverse_first, reverse_last);
 }
 
 int main() {
@@ -451,7 +507,7 @@ int main() {
         unique_trees_6_size = 4,
         unique_trees_7_size = 17;
 
-    bool unique_passed = (
+    bool passed = (
         count_unique_trees(0) == unique_trees_0_size &&
         count_unique_trees(1) == unique_trees_1_size &&
         count_unique_trees(2) == unique_trees_2_size &&
@@ -462,7 +518,7 @@ int main() {
         count_unique_trees(7) == unique_trees_7_size);
 
     cout << "Compose Structure Check: ";
-    cout << (unique_passed ? "passed" : "failed");
+    cout << (passed ? "passed" : "failed");
     cout << endl;
 
     // Stage 4, prepare a set of unique trees for later testing
@@ -529,7 +585,7 @@ int main() {
     // Stage 5
     // Check the candidate trees are built as expected
     // Check first the size of each tree
-    unique_passed = (
+    passed = (
         check_size(0, unique_trees_0, unique_trees_0_size) &&
         check_size(1, unique_trees_1, unique_trees_1_size) &&
         check_size(2, unique_trees_2, unique_trees_2_size) &&
@@ -540,12 +596,12 @@ int main() {
         check_size(7, unique_trees_7, unique_trees_7_size));
 
     cout << "Size Check: ";
-    cout << (unique_passed ? "passed" : "failed");
+    cout << (passed ? "passed" : "failed");
     cout << endl;
 
     // Check Height
-    unique_passed = (
-        check_height(0, unique_trees_0, unique_trees_0_size) &&
+    passed = (
+        check_height<AVLTree<int>>(0, unique_trees_0, unique_trees_0_size) &&
         check_height(1, unique_trees_1, unique_trees_1_size) &&
         check_height(2, unique_trees_2, unique_trees_2_size) &&
         check_height(2, unique_trees_3, unique_trees_3_size) &&
@@ -556,140 +612,456 @@ int main() {
         check_height(4, unique_trees_7 + 1, unique_trees_7_size - 1));
 
     cout << "Height Check: ";
-    cout << (unique_passed ? "passed" : "failed");
+    cout << (passed ? "passed" : "failed");
     cout << endl;
 
     // Check getRoot()
     try {
         unique_trees_0[0].getRoot();
-        unique_passed = false;
+        passed = false;
     } catch (const std::out_of_range&) {
-        unique_passed = true;
+        passed = true;
     }
 
-    unique_passed &= unique_trees_1[0].getRoot() == 0;
-    unique_passed &= unique_trees_2[0].getRoot() == 0;
-    unique_passed &= unique_trees_2[1].getRoot() == 1;
-    unique_passed &= unique_trees_3[0].getRoot() == 1;
-    unique_passed &= unique_trees_4[0].getRoot() == 2;
-    unique_passed &= unique_trees_4[1].getRoot() == 2;
-    unique_passed &= unique_trees_4[2].getRoot() == 1;
-    unique_passed &= unique_trees_4[3].getRoot() == 1;
-    unique_passed &= unique_trees_5[0].getRoot() == 3;
-    unique_passed &= unique_trees_5[1].getRoot() == 2;
-    unique_passed &= unique_trees_5[2].getRoot() == 2;
-    unique_passed &= unique_trees_5[3].getRoot() == 2;
-    unique_passed &= unique_trees_5[4].getRoot() == 2;
-    unique_passed &= unique_trees_5[5].getRoot() == 1;
-    unique_passed &= unique_trees_6[0].getRoot() == 3;
-    unique_passed &= unique_trees_6[1].getRoot() == 3;
-    unique_passed &= unique_trees_6[2].getRoot() == 2;
-    unique_passed &= unique_trees_6[3].getRoot() == 2;
-    unique_passed &= unique_trees_7[0].getRoot() == 3;
-    unique_passed &= unique_trees_7[1].getRoot() == 4;
-    unique_passed &= unique_trees_7[2].getRoot() == 4;
-    unique_passed &= unique_trees_7[3].getRoot() == 4;
-    unique_passed &= unique_trees_7[4].getRoot() == 4;
-    unique_passed &= unique_trees_7[5].getRoot() == 4;
-    unique_passed &= unique_trees_7[6].getRoot() == 4;
-    unique_passed &= unique_trees_7[7].getRoot() == 4;
-    unique_passed &= unique_trees_7[8].getRoot() == 4;
-    unique_passed &= unique_trees_7[9].getRoot() == 2;
-    unique_passed &= unique_trees_7[10].getRoot() == 2;
-    unique_passed &= unique_trees_7[11].getRoot() == 2;
-    unique_passed &= unique_trees_7[12].getRoot() == 2;
-    unique_passed &= unique_trees_7[13].getRoot() == 2;
-    unique_passed &= unique_trees_7[14].getRoot() == 2;
-    unique_passed &= unique_trees_7[15].getRoot() == 2;
-    unique_passed &= unique_trees_7[16].getRoot() == 2;
+    passed &= unique_trees_1[0].getRoot() == 0;
+    passed &= unique_trees_2[0].getRoot() == 0;
+    passed &= unique_trees_2[1].getRoot() == 1;
+    passed &= unique_trees_3[0].getRoot() == 1;
+    passed &= unique_trees_4[0].getRoot() == 2;
+    passed &= unique_trees_4[1].getRoot() == 2;
+    passed &= unique_trees_4[2].getRoot() == 1;
+    passed &= unique_trees_4[3].getRoot() == 1;
+    passed &= unique_trees_5[0].getRoot() == 3;
+    passed &= unique_trees_5[1].getRoot() == 2;
+    passed &= unique_trees_5[2].getRoot() == 2;
+    passed &= unique_trees_5[3].getRoot() == 2;
+    passed &= unique_trees_5[4].getRoot() == 2;
+    passed &= unique_trees_5[5].getRoot() == 1;
+    passed &= unique_trees_6[0].getRoot() == 3;
+    passed &= unique_trees_6[1].getRoot() == 3;
+    passed &= unique_trees_6[2].getRoot() == 2;
+    passed &= unique_trees_6[3].getRoot() == 2;
+    passed &= unique_trees_7[0].getRoot() == 3;
+    passed &= unique_trees_7[1].getRoot() == 4;
+    passed &= unique_trees_7[2].getRoot() == 4;
+    passed &= unique_trees_7[3].getRoot() == 4;
+    passed &= unique_trees_7[4].getRoot() == 4;
+    passed &= unique_trees_7[5].getRoot() == 4;
+    passed &= unique_trees_7[6].getRoot() == 4;
+    passed &= unique_trees_7[7].getRoot() == 4;
+    passed &= unique_trees_7[8].getRoot() == 4;
+    passed &= unique_trees_7[9].getRoot() == 2;
+    passed &= unique_trees_7[10].getRoot() == 2;
+    passed &= unique_trees_7[11].getRoot() == 2;
+    passed &= unique_trees_7[12].getRoot() == 2;
+    passed &= unique_trees_7[13].getRoot() == 2;
+    passed &= unique_trees_7[14].getRoot() == 2;
+    passed &= unique_trees_7[15].getRoot() == 2;
+    passed &= unique_trees_7[16].getRoot() == 2;
 
     cout << "Root Check: ";
-    cout << (unique_passed ? "passed" : "failed");
+    cout << (passed ? "passed" : "failed");
     cout << endl;
 
     // getMostLeft()
     try {
         unique_trees_0[0].getMostLeft();
-        unique_passed = false;
+        passed = false;
     } catch (const std::out_of_range&) {
-        unique_passed = true;
+        passed = true;
     }
 
     for (size_t i = 1; i < unique_trees_size; ++i) {
-        unique_passed &= unique_trees[i].getMostLeft() == 0;
+        passed &= unique_trees[i].getMostLeft() == 0;
     }
 
     cout << "Get Left Check: ";
-    cout << (unique_passed ? "passed" : "failed");
+    cout << (passed ? "passed" : "failed");
     cout << endl;
 
     // getMostRight()
     try {
         unique_trees_0[0].getMostRight();
-        unique_passed = false;
+        passed = false;
     } catch (const std::out_of_range&) {
-        unique_passed = true;
+        passed = true;
     }
 
     for (size_t i = 0; i < unique_trees_1_size; ++i)
-        unique_passed &= unique_trees_1[i].getMostRight() == 0;
+        passed &= unique_trees_1[i].getMostRight() == 0;
     for (size_t i = 0; i < unique_trees_2_size; ++i)
-        unique_passed &= unique_trees_2[i].getMostRight() == 1;
+        passed &= unique_trees_2[i].getMostRight() == 1;
     for (size_t i = 0; i < unique_trees_3_size; ++i)
-        unique_passed &= unique_trees_3[i].getMostRight() == 2;
+        passed &= unique_trees_3[i].getMostRight() == 2;
     for (size_t i = 0; i < unique_trees_4_size; ++i)
-        unique_passed &= unique_trees_4[i].getMostRight() == 3;
+        passed &= unique_trees_4[i].getMostRight() == 3;
     for (size_t i = 0; i < unique_trees_5_size; ++i)
-        unique_passed &= unique_trees_5[i].getMostRight() == 4;
+        passed &= unique_trees_5[i].getMostRight() == 4;
     for (size_t i = 0; i < unique_trees_6_size; ++i)
-        unique_passed &= unique_trees_6[i].getMostRight() == 5;
+        passed &= unique_trees_6[i].getMostRight() == 5;
     for (size_t i = 0; i < unique_trees_7_size; ++i)
-        unique_passed &= unique_trees_7[i].getMostRight() == 6;
+        passed &= unique_trees_7[i].getMostRight() == 6;
 
     cout << "Get Right Check: ";
-    cout << (unique_passed ? "passed" : "failed");
+    cout << (passed ? "passed" : "failed");
     cout << endl;
 
-    return 0;
-    AVLTree<int> tree(compare);
-    AVLTree<int> tree2(compare);
+    // Preorder Iterators
+    passed = true;
 
-    for (int i = 0; i < 11; i++) {
-        tree2.insert(i);
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        // Check ++it and it++ match
+        auto &tree = unique_trees[i];
+        test_iterator_increment(tree.preorder_begin(), tree.preorder_end());
+        test_iterator_increment(tree.reverse_preorder_begin(), tree.reverse_preorder_end());
+
+        // Size of iterator should equal size of tree
+        auto tree_size = tree.size();
+        passed &= tree_size == size(tree.preorder_begin(), tree.preorder_end());
+        passed &= tree_size == size(tree.reverse_preorder_begin(), tree.reverse_preorder_end());
+
+        // Check that the first element in forward and reverse are the root
+        if (!tree.empty()) {
+            const char err_msg[] = "tree %ld preorder iterator did not begin with root";
+            if (tree.getRoot() != *tree.preorder_begin()) {
+                int err_size = snprintf(nullptr, 0, err_msg, i);
+                char *err_buf = new char[err_size];
+                sprintf(err_buf, err_msg, i);
+                throw std::logic_error(err_buf);
+            }
+
+            if (tree.getRoot() != *tree.reverse_preorder_begin()) {
+                int err_size = snprintf(nullptr, 0, err_msg, i);
+                char *err_buf = new char[err_size];
+                sprintf(err_buf, err_msg, i);
+                throw std::logic_error(err_buf);
+            }
+        }
     }
-    tree2 = tree2;
 
-    assert(tree != tree2);
-    tree = tree2;
-    assert(tree == tree2);
-    tree.insert(3);
-    tree.insert(2);
-    tree.insert(6);
-    tree.insert(1);
-    tree.insert(5);
-    tree.insert(7);
-    tree.insert(4);
-    tree.insert(8);
+    cout << "Preorder Iterator Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    // Inorder Iterators
+    passed = true;
+    // Check Iterators
+    // Make sure the reverse of each iterator is the same as the forward
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        auto &tree = unique_trees[i];
+        // Make sure the iterators match each other
+        passed &= check_forward_reverse_iterators(
+            tree.inorder_begin(), tree.inorder_end(),
+            tree.reverse_inorder_begin(), tree.reverse_inorder_end());
+
+        // Check ++it and it++ match
+        test_iterator_increment(tree.inorder_begin(), tree.inorder_end());
+        test_iterator_increment(tree.reverse_inorder_begin(), tree.reverse_inorder_end());
+
+        // Size of iterator should equal size of tree
+        auto tree_size = tree.size();
+        passed &= tree_size == size(tree.inorder_begin(), tree.inorder_end());
+        passed &= tree_size == size(tree.reverse_inorder_begin(), tree.reverse_inorder_end());
+    }
+
+    cout << "Inorder Iterator Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    // Postorder Iterators
+    passed = true;
+
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        // Check ++it and it++ match
+        auto &tree = unique_trees[i];
+        test_iterator_increment(tree.postorder_begin(), tree.postorder_end());
+        test_iterator_increment(tree.reverse_postorder_begin(), tree.reverse_postorder_end());
+
+        // Size of iterator should equal size of tree
+        auto tree_size = tree.size();
+        passed &= tree_size == size(tree.postorder_begin(), tree.postorder_end());
+        passed &= tree_size == size(tree.reverse_postorder_begin(), tree.reverse_postorder_end());
+
+        // Check that the last element in forward and reverse are the root
+        if (!tree.empty()) {
+            const char err_msg[] = "tree %ld postorder iterator did not end with root";
+
+            auto forward_it = tree.postorder_begin();
+            std::advance(forward_it, tree_size - 1);
+            if (tree.getRoot() != *forward_it) {
+                int err_size = snprintf(nullptr, 0, err_msg, i);
+                char *err_buf = new char[err_size];
+                sprintf(err_buf, err_msg, i);
+                throw std::logic_error(err_buf);
+            }
+
+            auto reverse_it = tree.reverse_postorder_begin();
+            std::advance(reverse_it, tree_size - 1);
+            if (tree.getRoot() != *reverse_it) {
+                int err_size = snprintf(nullptr, 0, err_msg, i);
+                char *err_buf = new char[err_size];
+                sprintf(err_buf, err_msg, i);
+                throw std::logic_error(err_buf);
+            }
+        }
+    }
+
+    cout << "Postorder Iterator Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    // Level Order Iterators
+    passed = true;
+
+    // Check Iterators
+    // Make sure the reverse of each iterator is the same as the forward
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        auto &tree = unique_trees[i];
+        // Check ++it and it++ match
+        test_iterator_increment(tree.level_order_begin(), tree.level_order_end());
+        test_iterator_increment(tree.reverse_level_order_begin(), tree.reverse_level_order_end());
+
+        // Size of iterator should equal size of tree
+        auto tree_size = tree.size();
+        passed &= tree_size == size(tree.level_order_begin(), tree.level_order_end());
+        passed &= tree_size == size(tree.reverse_level_order_begin(), tree.reverse_level_order_end());
+
+        // The special thing about level order, if the values are used
+        // to create a new tree, that tree will be identical
+        AVLTree<int> other;
+        for (auto it = tree.level_order_begin(); it != tree.level_order_end(); ++it) {
+            other.insert(*it);
+        }
+        passed &= check_identical(tree, other);
+
+        // Check that the first element in forward and reverse are the root
+        if (!tree.empty()) {
+            const char err_msg[] = "tree %ld level order iterator did not begin with root";
+            if (tree.getRoot() != *tree.level_order_begin()) {
+                int err_size = snprintf(nullptr, 0, err_msg, i);
+                char *err_buf = new char[err_size];
+                sprintf(err_buf, err_msg, i);
+                throw std::logic_error(err_buf);
+            }
+
+            if (tree.getRoot() != *tree.reverse_level_order_begin()) {
+                int err_size = snprintf(nullptr, 0, err_msg, i);
+                char *err_buf = new char[err_size];
+                sprintf(err_buf, err_msg, i);
+                throw std::logic_error(err_buf);
+            }
+        }
+    }
+
+    cout << "Level Order Iterator Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    passed = true;
+    // Check assignment
+    AVLTree<int> other;
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        auto &tree = unique_trees[i];
+
+        // Test assignment
+        other = tree;
+        passed &= check_identical(tree, other);
+
+        // Test self-assignment
+        other = other;
+        passed &= check_identical(tree, other);
+
+        // Meh, why not?
+        passed &= check_identical(other, other);
+    }
+
+    // Assignment cares if the trees get bigger or smaller, so
+    // try opposite order
+    for (size_t i = unique_trees_size; i > 0;) {
+        auto &tree = unique_trees[--i];
+
+        // Test assignment
+        other = tree;
+        passed &= check_identical(tree, other);
+
+        // Test self-assignment
+        other = other;
+        passed &= check_identical(tree, other);
+
+        // Meh, why not?
+        passed &= check_identical(other, other);
+    }
+
+    cout << "Assignment Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    // Check copy constructor
+    passed = true;
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        auto &tree = unique_trees[i];
+
+        // Test construct copy
+        auto constructed(tree); // NOLINT: The point is to construct a new tree
+        passed &= check_identical(tree, constructed);
+    }
+
+    cout << "Copy Constructor Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    // Check contains()
+    passed = true;
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        auto &tree = unique_trees[i];
+
+        // Test contains
+        int tree_size = (int) tree.size();
+        for (int j = 0; j < tree_size; ++j) {
+            passed &= tree.contains(j);
+        }
+
+        // Check a few are not present
+        passed &= !tree.contains(-1);
+        passed &= !tree.contains(tree_size);
+    }
+
+    cout << "Copy Constructor Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    // Check popMostLeft()
+    passed = true;
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        auto tree = unique_trees[i];
+
+        // Test popMostLeft()
+        int tree_size = (int) tree.size();
+        for (int j = 0; j < tree_size; ++j) {
+            passed &= j == tree.popMostLeft();
+        }
+
+        // Check that the tree is now empty
+        if (!tree.empty()) {
+            throw std::logic_error("tree was not exhausted by popMostLeft()");
+        }
+
+        if (tree.size() != 0) { // NOLINT: size() is being used for testing
+            throw std::logic_error("Empty tree has nonzero size");
+        }
+
+        passed &= check_identical(tree, unique_trees_0[0]);
+    }
+
+    cout << "Pop Left Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    // Check popMostRight()
+    passed = true;
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        auto tree = unique_trees[i];
+
+        // Test popMostRight()
+        int tree_size = (int) tree.size();
+        for (int j = tree_size ; j > 0;) {
+            passed &= --j == tree.popMostRight();
+        }
+
+        // Check that the tree is now empty
+        if (!tree.empty()) {
+            throw std::logic_error("tree was not exhausted by popMostRight()");
+        }
+
+        if (tree.size() != 0) { // NOLINT: size() is being used for testing
+            throw std::logic_error("Empty tree has nonzero size");
+        }
+
+        passed &= check_identical(tree, unique_trees_0[0]);
+    }
+
+    cout << "Pop Right Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    // Check clear()
+    passed = true;
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        auto tree = unique_trees[i];
+
+        // Clear the tree and see it goes to the desired state
+        tree.clear();
+
+        // Check that the tree is now empty
+        if (!tree.empty()) {
+            throw std::logic_error("tree is not empty after clear()");
+        }
+
+        if (tree.size() != 0) { // NOLINT: size() is being used for testing
+            throw std::logic_error("Empty tree has nonzero size");
+        }
+
+        passed &= check_identical(tree, unique_trees_0[0]);
+    }
+
+    cout << "Clear Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    // Check remove()
+    passed = true;
+    for (size_t i = 0; i < unique_trees_size; ++i) {
+        auto tree = unique_trees[i];
+        int tree_size = (int) tree.size();
+
+        // Check that removing nonexistent elements does not changed
+        // structure
+        tree.remove(-1);
+        tree.remove(tree_size);
+
+        passed &= check_identical(tree, unique_trees[i]);
+
+        // Check that removing all elements results in an empty tree
+        for (int j = 0; j < tree_size; ++j) {
+            passed &= tree.remove(j);
+        }
+
+        // Check that the tree is now empty
+        if (!tree.empty()) {
+            throw std::logic_error("tree is not empty after remove()");
+        }
+
+        if (tree.size() != 0) { // NOLINT: size() is being used for testing
+            throw std::logic_error("Empty tree has nonzero size");
+        }
+
+        passed &= check_identical(tree, unique_trees_0[0]);
+
+        // Try removal in opposite order as well
+        tree = unique_trees[i];
+        for (int j = tree_size; j > 0;) {
+            passed &= tree.remove(--j);
+        }
+
+        // Check that the tree is now empty
+        if (!tree.empty()) {
+            throw std::logic_error("tree is not empty after remove()");
+        }
+
+        if (tree.size() != 0) { // NOLINT: size() is being used for testing
+            throw std::logic_error("Empty tree has nonzero size");
+        }
+
+        passed &= check_identical(tree, unique_trees_0[0]);
+    }
+
+    cout << "Remove Check: ";
+    cout << (passed ? "passed" : "failed");
+    cout << endl;
+
+    AVLTree<int> tree;
+    constructTree(tree, {3, 2, 6, 1, 5, 7, 4, 8});
     tree.printTree();
-    tree.remove(1);
-    tree.printTree();
-    tree.clear();
-
-    for (int i = 0; i < 11; i++) {
-        tree.insert(i);
-        tree.printTree();
-        cout << "--------------------" << endl;
-    }
-
-    for (int i = 0; i < 11; i++) {
-        tree.remove(i);
-        tree.printTree();
-        cout << "--------------------" << endl;
-    }
-
-    for (int i = 0; i < 11; i++) {
-        tree.insert(i);
-    }
 
     cout << "Preorder Traverse" << endl;
     for (auto it = tree.preorder_begin(); it != tree.preorder_end(); it++) {
@@ -738,15 +1110,4 @@ int main() {
         cout << *it << " ";
     }
     cout << endl;
-
-    // And some memory handling checks
-    // make sure Assignment does not leak
-    AVLTree<int> tree_a, tree_b;
-
-    for (size_t i = 0; i < 5; ++i) tree_a.insert(rand());
-    tree_b = tree_a;
-    assert(tree_a == tree_b);
-    tree_a.clear();
-    tree_b = tree_a;
-    assert(tree_b == tree_a);
 }
