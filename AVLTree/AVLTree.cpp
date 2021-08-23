@@ -408,7 +408,13 @@ bool AVLTree<T, Node>::insertInternal(Node *&node, const T &value) {
 
 template <class T, class Node>
 T AVLTree<T, Node>::popMostLeft() {
-    return popMostLeftInternal(root)->value;
+    if (!empty()) {
+        return popMostLeftInternal(root)->value;
+    } else {
+        // There are no values, so nothing valid to return
+        // Raise out of bounds error
+        throw std::out_of_range("tree is empty");
+    }
 }
 
 template <class T, class Node>
@@ -429,7 +435,13 @@ Node* AVLTree<T, Node>::popMostLeftInternal(Node *&node) {
 
 template <class T, class Node>
 T AVLTree<T, Node>::popMostRight() {
-    return popMostRightInternal(root)->value;
+    if (!empty()) {
+        return popMostRightInternal(root)->value;
+    } else {
+        // There are no values, so nothing valid to return
+        // Raise out of bounds error
+        throw std::out_of_range("tree is empty");
+    }
 }
 
 template <class T, class Node>

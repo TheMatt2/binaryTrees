@@ -49,6 +49,7 @@ class AVLTree: virtual public BinaryTree<T, Node> {
 
   public:
     using BinaryTree<T, Node>::BinaryTree;
+    using BinaryTree<T, Node>::empty;
 
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
@@ -121,7 +122,7 @@ class AVLTreeCountable: public AVLTree<T, Node>, public BinaryTreeCountable<T, N
     explicit AVLTreeCountable(int (*compare)(const T &a, const T &b) = default_compare): AVLTree<T, Node>::AVLTree(compare) {}
 
     // Copy constructor
-    AVLTreeCountable(const AVLTreeCountable &tree) {AVLTree<T, Node>::AVLTree(tree); _count = tree._count;};
+    AVLTreeCountable(const AVLTreeCountable &tree): AVLTree<T, Node>::AVLTree(tree) {_count = tree._count;};
 
     // Assignment constructor
     AVLTreeCountable& operator=(const AVLTreeCountable &tree);

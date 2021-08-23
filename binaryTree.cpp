@@ -113,7 +113,7 @@ T BinaryTree<T, Node>::getMostLeft() const {
     if (!empty()) {
         return getMostLeftInternal(root)->value;
     } else {
-        // There are values, so nothing valid to return
+        // There are no values, so nothing valid to return
         // Raise out of bounds error
         throw std::out_of_range("tree is empty");
     }
@@ -134,7 +134,7 @@ T BinaryTree<T, Node>::getMostRight() const {
     if (!empty()) {
         return getMostRightInternal(root)->value;
     } else {
-        // There are values, so nothing valid to return
+        // There are no values, so nothing valid to return
         // Raise out of bounds error
         throw std::out_of_range("tree is empty");
     }
