@@ -123,7 +123,7 @@ class AVLTreeCountable: public AVLTree<T, Node>, public BinaryTreeCountable<T, N
   protected:
     using BinaryTreeCountable<T, Node>::_count;
   public:
-    explicit AVLTreeCountable(int (*compare)(const T &a, const T &b) = default_compare): BinaryTreeCountable<T, Node>(compare) {}
+    explicit AVLTreeCountable(int (*compare)(const T &a, const T &b) = default_compare);
 
     // Copy constructor
     AVLTreeCountable(const AVLTreeCountable &tree);
