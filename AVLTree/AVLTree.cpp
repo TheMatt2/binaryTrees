@@ -534,6 +534,10 @@ bool AVLTree<T, Node>::removeInternal(Node *&node, const T &value) {
     return true;
 }
 
+// Copy constructor
+template <class T, class Node>
+AVLTreeCountable<T, Node>::AVLTreeCountable(const AVLTreeCountable<T, Node> &tree): BinaryTree<T, Node>(tree), BinaryTreeCountable<T, Node>(tree), AVLTree<T, Node>(tree) {}
+
 // Assignment constructor
 template <class T, class Node>
 AVLTreeCountable<T, Node>& AVLTreeCountable<T, Node>::operator=(const AVLTreeCountable<T, Node> &tree) {

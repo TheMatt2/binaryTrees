@@ -898,8 +898,13 @@ protected:
 template <class T, class Node>
 class BinaryTreeCountable: virtual public BinaryTree<T, Node> {
   public:
-    // Copy constructor and Assignment constructor
-    // need to be implemented
+    explicit BinaryTreeCountable(int (*compare)(const T &a, const T &b) = default_compare): BinaryTree<T, Node>(compare) {};
+
+    // Copy constructor
+    BinaryTreeCountable(const BinaryTreeCountable &tree);
+
+    // Assignment constructor
+    BinaryTreeCountable& operator=(const BinaryTreeCountable &tree);
 
     using BinaryTree<T, Node>::preorder_begin;
     using BinaryTree<T, Node>::preorder_end;
