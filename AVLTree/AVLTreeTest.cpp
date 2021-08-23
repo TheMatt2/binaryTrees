@@ -754,8 +754,7 @@ void test() {
     passed = true;
     // Check Iterators
     // Make sure the reverse of each iterator is the same as the forward
-    for (size_t i = 0; i < unique_trees_size; ++i) {
-        auto &tree = unique_trees[i];
+    for (auto &tree : unique_trees) {
         // Make sure the iterators match each other
         passed &= check_forward_reverse_iterators(
             tree.inorder_begin(), tree.inorder_end(),
@@ -905,9 +904,7 @@ void test() {
 
     // Check copy constructor
     passed = true;
-    for (size_t i = 0; i < unique_trees_size; ++i) {
-        Tree &tree = unique_trees[i];
-
+    for (auto &tree : unique_trees) {
         // Test construct copy
         Tree constructed(tree); // NOLINT: The point is to construct a new tree
         passed &= check_identical(tree, constructed);
@@ -919,9 +916,7 @@ void test() {
 
     // Check contains()
     passed = true;
-    for (size_t i = 0; i < unique_trees_size; ++i) {
-        auto &tree = unique_trees[i];
-
+    for (auto &tree : unique_trees) {
         // Test contains
         int tree_size = (int) tree.size();
         for (int j = 0; j < tree_size; ++j) {
@@ -939,9 +934,7 @@ void test() {
 
     // Check popMostLeft()
     passed = true;
-    for (size_t i = 0; i < unique_trees_size; ++i) {
-        auto tree = unique_trees[i];
-
+    for (auto tree : unique_trees) {
         // Test popMostLeft()
         int tree_size = (int) tree.size();
         for (int j = 0; j < tree_size; ++j) {
@@ -977,9 +970,7 @@ void test() {
 
     // Check popMostRight()
     passed = true;
-    for (size_t i = 0; i < unique_trees_size; ++i) {
-        auto tree = unique_trees[i];
-
+    for (auto tree: unique_trees) {
         // Test popMostRight()
         int tree_size = (int) tree.size();
         for (int j = tree_size ; j > 0;) {
@@ -1015,9 +1006,7 @@ void test() {
 
     // Check clear()
     passed = true;
-    for (size_t i = 0; i < unique_trees_size; ++i) {
-        auto tree = unique_trees[i];
-
+    for (auto tree : unique_trees) {
         // Clear the tree and see it goes to the desired state
         tree.clear();
 
@@ -1039,16 +1028,16 @@ void test() {
 
     // Check remove()
     passed = true;
-    for (size_t i = 0; i < unique_trees_size; ++i) {
-        auto tree = unique_trees[i];
+    for (auto & unique_tree : unique_trees) {
+        auto tree = unique_tree;
         int tree_size = (int) tree.size();
 
-        // Check that removing nonexistent elements does not changed
-        // structure
+        // Check that removing nonexistent elements does
+        // not change structure
         tree.remove(-1);
         tree.remove(tree_size);
 
-        passed &= check_identical(tree, unique_trees[i]);
+        passed &= check_identical(tree, unique_tree);
 
         // Check that removing all elements results in an empty tree
         for (int j = 0; j < tree_size; ++j) {
@@ -1067,7 +1056,7 @@ void test() {
         passed &= check_identical(tree, unique_trees_0[0]);
 
         // Try removal in opposite order as well
-        tree = unique_trees[i];
+        tree = unique_tree;
         for (int j = tree_size; j > 0;) {
             passed &= tree.remove(--j);
         }
