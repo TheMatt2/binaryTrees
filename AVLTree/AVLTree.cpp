@@ -563,12 +563,6 @@ bool AVLTreeCountable<T, Node>::remove(const T &value) noexcept {
     return result;
 }
 
-//template <class T, class Node>
-//void AVLTreeCountable<T, Node>::clear() noexcept {
-//    AVLTree<T, Node>::clear();
-//    _count = 0;
-//}
-
 template <class T, class Node>
 T AVLTreeCountable<T, Node>::popMostLeft() {
     const T &result = AVLTree<T, Node>::popMostLeft();

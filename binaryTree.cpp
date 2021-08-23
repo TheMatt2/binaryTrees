@@ -10,7 +10,7 @@
 
 template <class T, class Node>
 void BinaryTree<T, Node>::clear() noexcept {
-    // Deallocate all of the memory recursively
+    // Deallocate memory recursively
     clearInternal(root);
     root = nullptr;
 }
