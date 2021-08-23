@@ -4,6 +4,7 @@
 
 #include <cstdio>
 #include <vector>
+#include <sstream>
 #include <iostream>
 #include <algorithm>
 #include <stdexcept>
@@ -209,11 +210,11 @@ bool check_identical(const AVLTree<T> &treeA, const AVLTree<T> &treeB) {
     }
     {
         // Make sure both print the same thing
-        std::stringstream printA, printB;
-        treeA.printTree(printA);
-        treeB.printTree(printB);
+        std::stringstream streamA, streamB;
+        treeA.printTree(streamA);
+        treeB.printTree(streamB);
 
-        bool print_equality = printA.str() == printB.str();
+        bool print_equality = streamA.str() == streamB.str();
 
         // Logically, if any previous checks failed, this check must fail.
         if (print_equality && !result) {
@@ -428,7 +429,7 @@ bool check_forward_reverse_iterators(
 }
 
 template <class T, class It>
-bool iteratorEquals(It first, It last, std::initializer_list<T> init_values) {
+inline bool iteratorEquals(It first, It last, std::initializer_list<T> init_values) {
     return std::equal(first, last, init_values.begin(), init_values.end());
 }
 
@@ -1053,7 +1054,7 @@ int main() {
             throw std::logic_error("tree is not empty after remove()");
         }
 
-        if (tree.size() != 0) { // NOLINT: size() is being used for testing
+        if (tree.size() != 0) { // NOLINT: size() is being tested
             throw std::logic_error("Empty tree has nonzero size");
         }
 
@@ -1068,6 +1069,32 @@ int main() {
     passed = true;
     AVLTree<int> tree;
     constructTree(tree, {3, 2, 6, 1, 5, 7, 4, 8});
+
+    // Check print statements
+    std::stringstream stream;
+    tree.printTree(stream);
+
+    passed &= stream.str() == (
+        "       3\n"
+        "   2       6\n"
+        " 1       5   7\n"
+        "        4     8\n");
+    stream.str(""); // clear stream
+
+    tree.printTree(0, 0, '#', true, true, ' ', stream);
+    passed &= stream.str() == (
+        "       3       \n"
+        "   2       6   \n"
+        " 1   #   5   7 \n"
+        "# # # # 4 # # 8\n");
+    stream.str("");
+
+    tree.printTree(0, 0, '#', false, true, ' ', stream);
+    passed &= stream.str() == (
+        "       3       \n"
+        "   2       6   \n"
+        " 1   #   5   7 \n"
+        "# # # # 4 # # 8\n");
 
     passed &= iteratorEquals(tree.preorder_begin(), tree.preorder_end(),
                              {3, 2, 1, 6, 5, 4, 7, 8});
