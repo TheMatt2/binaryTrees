@@ -271,8 +271,8 @@ bool contains_trees(const AVLTree<T> &tree, const AVLTree<T> forest[], size_t le
     return false;
 }
 
-template <class T>
-void test_unique_trees(const AVLTree<T> forest[], size_t len) {
+template <class Tree>
+void test_unique_trees(const Tree forest[], size_t len) {
     const char err_msg[] = "Tree %ld matched tree %ld, but should be distinct.";
 
     // Check that all trees in list are unique
@@ -281,7 +281,7 @@ void test_unique_trees(const AVLTree<T> forest[], size_t len) {
         size_t j;
         for (j = 0; j < i; ++j) {
             if (check_identical(forest[i], forest[j])) {
-                // Create to create, get length, and then make buf of that length
+                // Create, get length, and then make buf of that length
                 int err_size = snprintf(nullptr, 0, err_msg, i, j);
                 char *err_buf = new char[err_size];
                 sprintf(err_buf, err_msg, i, j);
@@ -343,8 +343,8 @@ unsigned int count_unique_trees(const int n) {
     return trees.size();
 }
 
-template <class T>
-bool check_size(const unsigned int size, const AVLTree<T> forest[], size_t len) {
+template <class Tree>
+bool check_size(const unsigned int size, const Tree forest[], size_t len) {
     // Check that the size of all trees is the same as expected
     for (size_t i = 0; i < len; ++i) {
         if (size != forest[i].size()) {
@@ -365,7 +365,7 @@ bool check_height(const unsigned int height, Tree forest[], size_t len) {
     return true;
 }
 
-// Number of values in a last
+// Number of values in a list
 template <class It>
 unsigned int size(It first, It last) {
     unsigned int n = 0;
@@ -433,13 +433,14 @@ inline bool iteratorEquals(It first, It last, std::initializer_list<T> init_valu
     return std::equal(first, last, init_values.begin(), init_values.end());
 }
 
-int main() {
-    cout << "AVL Tree Tests" << endl;
-
+// Test the given tree
+// Objects in tree are expected to be integers
+template <class Tree>
+void test() {
     // Stage 1
     // Show equality and tree building are working.
     // These will be utilized by later tests
-    auto *treeA = new AVLTree<int>();
+    auto *treeA = new Tree();
 
     // 2 Root, 0 deepest
     constructTree(*treeA, {1, 2, 3, 0});
@@ -451,7 +452,7 @@ int main() {
 
     // Switch tree to avoid using the assignment operator at this point
     delete treeA;
-    treeA = new AVLTree<int>();
+    treeA = new Tree();
     // 2 Root, 1 deepest
     constructTree(*treeA, {0, 2, 3, 1});
     test_identical_tree_to_init(*treeA, {0, 3, 2, 1});
@@ -462,7 +463,7 @@ int main() {
 
     // Root 1, 2 deepest
     delete treeA;
-    treeA = new AVLTree<int>();
+    treeA = new Tree();
     constructTree(*treeA, {0, 1, 3, 2});
     test_identical_tree_to_init(*treeA, {0, 3, 1, 2});
     test_identical_tree_to_init(*treeA, {1, 0, 3, 2});
@@ -472,7 +473,7 @@ int main() {
 
     // Root 1, 3 deepest
     delete treeA;
-    treeA = new AVLTree<int>();
+    treeA = new Tree();
     constructTree(*treeA, {0, 1, 2, 3});
     test_identical_tree_to_init(*treeA, {0, 2, 1, 3});
     test_identical_tree_to_init(*treeA, {1, 0, 2, 3});
@@ -481,7 +482,7 @@ int main() {
     test_identical_tree_to_init(*treeA, {2, 1, 0, 3});
     delete treeA;
 
-    cout << "Identical Compare Check: passed" << endl;
+    cout << "Identical Compare Check    : passed" << endl;
 
     // Stage 2
     // Show equivalence works correctly.
@@ -497,7 +498,7 @@ int main() {
     test_equivalent({2, 1, 3, 4}, {2, 1, 3, 4});
     test_equivalent({2, 1, 4, 3}, {2, 1, 4, 3});
 
-    cout << "Equivalent Compare Check: passed" << endl;
+    cout << "Equivalent Compare Check   : passed" << endl;
 
     // Stage 3
     // Verify tree building by checking the number
@@ -523,7 +524,7 @@ int main() {
         count_unique_trees(6) == unique_trees_6_size &&
         count_unique_trees(7) == unique_trees_7_size);
 
-    cout << "Compose Structure Check: ";
+    cout << "Compose Structure Check    : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -534,9 +535,9 @@ int main() {
         unique_trees_4_size + unique_trees_5_size +
         unique_trees_6_size + unique_trees_7_size);
 
-    AVLTree<int> unique_trees[unique_trees_size]; // 36
+    Tree unique_trees[unique_trees_size]; // 36
 
-    AVLTree<int> * const unique_trees_0 = unique_trees + 0,
+    Tree * const unique_trees_0 = unique_trees + 0,
         * const unique_trees_1 = unique_trees_0 + unique_trees_0_size,
         * const unique_trees_2 = unique_trees_1 + unique_trees_1_size,
         * const unique_trees_3 = unique_trees_2 + unique_trees_2_size,
@@ -601,13 +602,13 @@ int main() {
         check_size(6, unique_trees_6, unique_trees_6_size) &&
         check_size(7, unique_trees_7, unique_trees_7_size));
 
-    cout << "Size Check: ";
+    cout << "Size Check                 : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
     // Check Height
     passed = (
-        check_height<AVLTree<int>>(0, unique_trees_0, unique_trees_0_size) &&
+        check_height<Tree>(0, unique_trees_0, unique_trees_0_size) &&
         check_height(1, unique_trees_1, unique_trees_1_size) &&
         check_height(2, unique_trees_2, unique_trees_2_size) &&
         check_height(2, unique_trees_3, unique_trees_3_size) &&
@@ -617,7 +618,7 @@ int main() {
         check_height(3, unique_trees_7, 1) && // The first of 7 will be shorter
         check_height(4, unique_trees_7 + 1, unique_trees_7_size - 1));
 
-    cout << "Height Check: ";
+    cout << "Height Check               : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -665,7 +666,7 @@ int main() {
     passed &= unique_trees_7[15].getRoot() == 2;
     passed &= unique_trees_7[16].getRoot() == 2;
 
-    cout << "Root Check: ";
+    cout << "Root Check                 : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -681,7 +682,7 @@ int main() {
         passed &= unique_trees[i].getMostLeft() == 0;
     }
 
-    cout << "Get Left Check: ";
+    cout << "Get Left Check             : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -708,7 +709,7 @@ int main() {
     for (size_t i = 0; i < unique_trees_7_size; ++i)
         passed &= unique_trees_7[i].getMostRight() == 6;
 
-    cout << "Get Right Check: ";
+    cout << "Get Right Check            : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -745,7 +746,7 @@ int main() {
         }
     }
 
-    cout << "Preorder Iterator Check: ";
+    cout << "Preorder Iterator Check    : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -770,7 +771,7 @@ int main() {
         passed &= tree_size == size(tree.reverse_inorder_begin(), tree.reverse_inorder_end());
     }
 
-    cout << "Inorder Iterator Check: ";
+    cout << "Inorder Iterator Check     : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -812,7 +813,7 @@ int main() {
         }
     }
 
-    cout << "Postorder Iterator Check: ";
+    cout << "Postorder Iterator Check   : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -834,7 +835,7 @@ int main() {
 
         // The special thing about level order, if the values are used
         // to create a new tree, that tree will be identical
-        AVLTree<int> other;
+        Tree other;
         for (auto it = tree.level_order_begin(); it != tree.level_order_end(); ++it) {
             other.insert(*it);
         }
@@ -859,13 +860,13 @@ int main() {
         }
     }
 
-    cout << "Level Order Iterator Check: ";
+    cout << "Level Order Iterator Check : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
     passed = true;
     // Check assignment
-    AVLTree<int> other;
+    Tree other;
     for (size_t i = 0; i < unique_trees_size; ++i) {
         auto &tree = unique_trees[i];
 
@@ -898,21 +899,21 @@ int main() {
         passed &= check_identical(other, other);
     }
 
-    cout << "Assignment Check: ";
+    cout << "Assignment Check           : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
     // Check copy constructor
     passed = true;
     for (size_t i = 0; i < unique_trees_size; ++i) {
-        auto &tree = unique_trees[i];
+        Tree &tree = unique_trees[i];
 
         // Test construct copy
-        auto constructed(tree); // NOLINT: The point is to construct a new tree
+        Tree constructed(tree); // NOLINT: The point is to construct a new tree
         passed &= check_identical(tree, constructed);
     }
 
-    cout << "Copy Constructor Check: ";
+    cout << "Copy Constructor Check     : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -932,7 +933,7 @@ int main() {
         passed &= !tree.contains(tree_size);
     }
 
-    cout << "Copy Constructor Check: ";
+    cout << "Contains Check             : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -956,10 +957,21 @@ int main() {
             throw std::logic_error("Empty tree has nonzero size");
         }
 
+        // Check correct error is thrown if attempting to pop from empty tree
+        bool exc = false;
+        try {
+            tree.popMostLeft();
+        } catch (const std::out_of_range&) {
+            exc = true;
+        }
+        if (!exc) {
+            throw std::logic_error("Empty tree did not throw an error on popMostLeft()");
+        }
+
         passed &= check_identical(tree, unique_trees_0[0]);
     }
 
-    cout << "Pop Left Check: ";
+    cout << "Pop Left Check             : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -983,10 +995,21 @@ int main() {
             throw std::logic_error("Empty tree has nonzero size");
         }
 
+        // Check correct error is thrown if attempting to pop from empty tree
+        bool exc = false;
+        try {
+            tree.popMostRight();
+        } catch (const std::out_of_range&) {
+            exc = true;
+        }
+        if (!exc) {
+            throw std::logic_error("Empty tree did not throw an error on popMostRight()");
+        }
+
         passed &= check_identical(tree, unique_trees_0[0]);
     }
 
-    cout << "Pop Right Check: ";
+    cout << "Pop Right Check            : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -1010,7 +1033,7 @@ int main() {
         passed &= check_identical(tree, unique_trees_0[0]);
     }
 
-    cout << "Clear Check: ";
+    cout << "Clear Check                : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -1061,13 +1084,13 @@ int main() {
         passed &= check_identical(tree, unique_trees_0[0]);
     }
 
-    cout << "Remove Check: ";
+    cout << "Remove Check               : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
     // Test Vector Check
     passed = true;
-    AVLTree<int> tree;
+    Tree tree;
     constructTree(tree, {3, 2, 6, 1, 5, 7, 4, 8});
 
     // Check print statements
@@ -1113,7 +1136,7 @@ int main() {
     passed &= iteratorEquals(tree.reverse_level_order_begin(), tree.reverse_level_order_end(),
                              {3, 6, 2, 7, 5, 1, 8, 4});
 
-    cout << "Test Vector Check: ";
+    cout << "Test Vector Check          : ";
     cout << (passed ? "passed" : "failed");
     cout << endl;
 
@@ -1167,4 +1190,11 @@ int main() {
     }
     cout << endl;
 #endif
+}
+
+int main() {
+    cout << "AVLTree Tests" << endl;
+    test<AVLTree<int>>();
+    cout << "\nAVLTreeCountable Tests" << endl;
+    test<AVLTreeCountable<int>>();
 }
