@@ -24,8 +24,8 @@ void loadDataset(const char *filename, std::vector<std::string> &dataset) {
     }
 }
 
-template <class T, class Tree>
-long insertAll(Tree &tree, T *elements, size_t size) {
+template <class Tree>
+long insertAll(Tree &tree, typename Tree::value_type elements[], size_t size) {
     auto start = std::chrono::high_resolution_clock::now();
 
     for (size_t i = 0; i < size; i++) {
@@ -39,8 +39,8 @@ long insertAll(Tree &tree, T *elements, size_t size) {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
 }
 
-template <class T, class Tree>
-long removeAll(Tree &tree, T *elements, size_t size) {
+template <class Tree>
+long removeAll(Tree &tree, typename Tree::value_type elements[], size_t size) {
     auto start = std::chrono::high_resolution_clock::now();
 
     for (size_t i = 0; i < size; i++) {
@@ -97,19 +97,19 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Insert Group A: ";
     auto duration = insertAll(avlTree, groupA, groupA_size);
-    std::cout << duration / 1000000.0 << "ms" << std::endl;
+    std::cout << (double) duration / 1000000.0 << "ms" << std::endl;
 
     std::cout << "Insert Group B: ";
     duration = insertAll(avlTree, groupB, groupB_size);
-    std::cout << duration / 1000000.0 << "ms" << std::endl;
+    std::cout << (double) duration / 1000000.0 << "ms" << std::endl;
 
     std::cout << "Remove Group A: ";
     duration = removeAll(avlTree, groupA, groupA_size);
-    std::cout << duration / 1000000.0 << "ms" << std::endl;
+    std::cout << (double) duration / 1000000.0 << "ms" << std::endl;
 
     std::cout << "Remove Group B: ";
     duration = removeAll(avlTree, groupB, groupB_size);
-    std::cout << duration / 1000000.0 << "ms" << std::endl;
+    std::cout << (double) duration / 1000000.0 << "ms" << std::endl;
 
     assert(avlTree.empty());
 }
