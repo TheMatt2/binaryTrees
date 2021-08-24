@@ -36,6 +36,9 @@ template <> inline int default_compare(const short &a, const short &b) noexcept 
 
 template <class T, class Node>
 class BinaryTree {
+  public:
+    // Public reference to T for reference
+    typedef T value_type;
   protected:
     // Comparison function
     int (*compare)(const T &a, const T &b);
@@ -678,7 +681,7 @@ protected:
                 return false;
             }
 
-            // Otherwise check the node is identical
+            // Otherwise, check the node is identical
             return queue.front() == iter.queue.front();
         }
 
@@ -718,7 +721,7 @@ protected:
         using iterator_category = std::forward_iterator_tag;
         using value_type = T;
         using size_type = unsigned int;
-        using difference_type = long; // Issue is this requires signed, but we may have unsigned int elements
+        using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
         using pointer = T*;
         using reference = T&;
 
@@ -752,7 +755,7 @@ protected:
                 return false;
             }
 
-            // Otherwise check the node is identical
+            // Otherwise, check the node is identical
             return stack.top() == iter.stack.top();
         }
 
@@ -794,7 +797,7 @@ protected:
         using iterator_category = std::forward_iterator_tag;
         using value_type = T;
         using size_type = unsigned int;
-        using difference_type = long; // Issue is this requires signed, but we may have unsigned int elements
+        using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
         using pointer = T*;
         using reference = T&;
 
@@ -828,7 +831,7 @@ protected:
                 return false;
             }
 
-            // Otherwise check the node is identical
+            // Otherwise, check the node is identical
             return queue.front() == iter.queue.front();
         }
 

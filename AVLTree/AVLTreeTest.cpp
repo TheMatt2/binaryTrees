@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include <stdexcept>
+#include <type_traits>
 #include <initializer_list>
 
 // Because the test must also pass all sanity checks
@@ -16,8 +17,8 @@
 
 using namespace std;
 
-template <class T>
-bool check_equivalent(const AVLTree<T> &treeA, const AVLTree<T> &treeB) {
+template <class Tree>
+bool check_equivalent(const Tree &treeA, const Tree &treeB) {
     // Check that both trees are equivalent.
     // For the purposes of this test, and other uses, two trees are
     // equivalent iff both trees contain the same set of elements,
@@ -34,7 +35,7 @@ bool check_equivalent(const AVLTree<T> &treeA, const AVLTree<T> &treeB) {
 
         // Check direct node accesses
         // Throw error if a mismatch between emptiness and error
-        T treeA_left, treeA_right, treeB_left, treeB_right;
+        typename Tree::value_type treeA_left, treeA_right, treeB_left, treeB_right;
         try {
             treeA_left = treeA.getMostLeft();
         } catch (const std::out_of_range&) {
@@ -106,8 +107,8 @@ bool check_equivalent(const AVLTree<T> &treeA, const AVLTree<T> &treeB) {
     return result;
 }
 
-template <class T>
-bool check_identical(const AVLTree<T> &treeA, const AVLTree<T> &treeB) {
+template <class Tree>
+bool check_identical(const Tree &treeA, const Tree &treeB) {
     // Check that both trees are identical in all respects
     // Note that all functions are always called.
     // This makes sure that, in the case one test would fail, further tests are still used
@@ -118,7 +119,7 @@ bool check_identical(const AVLTree<T> &treeA, const AVLTree<T> &treeB) {
 
     // Check direct node access
     {
-        T treeA_root, treeB_root;
+        typename Tree::value_type treeA_root, treeB_root;
         try {
             treeA_root = treeA.getRoot();
         } catch (const std::out_of_range&) {
@@ -233,8 +234,8 @@ bool check_identical(const AVLTree<T> &treeA, const AVLTree<T> &treeB) {
     return result;
 }
 
-template <class T>
-void constructTree(AVLTree<T> &tree, std::initializer_list<T> init_values) {
+template <class Tree>
+void constructTree(Tree &tree, std::initializer_list<typename Tree::value_type> init_values) {
     assert(tree.empty());
     for (auto value : init_values) {
         tree.insert(value);
@@ -244,23 +245,23 @@ void constructTree(AVLTree<T> &tree, std::initializer_list<T> init_values) {
 #endif
 }
 
-template <class T>
-void test_identical_tree_to_init(AVLTree<T> &treeA, std::initializer_list<T> init_b) {
-    AVLTree<T> treeB;
+template <class Tree>
+void test_identical_tree_to_init(Tree &treeA, std::initializer_list<typename Tree::value_type> init_b) {
+    Tree treeB;
     constructTree(treeB, init_b);
     if (!check_identical(treeA, treeB)) throw logic_error("Identity test failed.");
 }
 
-template <class T>
-void test_equivalent(std::initializer_list<T> init_a, std::initializer_list<T> init_b) {
-    AVLTree<T> treeA, treeB;
+template <class Tree>
+void test_equivalent(std::initializer_list<typename Tree::value_type> init_a, std::initializer_list<typename Tree::value_type> init_b) {
+    Tree treeA, treeB;
     constructTree(treeA, init_a);
     constructTree(treeB, init_b);
     if (!check_equivalent(treeA, treeB)) throw logic_error("Identity test failed.");
 }
 
-template <class T>
-bool contains_trees(const AVLTree<T> &tree, const AVLTree<T> forest[], size_t len) {
+template <class Tree>
+bool contains_trees(const Tree &tree, const Tree forest[], size_t len) {
     // Check if val in values
     for (; len > 0;) {
         if (check_identical(tree, forest[--len])) {
@@ -299,6 +300,7 @@ void test_unique_trees(const Tree forest[], size_t len) {
     }
 }
 
+template <class Tree>
 unsigned int count_unique_trees(const int n) {
     // For a given number of elements, count how many unique tree
     // structures exist.
@@ -320,11 +322,11 @@ unsigned int count_unique_trees(const int n) {
     }
 
     // Create a vector to store all trees we will compare
-    std::vector<AVLTree<int>> trees;
+    std::vector<Tree> trees;
 
     // Start creating trees
     do {
-        AVLTree<int> tree;
+        Tree tree;
         for (int i = 0; i < n; ++i) {
             tree.insert(range[i]);
         }
@@ -416,9 +418,9 @@ bool check_forward_reverse_iterators(
         ReverseIt reverse_first, ReverseIt reverse_last) {
 
     static_assert(std::is_same<
-            typename ForwardIt::value_type,
-            typename ReverseIt::value_type>::value,
-            "Forward and Reverse iterators are for different types");
+        typename ForwardIt::value_type,
+        typename ReverseIt::value_type>::value,
+        "Forward and Reverse iterators are for different types");
 
     typedef typename ForwardIt::value_type T;
 
@@ -434,9 +436,13 @@ inline bool iteratorEquals(It first, It last, std::initializer_list<T> init_valu
 }
 
 // Test the given tree
-// Objects in tree are expected to be integers
 template <class Tree>
 void test() {
+    // Objects in tree are expected to be integers
+    static_assert(
+        std::is_same<typename Tree::value_type, int>::value,
+        "AVLTree value type is expected to be integer");
+
     // Stage 1
     // Show equality and tree building are working.
     // These will be utilized by later tests
@@ -488,15 +494,15 @@ void test() {
     // Show equivalence works correctly.
     // First show the ==, and != operators are functional.
     // So it can be used for other tests
-    test_equivalent<int>({}, {});
-    test_equivalent({1}, {1});
-    test_equivalent({1, 2}, {1, 2});
-    test_equivalent({2, 1}, {1, 2});
-    test_equivalent({2, 1, 3}, {2, 1, 3});
-    test_equivalent({3, 2, 4, 1}, {3, 2, 4, 1});
-    test_equivalent({3, 1, 4, 2}, {3, 1, 4, 2});
-    test_equivalent({2, 1, 3, 4}, {2, 1, 3, 4});
-    test_equivalent({2, 1, 4, 3}, {2, 1, 4, 3});
+    test_equivalent<Tree>({}, {});
+    test_equivalent<Tree>({1}, {1});
+    test_equivalent<Tree>({1, 2}, {1, 2});
+    test_equivalent<Tree>({2, 1}, {1, 2});
+    test_equivalent<Tree>({2, 1, 3}, {2, 1, 3});
+    test_equivalent<Tree>({3, 2, 4, 1}, {3, 2, 4, 1});
+    test_equivalent<Tree>({3, 1, 4, 2}, {3, 1, 4, 2});
+    test_equivalent<Tree>({2, 1, 3, 4}, {2, 1, 3, 4});
+    test_equivalent<Tree>({2, 1, 4, 3}, {2, 1, 4, 3});
 
     cout << "Equivalent Compare Check   : passed" << endl;
 
@@ -515,14 +521,14 @@ void test() {
         unique_trees_7_size = 17;
 
     bool passed = (
-        count_unique_trees(0) == unique_trees_0_size &&
-        count_unique_trees(1) == unique_trees_1_size &&
-        count_unique_trees(2) == unique_trees_2_size &&
-        count_unique_trees(3) == unique_trees_3_size &&
-        count_unique_trees(4) == unique_trees_4_size &&
-        count_unique_trees(5) == unique_trees_5_size &&
-        count_unique_trees(6) == unique_trees_6_size &&
-        count_unique_trees(7) == unique_trees_7_size);
+        count_unique_trees<Tree>(0) == unique_trees_0_size &&
+        count_unique_trees<Tree>(1) == unique_trees_1_size &&
+        count_unique_trees<Tree>(2) == unique_trees_2_size &&
+        count_unique_trees<Tree>(3) == unique_trees_3_size &&
+        count_unique_trees<Tree>(4) == unique_trees_4_size &&
+        count_unique_trees<Tree>(5) == unique_trees_5_size &&
+        count_unique_trees<Tree>(6) == unique_trees_6_size &&
+        count_unique_trees<Tree>(7) == unique_trees_7_size);
 
     cout << "Compose Structure Check    : ";
     cout << (passed ? "passed" : "failed");
@@ -866,9 +872,7 @@ void test() {
     passed = true;
     // Check assignment
     Tree other;
-    for (size_t i = 0; i < unique_trees_size; ++i) {
-        auto &tree = unique_trees[i];
-
+    for (auto &tree : unique_trees) {
         // Test assignment
         other = tree;
         passed &= check_identical(tree, other);
