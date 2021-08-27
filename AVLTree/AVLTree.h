@@ -33,6 +33,7 @@ struct AVLTreeNode {
 
 template <class T, class Node = AVLTreeNode<T>>
 class AVLTree: virtual public BinaryTree<Node> {
+    static_assert(std::is_same<T, Node::value_type>::value, "Node value type must match class type");
   protected:
     using BinaryTree<Node>::root;
     using BinaryTree<Node>::compare;
@@ -123,6 +124,7 @@ class AVLTree: virtual public BinaryTree<Node> {
 // This uses another integer, but makes an O(1) size() function
 template <class T, class Node = AVLTreeNode<T>>
 class AVLTreeCountable: public AVLTree<T, Node>, public BinaryTreeCountable<Node> {
+    static_assert(std::is_same<T, Node::value_type>::value, "Node value type must match class type");
   protected:
     using BinaryTreeCountable<Node>::_count;
   public:
