@@ -122,9 +122,9 @@ class AVLTree: virtual public BinaryTree<Node> {
 // A specialized AVLTree that tracks the size of elements in the tree.
 // This uses another integer, but makes an O(1) size() function
 template <class T, class Node = AVLTreeNode<T>>
-class AVLTreeCountable: public AVLTree<T, Node>, public BinaryTreeCountable<T, Node> {
+class AVLTreeCountable: public AVLTree<T, Node>, public BinaryTreeCountable<Node> {
   protected:
-    using BinaryTreeCountable<T, Node>::_count;
+    using BinaryTreeCountable<Node>::_count;
   public:
     explicit AVLTreeCountable(int (*compare)(const T &a, const T &b) = default_compare);
 

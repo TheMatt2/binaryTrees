@@ -556,9 +556,10 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
+      protected:
         using stack_iterator::stack;
         using stack_iterator::stack_iterator;
-      protected:
+
         void advance() override;
     };
 
@@ -582,9 +583,10 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
+      protected:
         using stack_iterator::stack;
         using stack_iterator::stack_iterator;
-      protected:
+    
         void advance() override;
     };
 
@@ -608,14 +610,16 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
-        using stack_iterator::stack;
       protected:
+        using stack_iterator::stack;
+      
         explicit postorder_iterator(Node *root): stack_iterator(root) {
             // The root is the last value in postorder traversal, not the first
             // so advance() must be called from the constructor for start
             if (root != nullptr) advanceToNext();
         }
         void advance() override;
+
       private:
         // For postorder, it involves both advancing (backtracking)
         // and then falling down to the next node.
@@ -643,8 +647,9 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
-        using stack_iterator::stack;
       protected:
+        using stack_iterator::stack;
+    
         explicit reverse_postorder_iterator(Node *root): stack_iterator(root) {
             // Go to the first value
             if (root != nullptr) advanceToNext();
@@ -676,8 +681,9 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
-        using stack_iterator::stack;
       protected:
+        using stack_iterator::stack;
+    
         explicit inorder_iterator(Node *root): stack_iterator(root) {
                 // Go to the first value
                 if (root != nullptr) advanceToNext();
@@ -709,8 +715,9 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
-        using stack_iterator::stack;
       protected:
+        using stack_iterator::stack;
+      
         explicit reverse_inorder_iterator(Node *root): stack_iterator(root) {
                 // Go to the first value
                 if (root != nullptr) advanceToNext();
@@ -742,9 +749,10 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
+      protected:
         using queue_iterator::queue;
         using queue_iterator::queue_iterator;
-      protected:
+      
         void advance() override;
     };
 
@@ -768,9 +776,10 @@ class BinaryTree {
         // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
 
+      protected:
         using queue_iterator::queue;
         using queue_iterator::queue_iterator;
-      protected:
+      
         void advance() override;
     };
 
@@ -912,19 +921,16 @@ protected:
 
 // A specialized BinaryTree that tracks the size the tree.
 // This uses another integer, but makes an O(1) size() function
-template <class T, class Node>
+template <class Node>
 class BinaryTreeCountable: virtual public BinaryTree<Node> {
   public:
-    explicit BinaryTreeCountable(int (*compare)(const T &a, const T &b) = default_compare): BinaryTree<Node>(compare) {};
+    explicit BinaryTreeCountable(int (*compare)(const value_type &a, const value_type &b) = default_compare): BinaryTree<Node>(compare) {};
 
     // Copy constructor
     BinaryTreeCountable(const BinaryTreeCountable &tree);
 
     // Assignment constructor
     BinaryTreeCountable& operator=(const BinaryTreeCountable &tree);
-
-    using BinaryTree<Node>::preorder_begin;
-    using BinaryTree<Node>::preorder_end;
 
     bool operator==(const BinaryTreeCountable &tree) const noexcept {
         // Size must match first
@@ -938,12 +944,12 @@ class BinaryTreeCountable: virtual public BinaryTree<Node> {
         return !operator==(tree);
     }
 
-    bool insert(const T &value) noexcept override = 0;
-    bool remove(const T &value) noexcept override = 0;
+    bool insert(const value_type &value) noexcept override = 0;
+    bool remove(const value_type &value) noexcept override = 0;
     void clear() noexcept override {BinaryTree<Node>::clear(); _count = 0;};
 
-    T popMostLeft() override = 0;
-    T popMostRight() override = 0;
+    value_type popMostLeft() override = 0;
+    value_type popMostRight() override = 0;
 
     unsigned int size() const noexcept override {return _count;};
 

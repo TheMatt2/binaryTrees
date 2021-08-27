@@ -49,9 +49,9 @@ class SplayTree: virtual public BinaryTree<Node> {
 // A specialized SplayTree that tracks the size of elements in the tree.
 // This uses another integer, but makes an O(1) size() function
 template <class T, class Node = SplayTreeNode<T>>
-class SplayTreeCountable: public SplayTree<T, Node>, public BinaryTreeCountable<T, Node> {
+class SplayTreeCountable: public SplayTree<T, Node>, public BinaryTreeCountable<Node> {
 protected:
-    using BinaryTreeCountable<T, Node>::_count;
+    using BinaryTreeCountable<Node>::_count;
   public:
     explicit SplayTreeCountable(int (*compare)(const T &a, const T &b) = default_compare): SplayTree<T, Node>::SplayTree(compare) {};
 
