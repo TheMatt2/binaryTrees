@@ -380,6 +380,162 @@ class BinaryTree {
     constexpr reverse_level_order_iterator reverse_level_order_begin() const noexcept;
     constexpr reverse_level_order_iterator reverse_level_order_end() const noexcept;
 
+    // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
+    // Used as a base for the other iterators
+    class stack_iterator {
+        /*
+         * Base iterator for building the preorder, postorder, and the reverse iterators.
+         */
+         // Allow BinaryTree to use the protected constructor
+        friend class BinaryTree;
+    public:
+        // Iterator traits
+        // Makes this iterator "official" in the eyes of the stl functions
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using size_type = unsigned int;
+        using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
+        using pointer = T*;
+        using reference = T&;
+
+        // Copy constructor
+        stack_iterator(const stack_iterator& iter) : stack(iter.stack) {}
+
+        stack_iterator& operator=(const stack_iterator& iter) {
+            stack = iter.stack;
+            return *this;
+        }
+
+        // Prefix ++ overload
+        stack_iterator& operator++() {
+            if (!stack.empty()) advance();
+            return *this;
+        }
+
+        // Postfix ++ overload
+        stack_iterator operator++(int) {
+            stack_iterator iter = *this;
+            ++* this;
+            return iter;
+        }
+
+        bool operator==(const stack_iterator& iter) const {
+            if (stack.empty()) {
+                // Equal only of other is empty
+                return iter.stack.empty();
+            }
+            else if (iter.stack.empty()) {
+                // Other is empty, but this isn't. Not equal.
+                return false;
+            }
+
+            // Otherwise, check the node is identical
+            return stack.top() == iter.stack.top();
+        }
+
+        bool operator!=(const stack_iterator& iter) const {
+            return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
+        }
+
+        virtual T operator*() const {
+            if (!stack.empty())
+                return stack.top()->value;
+            else
+                // Throw error since nothing exists
+                throw std::out_of_range("iterator has been exhausted");
+        }
+
+    protected:
+        // Implemented as a blank function
+        // to allow the increment operators to be happy
+        virtual void advance() { throw std::logic_error("not implemented" /* and shouldn't exist */); }
+
+        explicit stack_iterator(const Node* root) : stack() {
+            // Add pointer, if non-null
+            if (root != nullptr) stack.push(root);
+        }
+
+        // Internally track nodes in a stack.
+        std::stack<const Node*> stack;
+    };
+
+    class queue_iterator {
+        /*
+         * Base Iterator for level order and reverse level order iterators.
+         */
+         // Allow BinaryTree to use the protected constructor
+        friend class BinaryTree;
+    public:
+        // Iterator traits
+        // Makes this iterator "official" in the eyes of the stl functions
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using size_type = unsigned int;
+        using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
+        using pointer = T*;
+        using reference = T&;
+
+        // Copy constructor
+        queue_iterator(const queue_iterator& iter) : queue(iter.queue) {}
+
+        queue_iterator& operator=(const queue_iterator& iter) {
+            queue = iter.queue;
+            return *this;
+        }
+
+        // Prefix ++ overload
+        queue_iterator& operator++() {
+            if (!queue.empty()) advance();
+            return *this;
+        }
+
+        // Postfix ++ overload
+        queue_iterator operator++(int) {
+            queue_iterator iter = *this;
+            ++* this;
+            return iter;
+        }
+
+        bool operator==(const queue_iterator& iter) const {
+            if (queue.empty()) {
+                // Equal only of other is empty
+                return iter.queue.empty();
+            }
+            else if (iter.queue.empty()) {
+                // Other is empty, but this isn't. Not equal.
+                return false;
+            }
+
+            // Otherwise, check the node is identical
+            return queue.front() == iter.queue.front();
+        }
+
+        bool operator!=(const queue_iterator& iter) const {
+            return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
+        }
+
+        virtual T operator*() const {
+            if (!queue.empty())
+                return queue.front()->value;
+            else
+                // Throw error since nothing exists
+                throw std::out_of_range("iterator has been exhausted");
+        }
+
+    protected:
+        // Implemented as a fake function
+        // to allow the increment operators to be happy
+        virtual void advance() { throw std::logic_error("not implemented" /* and shouldn't exist */); }
+
+        explicit queue_iterator(const Node* root) : queue() {
+            // Add pointer, if non-null
+            if (root != nullptr) queue.push(root);
+        }
+
+        // Internally track nodes in a queue.
+        std::queue<const Node*> queue;
+    };
+
     /**
      * Iterator over the tree in a preorder traversal.
      * Iterates through the tree from left to right,
@@ -397,6 +553,9 @@ class BinaryTree {
      * D, B, A, C, F, E, G
      */
     class preorder_iterator: public stack_iterator {
+        // Allow BinaryTree to use the protected constructor
+        friend class BinaryTree;
+
         using stack_iterator::stack;
         using stack_iterator::stack_iterator;
       protected:
@@ -420,6 +579,9 @@ class BinaryTree {
      * D, F, G, E, B, C, A
      */
     class reverse_preorder_iterator: public stack_iterator {
+        // Allow BinaryTree to use the protected constructor
+        friend class BinaryTree;
+
         using stack_iterator::stack;
         using stack_iterator::stack_iterator;
       protected:
@@ -577,6 +739,9 @@ class BinaryTree {
      * D, B, F, A, C, E, G
      */
     class level_order_iterator: public queue_iterator {
+        // Allow BinaryTree to use the protected constructor
+        friend class BinaryTree;
+
         using queue_iterator::queue;
         using queue_iterator::queue_iterator;
       protected:
@@ -600,6 +765,9 @@ class BinaryTree {
      * D, F, B, G, E, C, A
      */
     class reverse_level_order_iterator: public queue_iterator {
+        // Allow BinaryTree to use the protected constructor
+        friend class BinaryTree;
+
         using queue_iterator::queue;
         using queue_iterator::queue_iterator;
       protected:
@@ -705,160 +873,6 @@ protected:
 
         // Internally track nodes in a queue.
         clearable_queue<const Node*> queue;
-    };
-
-    // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
-    // Used as a base for the other iterators
-    class stack_iterator {
-        /*
-         * Base iterator for building the preorder, postorder, and the reverse iterators.
-         */
-        // Allow BinaryTree to use the protected constructor
-        friend class BinaryTree;
-      public:
-        // Iterator traits
-        // Makes this iterator "official" in the eyes of the stl functions
-        using iterator_category = std::forward_iterator_tag;
-        using value_type = T;
-        using size_type = unsigned int;
-        using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
-        using pointer = T*;
-        using reference = T&;
-
-        // Copy constructor
-        stack_iterator(const stack_iterator &iter): stack(iter.stack) {}
-
-        stack_iterator &operator=(const stack_iterator &iter) {
-            stack = iter.stack;
-            return *this;
-        }
-
-        // Prefix ++ overload
-        stack_iterator &operator++() {
-            if (!stack.empty()) advance();
-            return *this;
-        }
-
-        // Postfix ++ overload
-        stack_iterator operator++(int) {
-            stack_iterator iter = *this;
-            ++*this;
-            return iter;
-        }
-
-        bool operator==(const stack_iterator &iter) const {
-            if (stack.empty()) {
-                // Equal only of other is empty
-                return iter.stack.empty();
-            } else if (iter.stack.empty()) {
-                // Other is empty, but this isn't. Not equal.
-                return false;
-            }
-
-            // Otherwise, check the node is identical
-            return stack.top() == iter.stack.top();
-        }
-
-        bool operator!=(const stack_iterator &iter) const {
-            return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
-        }
-
-        virtual T operator*() const {
-            if (!stack.empty())
-                return stack.top()->value;
-            else
-                // Throw error since nothing exists
-                throw std::out_of_range("iterator has been exhausted");
-        }
-
-      protected:
-        // Implemented as a blank function
-        // to allow the increment operators to be happy
-        virtual void advance() {throw std::logic_error("not implemented" /* and shouldn't exist */);}
-
-        explicit stack_iterator(const Node *root): stack() {
-            // Add pointer, if non-null
-            if (root != nullptr) stack.push(root);
-        }
-
-        // Internally track nodes in a stack.
-        std::stack<const Node*> stack;
-    };
-
-    class queue_iterator {
-        /*
-         * Base Iterator for level order and reverse level order iterators.
-         */
-        // Allow BinaryTree to use the protected constructor
-        friend class BinaryTree;
-      public:
-        // Iterator traits
-        // Makes this iterator "official" in the eyes of the stl functions
-        using iterator_category = std::forward_iterator_tag;
-        using value_type = T;
-        using size_type = unsigned int;
-        using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
-        using pointer = T*;
-        using reference = T&;
-
-        // Copy constructor
-        queue_iterator(const queue_iterator &iter): queue(iter.queue) {}
-
-        queue_iterator &operator=(const queue_iterator &iter) {
-            queue = iter.queue;
-            return *this;
-        }
-
-        // Prefix ++ overload
-        queue_iterator &operator++() {
-            if (!queue.empty()) advance();
-            return *this;
-        }
-
-        // Postfix ++ overload
-        queue_iterator operator++(int) {
-            queue_iterator iter = *this;
-            ++*this;
-            return iter;
-        }
-
-        bool operator==(const queue_iterator &iter) const {
-            if (queue.empty()) {
-                // Equal only of other is empty
-                return iter.queue.empty();
-            } else if (iter.queue.empty()) {
-                // Other is empty, but this isn't. Not equal.
-                return false;
-            }
-
-            // Otherwise, check the node is identical
-            return queue.front() == iter.queue.front();
-        }
-
-        bool operator!=(const queue_iterator &iter) const {
-            return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
-        }
-
-        virtual T operator*() const {
-            if (!queue.empty())
-                return queue.front()->value;
-            else
-                // Throw error since nothing exists
-                throw std::out_of_range("iterator has been exhausted");
-        }
-
-      protected:
-        // Implemented as a fake function
-        // to allow the increment operators to be happy
-        virtual void advance() {throw std::logic_error("not implemented" /* and shouldn't exist */);}
-
-        explicit queue_iterator(const Node *root): queue() {
-            // Add pointer, if non-null
-            if (root != nullptr) queue.push(root);
-        }
-
-        // Internally track nodes in a queue.
-        std::queue<const Node*> queue;
     };
 
     // Add internal sanity checks that can enabled if requested.
