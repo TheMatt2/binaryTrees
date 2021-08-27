@@ -21,6 +21,10 @@ struct SplayTreeNode {
 
 template <class T, class Node = SplayTreeNode<T>>
 class SplayTree: virtual public BinaryTree<Node> {
+  public:
+    using value_type = typename BinaryTree<Node>::value_type;
+
+    static_assert(std::is_same<T, value_type>::value, "Node value type must match class type");
   protected:
     using BinaryTree<Node>::root;
     using BinaryTree<Node>::compare;
@@ -36,7 +40,7 @@ class SplayTree: virtual public BinaryTree<Node> {
     Node* popMostRightInternal(Node *&node);
 
   public:
-    using BinaryTree<Node>::BinaryTree;
+    explicit SplayTree(int (*compare)(const T& a, const T& b) = default_compare) : BinaryTree<Node>(compare) {}
 
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
@@ -50,13 +54,13 @@ class SplayTree: virtual public BinaryTree<Node> {
 // This uses another integer, but makes an O(1) size() function
 template <class T, class Node = SplayTreeNode<T>>
 class SplayTreeCountable: public SplayTree<T, Node>, public BinaryTreeCountable<Node> {
-protected:
+  protected:
     using BinaryTreeCountable<Node>::_count;
   public:
-    explicit SplayTreeCountable(int (*compare)(const T &a, const T &b) = default_compare): SplayTree<T, Node>::SplayTree(compare) {};
+    explicit SplayTreeCountable(int (*compare)(const T &a, const T &b) = default_compare);
 
     // Copy constructor
-    SplayTreeCountable(const SplayTreeCountable &tree) {SplayTree<T, Node>::SplayTree(tree); _count = tree._count;};
+    SplayTreeCountable(const SplayTreeCountable& tree);
 
     // Assignment constructor
     SplayTreeCountable& operator=(const SplayTreeCountable &tree);

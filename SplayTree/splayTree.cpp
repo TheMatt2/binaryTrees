@@ -313,6 +313,13 @@ bool SplayTree<T, Node>::removeInternal(Node *&node, const T &value) {
     return success;
 }
 
+template <class T, class Node>
+SplayTreeCountable<T, Node>::SplayTreeCountable(int (*compare)(const T& a, const T& b)) : BinaryTree<Node>(compare), BinaryTreeCountable<Node>(compare), SplayTree<T, Node>(compare) {}
+
+// Copy constructor
+template <class T, class Node>
+SplayTreeCountable<T, Node>::SplayTreeCountable(const SplayTreeCountable<T, Node>& tree) : BinaryTree<Node>(tree), BinaryTreeCountable<Node>(tree), SplayTree<T, Node>(tree) {}
+
 // Assignment constructor
 template <class T, class Node>
 SplayTreeCountable<T, Node>& SplayTreeCountable<T, Node>::operator=(const SplayTreeCountable<T, Node> &tree) {
