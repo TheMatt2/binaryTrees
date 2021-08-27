@@ -109,11 +109,6 @@ class BinaryTree {
                            unsigned int padding_left, unsigned int padding_right,
                            unsigned int width, char background, std::ostream &ostream) const noexcept;
 
-    // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
-    // Used as a base for the other iterators
-    class stack_iterator;
-    class queue_iterator;
-
   public:
     explicit BinaryTree(int (*compare)(const value_type &a, const value_type &b) = default_compare): compare(compare), root(nullptr) {};
 
@@ -380,6 +375,7 @@ class BinaryTree {
     constexpr reverse_level_order_iterator reverse_level_order_begin() const noexcept;
     constexpr reverse_level_order_iterator reverse_level_order_end() const noexcept;
 
+  private:
     // Guide used in for layout https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
     // Used as a base for the other iterators
     class stack_iterator {
@@ -388,7 +384,7 @@ class BinaryTree {
          */
          // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
-    public:
+      public:
         // Iterator traits
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
@@ -445,7 +441,7 @@ class BinaryTree {
                 throw std::out_of_range("iterator has been exhausted");
         }
 
-    protected:
+      protected:
         // Implemented as a blank function
         // to allow the increment operators to be happy
         virtual void advance() { throw std::logic_error("not implemented" /* and shouldn't exist */); }
@@ -465,7 +461,7 @@ class BinaryTree {
          */
          // Allow BinaryTree to use the protected constructor
         friend class BinaryTree;
-    public:
+      public:
         // Iterator traits
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
@@ -522,7 +518,7 @@ class BinaryTree {
                 throw std::out_of_range("iterator has been exhausted");
         }
 
-    protected:
+      protected:
         // Implemented as a fake function
         // to allow the increment operators to be happy
         virtual void advance() { throw std::logic_error("not implemented" /* and shouldn't exist */); }
@@ -536,6 +532,7 @@ class BinaryTree {
         std::queue<const Node*> queue;
     };
 
+  public:
     /**
      * Iterator over the tree in a preorder traversal.
      * Iterates through the tree from left to right,
@@ -924,6 +921,8 @@ protected:
 template <class Node>
 class BinaryTreeCountable: virtual public BinaryTree<Node> {
   public:
+    using value_type = typename BinaryTree<Node>::value_type;
+
     explicit BinaryTreeCountable(int (*compare)(const value_type &a, const value_type &b) = default_compare): BinaryTree<Node>(compare) {};
 
     // Copy constructor
