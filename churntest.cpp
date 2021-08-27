@@ -38,8 +38,8 @@ inline int stringCompare(const std::string &a, const std::string &b) {
     return a.compare(b);
 }
 
-template <class T, class Tree>
-long performanceTest(Tree &tree, size_t iterations, T* testset, size_t length) {
+template <class Tree>
+std::chrono::nanoseconds::rep performanceTest(Tree &tree, size_t iterations, typename Tree::value_type testset[], size_t length) {
     // Returns count of nanoseconds taken
     // Take the collection and list of actions.
     // Then execute the actions, returning the time taken.
@@ -92,7 +92,8 @@ void churntest(Tree &tree, typename Tree::value_type dataset[], size_t size) {
         }
 
         // https://stackoverflow.com/a/3093470 shows this is safe because a vector will be continuous
-        auto duration = performanceTest(tree, size, &dataset[0], split_index);
+        auto duration = performanceTest(tree, size, dataset, split_index);
+        assert(duration > 0);
 
         std::cout << churn * 100 << "% churn\t: "
                   << duration / 1000000.0 // million nanoseconds in a millisecond
