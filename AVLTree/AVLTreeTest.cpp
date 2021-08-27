@@ -273,11 +273,11 @@ bool contains_trees(const Tree &tree, const Tree forest[], size_t len) {
 }
 
 template <class Tree>
-void test_unique_trees(const Tree forest[], size_t len) {
+void test_unique_trees(const Tree forest[], size_t length) {
     const char err_msg[] = "Tree %ld matched tree %ld, but should be distinct.";
 
     // Check that all trees in list are unique
-    for (size_t i = 0; i < len; ++i) {
+    for (size_t i = 0; i < length; ++i) {
         // Make sure to not compare to itself
         size_t j;
         for (j = 0; j < i; ++j) {
@@ -289,7 +289,7 @@ void test_unique_trees(const Tree forest[], size_t len) {
                 throw std::logic_error(err_buf);
             }
         }
-        for (j = i + 1; j < len; ++j) {
+        for (j = i + 1; j < length; ++j) {
             if (check_identical(forest[i], forest[j])) {
                 int err_size = snprintf(nullptr, 0, err_msg, i, j);
                 char *err_buf = new char[err_size];
@@ -346,9 +346,9 @@ unsigned int count_unique_trees(const int n) {
 }
 
 template <class Tree>
-bool check_size(const unsigned int size, const Tree forest[], size_t len) {
+bool check_size(const unsigned int size, const Tree forest[], size_t length) {
     // Check that the size of all trees is the same as expected
-    for (size_t i = 0; i < len; ++i) {
+    for (size_t i = 0; i < length; ++i) {
         if (size != forest[i].size()) {
             return false;
         }
@@ -357,9 +357,9 @@ bool check_size(const unsigned int size, const Tree forest[], size_t len) {
 }
 
 template <class Tree>
-bool check_height(const unsigned int height, Tree forest[], size_t len) {
+bool check_height(const unsigned int height, Tree forest[], size_t length) {
     // Check that the size of all trees is the same as expected
-    for (size_t i = 0; i < len; ++i) {
+    for (size_t i = 0; i < length; ++i) {
         if (height != forest[i].getHeight()) {
             return false;
         }
