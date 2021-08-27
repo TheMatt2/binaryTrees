@@ -13,6 +13,9 @@
 
 template <class T>
 struct AVLTreeNode {
+    // Public reference to T for reference
+    using value_type = T;
+
     explicit AVLTreeNode(const T &value): left(nullptr), right(nullptr), height(1), value(value) {}
 
     // Copy constructor
@@ -29,10 +32,10 @@ struct AVLTreeNode {
 };
 
 template <class T, class Node = AVLTreeNode<T>>
-class AVLTree: virtual public BinaryTree<T, Node> {
+class AVLTree: virtual public BinaryTree<Node> {
   protected:
-    using BinaryTree<T, Node>::root;
-    using BinaryTree<T, Node>::compare;
+    using BinaryTree<Node>::root;
+    using BinaryTree<Node>::compare;
 
     const Node* containsInternal(const Node* const &node, const T &value) const;
 
@@ -48,12 +51,12 @@ class AVLTree: virtual public BinaryTree<T, Node> {
     Node* popMostRightInternal(Node *&node);
 
   public:
-    using BinaryTree<T, Node>::empty;
+    using BinaryTree<Node>::empty;
 
-    explicit AVLTree(int (*compare)(const T &a, const T &b) = default_compare): BinaryTree<T, Node>(compare) {}
+    explicit AVLTree(int (*compare)(const T &a, const T &b) = default_compare): BinaryTree<Node>(compare) {}
 
     // Copy constructor
-    AVLTree(const AVLTree &tree): BinaryTree<T, Node>(tree) {};
+    AVLTree(const AVLTree &tree): BinaryTree<Node>(tree) {};
 
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
@@ -68,7 +71,7 @@ class AVLTree: virtual public BinaryTree<T, Node> {
 #ifdef BINARYTREE_SANITY_CHECK
   protected:
     void sanityCheckInternal(const Node* const &node) const override {
-        BinaryTree<T, Node>::sanityCheckInternal(node);
+        BinaryTree<Node>::sanityCheckInternal(node);
 
         if (node->height == 1) {
             // This is a leaf node with no children

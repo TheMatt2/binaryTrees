@@ -8,6 +8,9 @@
 
 template <class T>
 struct SplayTreeNode {
+    // Public reference to T for reference
+    using value_type = T;
+
     explicit SplayTreeNode(const T &value): left(nullptr), right(nullptr), value(value) {}
 
     SplayTreeNode *left;
@@ -17,10 +20,10 @@ struct SplayTreeNode {
 };
 
 template <class T, class Node = SplayTreeNode<T>>
-class SplayTree: virtual public BinaryTree<T, Node> {
+class SplayTree: virtual public BinaryTree<Node> {
   protected:
-    using BinaryTree<T, Node>::root;
-    using BinaryTree<T, Node>::compare;
+    using BinaryTree<Node>::root;
+    using BinaryTree<Node>::compare;
 
     bool insertInternal(Node *&node, const T &value);
 
@@ -33,7 +36,7 @@ class SplayTree: virtual public BinaryTree<T, Node> {
     Node* popMostRightInternal(Node *&node);
 
   public:
-    using BinaryTree<T, Node>::BinaryTree;
+    using BinaryTree<Node>::BinaryTree;
 
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
