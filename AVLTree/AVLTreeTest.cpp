@@ -285,7 +285,7 @@ void test_unique_trees(const Tree forest[], size_t len) {
                 // Create, get length, and then make buf of that length
                 int err_size = snprintf(nullptr, 0, err_msg, i, j);
                 char *err_buf = new char[err_size];
-                sprintf(err_buf, err_msg, i, j);
+                snprintf(err_buf, err_size, err_msg, i, j);
                 throw std::logic_error(err_buf);
             }
         }
@@ -293,7 +293,7 @@ void test_unique_trees(const Tree forest[], size_t len) {
             if (check_identical(forest[i], forest[j])) {
                 int err_size = snprintf(nullptr, 0, err_msg, i, j);
                 char *err_buf = new char[err_size];
-                sprintf(err_buf, err_msg, i, j);
+                snprintf(err_buf, err_size, err_msg, i, j);
                 throw std::logic_error(err_buf);
             }
         }

@@ -309,14 +309,14 @@ void BinaryTree<Node>::printTreeInternal(
 }
 
 template <class Node>
-unsigned int BinaryTree<Node>::getMaxStringWidth() const noexcept {
+size_t BinaryTree<Node>::getMaxStringWidth() const noexcept {
     // If width is zero, search tree to determine the maximum width.
-    unsigned int width = 0;
+    size_t width = 0;
     for (auto it = preorder_begin(); it != preorder_end(); ++it) {
         // Use stringstream to determine length of string representation
         std::stringstream buf;
         buf << *it;
-        const unsigned int node_width = buf.str().length();
+        const size_t node_width = buf.str().length();
 
         if (node_width > width) width = node_width;
     }

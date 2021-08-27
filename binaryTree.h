@@ -81,7 +81,7 @@ class BinaryTree {
      * Internal function only used for determining how to print
      * the tree.
      */
-    virtual unsigned int getMaxStringWidth() const noexcept;
+    virtual size_t getMaxStringWidth() const noexcept;
 
     /**
      * Internally print out part of the tree.
