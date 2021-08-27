@@ -739,14 +739,14 @@ void test() {
             if (tree.getRoot() != *tree.preorder_begin()) {
                 int err_size = snprintf(nullptr, 0, err_msg, i);
                 char *err_buf = new char[err_size];
-                sprintf(err_buf, err_msg, i);
+                snprintf(err_buf, err_size, err_msg, i);
                 throw std::logic_error(err_buf);
             }
 
             if (tree.getRoot() != *tree.reverse_preorder_begin()) {
                 int err_size = snprintf(nullptr, 0, err_msg, i);
                 char *err_buf = new char[err_size];
-                sprintf(err_buf, err_msg, i);
+                snprintf(err_buf, err_size, err_msg, i);
                 throw std::logic_error(err_buf);
             }
         }
@@ -803,7 +803,7 @@ void test() {
             if (tree.getRoot() != *forward_it) {
                 int err_size = snprintf(nullptr, 0, err_msg, i);
                 char *err_buf = new char[err_size];
-                sprintf(err_buf, err_msg, i);
+                snprintf(err_buf, err_size, err_msg, i);
                 throw std::logic_error(err_buf);
             }
 
@@ -812,7 +812,7 @@ void test() {
             if (tree.getRoot() != *reverse_it) {
                 int err_size = snprintf(nullptr, 0, err_msg, i);
                 char *err_buf = new char[err_size];
-                sprintf(err_buf, err_msg, i);
+                snprintf(err_buf, err_size, err_msg, i);
                 throw std::logic_error(err_buf);
             }
         }
@@ -852,14 +852,14 @@ void test() {
             if (tree.getRoot() != *tree.level_order_begin()) {
                 int err_size = snprintf(nullptr, 0, err_msg, i);
                 char *err_buf = new char[err_size];
-                sprintf(err_buf, err_msg, i);
+                snprintf(err_buf, err_size, err_msg, i);
                 throw std::logic_error(err_buf);
             }
 
             if (tree.getRoot() != *tree.reverse_level_order_begin()) {
                 int err_size = snprintf(nullptr, 0, err_msg, i);
                 char *err_buf = new char[err_size];
-                sprintf(err_buf, err_msg, i);
+                snprintf(err_buf, err_size, err_msg, i);
                 throw std::logic_error(err_buf);
             }
         }
