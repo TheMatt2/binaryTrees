@@ -862,7 +862,7 @@ protected:
             return queue.front() == iter.queue.front();
         }
 
-        bool operator!=(const queue_iterator &iter) const {
+        bool operator!=(const level_order_print_iterator &iter) const {
             return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
         }
 
