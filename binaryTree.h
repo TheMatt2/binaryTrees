@@ -960,7 +960,7 @@ class BinaryTreeCountable: virtual public BinaryTree<Node> {
 
         // Add additional check for the count variable (expensive)
         unsigned int count = 0;
-        for (auto it = preorder_begin(); it != preorder_end(); it++) {
+        for (auto it = BinaryTree<Node>::preorder_begin(); it != BinaryTree<Node>::preorder_end(); ++it) {
             count++;
         }
 
