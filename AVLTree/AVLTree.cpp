@@ -520,7 +520,7 @@ bool AVLTree<T, Node>::removeInternal(Node *&node, const T &value) {
         return true;
     }
 
-    // Otherwise handle recursion
+    // Otherwise, handle recursion
     // If negative, go left.
     // If positive, go right.
     Node *&child = cmp < 0 ? node->left : node->right;
