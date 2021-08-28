@@ -660,4 +660,4 @@ BinaryTreeCountable<Node>& BinaryTreeCountable<Node>::operator=(const BinaryTree
     _count = tree._count;
     return BinaryTree<Node>::operator=(tree);
 }
-#endif
+#endif //BINARYTREE_CPP

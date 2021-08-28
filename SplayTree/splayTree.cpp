@@ -355,4 +355,4 @@ T SplayTreeCountable<T, Node>::popMostRight() {
     _count--;
     return result;
 }
-#endif
+#endif //SPLAYTREE_CPP

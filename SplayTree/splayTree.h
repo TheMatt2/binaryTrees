@@ -72,4 +72,4 @@ class SplayTreeCountable: public SplayTree<T, Node>, public BinaryTreeCountable<
     T popMostRight() override;
 };
 #include "splayTree.cpp"
-#endif
+#endif //SPLAYTREE_H

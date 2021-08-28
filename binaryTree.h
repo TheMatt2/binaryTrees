@@ -972,4 +972,4 @@ class BinaryTreeCountable: virtual public BinaryTree<Node> {
     unsigned int _count = 0;
 };
 #include "binaryTree.cpp"
-#endif
+#endif //BINARYTREE_H

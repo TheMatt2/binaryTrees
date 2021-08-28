@@ -17,4 +17,4 @@ class clearable_stack: public std::stack<T, Container> {
         std::stack<T, Container>::c.clear();
     }
 };
-#endif
+#endif //CLEARABLE_STACK_H

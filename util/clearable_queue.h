@@ -17,4 +17,4 @@ public:
         std::queue<T, Container>::c.clear();
     }
 };
-#endif
+#endif //CLEARABLE_QUEUE_H
