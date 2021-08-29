@@ -50,6 +50,8 @@ class SplayTree: virtual public BinaryTree<Node> {
     T popMostRight() override;
 };
 
+#include "../binaryTreeCountable.h"
+
 // A specialized SplayTree that tracks the size of elements in the tree.
 // This uses another integer, but makes an O(1) size() function
 template <class T, class Node = SplayTreeNode<T>>

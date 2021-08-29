@@ -648,16 +648,4 @@ void BinaryTree<Node>::level_order_print_iterator::advance() {
 //typename BinaryTree<Node>::level_order_print_iterator BinaryTree<Node>::level_order_print_end() const {
 //    return level_order_print_iterator(nullptr);
 //}
-
-// Copy constructor
-template <class Node>
-BinaryTreeCountable<Node>::BinaryTreeCountable(const BinaryTreeCountable &tree): BinaryTree<Node>(tree), _count(tree._count) {}
-
-// Assignment constructor
-template <class Node>
-// NOLINT: Despite what the linter thinks, this properly handles self assignment
-BinaryTreeCountable<Node>& BinaryTreeCountable<Node>::operator=(const BinaryTreeCountable &tree) {
-    _count = tree._count;
-    return BinaryTree<Node>::operator=(tree);
-}
 #endif //BINARYTREE_CPP

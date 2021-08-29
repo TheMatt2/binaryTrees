@@ -123,6 +123,7 @@ class AVLTree: virtual public BinaryTree<Node> {
 #endif
 };
 
+#include "../binaryTreeCountable.h"
 // A specialized AVLTree that tracks the size of elements in the tree.
 // This uses another integer, but makes an O(1) size() function
 template <class T, class Node = AVLTreeNode<T>>

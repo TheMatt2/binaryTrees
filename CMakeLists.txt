@@ -16,14 +16,14 @@ add_executable(
         AVLTree/AVLTreeTest.cpp
         AVLTree/AVLTree.cpp
         binaryTree.cpp
-)
+        binaryTreeCountable.cpp)
 
 add_executable(
         splayTreeTest
         SplayTree/splayTreeTest.cpp
         SplayTree/splayTree.cpp
         binaryTree.cpp
-)
+        binaryTreeCountable.cpp)
 
 add_executable(
         churntest
@@ -31,7 +31,7 @@ add_executable(
         AVLTree/AVLTree.cpp
         SplayTree/splayTree.cpp
         binaryTree.cpp
-)
+        binaryTreeCountable.cpp)
 
 add_executable(
         speedtest
@@ -39,7 +39,7 @@ add_executable(
         AVLTree/AVLTree.cpp
         SplayTree/splayTree.cpp
         binaryTree.cpp
-)
+        binaryTreeCountable.cpp)
 
 # Only build benchmarks if library available
 find_package(benchmark QUIET)
@@ -49,7 +49,7 @@ if (benchmark_FOUND)
             AVLTree/AVLTreeBenchmark.cpp
             AVLTree/AVLTree.cpp
             binaryTree.cpp
-    )
+            binaryTreeCountable.cpp)
 
     target_link_libraries(AVLTreeBenchmark benchmark::benchmark)
 
@@ -58,7 +58,7 @@ if (benchmark_FOUND)
             SplayTree/splayTreeBenchmark.cpp
             SplayTree/splayTree.cpp
             binaryTree.cpp
-    )
+            binaryTreeCountable.cpp)
 
     target_link_libraries(splayTreeBenchmark benchmark::benchmark)
 endif()
