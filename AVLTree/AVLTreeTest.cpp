@@ -14,6 +14,7 @@
 // Because the test must also pass all sanity checks
 #define BINARYTREE_SANITY_CHECK
 #include "AVLTree.h"
+#include "AVLTreeCountable.h"
 
 using namespace std;
 

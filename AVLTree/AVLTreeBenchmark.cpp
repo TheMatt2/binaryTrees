@@ -15,6 +15,7 @@
 #define TESTS Ranges({{1 << 10, 8 << 10}, {128, 512}})->Complexity()->Threads(1)->ThreadPerCpu()
 
 #include "AVLTree.h"
+#include "AVLTreeCountable.h"
 
 inline int RandomNumber() {
     return rand();

@@ -49,29 +49,5 @@ class SplayTree: virtual public BinaryTree<Node> {
     T popMostLeft() override;
     T popMostRight() override;
 };
-
-#include "../binaryTreeCountable.h"
-
-// A specialized SplayTree that tracks the size of elements in the tree.
-// This uses another integer, but makes an O(1) size() function
-template <class T, class Node = SplayTreeNode<T>>
-class SplayTreeCountable: public SplayTree<T, Node>, public BinaryTreeCountable<Node> {
-  protected:
-    using BinaryTreeCountable<Node>::_count;
-  public:
-    explicit SplayTreeCountable(int (*compare)(const T &a, const T &b) = default_compare);
-
-    // Copy constructor
-    SplayTreeCountable(const SplayTreeCountable& tree);
-
-    // Assignment constructor
-    SplayTreeCountable& operator=(const SplayTreeCountable &tree);
-
-    bool insert(const T &value) noexcept override;
-    bool remove(const T &value) noexcept override;
-
-    T popMostLeft() override;
-    T popMostRight() override;
-};
 #include "splayTree.cpp"
 #endif //SPLAYTREE_H

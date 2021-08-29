@@ -14,6 +14,7 @@ SET(CMAKE_CXX_FLAGS_RELEASE_INIT "${CMAKE_CXX_FLAGS} ${GCC_WALL} ${GCC_PEDANTIC}
 add_executable(
         AVLTreeTest
         AVLTree/AVLTreeTest.cpp
+        AVLTree/AVLTreeCountable.cpp
         AVLTree/AVLTree.cpp
         binaryTree.cpp
         binaryTreeCountable.cpp)
@@ -21,6 +22,7 @@ add_executable(
 add_executable(
         splayTreeTest
         SplayTree/splayTreeTest.cpp
+        SplayTree/splayTreeCountable.cpp
         SplayTree/splayTree.cpp
         binaryTree.cpp
         binaryTreeCountable.cpp)
@@ -47,6 +49,7 @@ if (benchmark_FOUND)
     add_executable(
             AVLTreeBenchmark
             AVLTree/AVLTreeBenchmark.cpp
+            AVLTree/AVLTreeCountable.cpp
             AVLTree/AVLTree.cpp
             binaryTree.cpp
             binaryTreeCountable.cpp)
@@ -56,6 +59,7 @@ if (benchmark_FOUND)
     add_executable(
             splayTreeBenchmark
             SplayTree/splayTreeBenchmark.cpp
+            SplayTree/splayTreeCountable.cpp
             SplayTree/splayTree.cpp
             binaryTree.cpp
             binaryTreeCountable.cpp)
