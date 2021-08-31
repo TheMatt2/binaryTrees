@@ -20,14 +20,13 @@ struct SplayTreeNode {
 };
 
 template <class T, class Node = SplayTreeNode<T>>
-class SplayTree: virtual public BinaryTree<Node> {
+class SplayTree: virtual public BinaryTree<T, Node> {
   public:
-    using value_type = typename BinaryTree<Node>::value_type;
+    using value_type = T;
 
-    static_assert(std::is_same<T, value_type>::value, "Node value type must match class type");
   protected:
-    using BinaryTree<Node>::root;
-    using BinaryTree<Node>::compare;
+    using BinaryTree<T, Node>::root;
+    using BinaryTree<T, Node>::compare;
 
     bool insertInternal(Node *&node, const T &value);
 
@@ -40,7 +39,7 @@ class SplayTree: virtual public BinaryTree<Node> {
     Node* popMostRightInternal(Node *&node);
 
   public:
-    explicit SplayTree(int (*compare)(const T& a, const T& b) = default_compare) : BinaryTree<Node>(compare) {}
+    explicit SplayTree(int (*compare)(const T& a, const T& b) = default_compare) : BinaryTree<T, Node>(compare) {}
 
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;

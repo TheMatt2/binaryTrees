@@ -34,14 +34,14 @@ template <> inline int default_compare(const char &a, const char &b) noexcept {r
 template <> inline int default_compare(const short &a, const short &b) noexcept {return a - b;}
 //template <> int default_compare(const long &a, const long &b) noexcept {return a - b;} // TODO safe long compare
 
-template <class Node>
+template <class T, class Node>
 class BinaryTree {
   public:
-    // Public reference to value_type for reference
-    using value_type = typename Node::value_type;
+    // Public reference to T for reference
+    using value_type = T;
   protected:
     // Comparison function
-    int (*compare)(const value_type &a, const value_type &b);
+    int (*compare)(const T &a, const T &b);
 
     Node *root;
 
@@ -110,7 +110,7 @@ class BinaryTree {
                            unsigned int width, char background, std::ostream &ostream) const noexcept;
 
   public:
-    explicit BinaryTree(int (*compare)(const value_type &a, const value_type &b) = default_compare): compare(compare), root(nullptr) {};
+    explicit BinaryTree(int (*compare)(const T &a, const T &b) = default_compare): compare(compare), root(nullptr) {};
 
     // Copy constructor
     BinaryTree(const BinaryTree &tree);
@@ -134,12 +134,12 @@ class BinaryTree {
     bool operator==(const BinaryTree &tree) const noexcept;
     bool operator!=(const BinaryTree &tree) const noexcept;
 
-    virtual bool contains(const value_type &value) noexcept = 0;
-    virtual bool insert(const value_type &value) noexcept = 0;
-    virtual bool remove(const value_type &value) noexcept = 0;
+    virtual bool contains(const T &value) noexcept = 0;
+    virtual bool insert(const T &value) noexcept = 0;
+    virtual bool remove(const T &value) noexcept = 0;
 
-    virtual value_type popMostLeft() = 0;
-    virtual value_type popMostRight() = 0;
+    virtual T popMostLeft() = 0;
+    virtual T popMostRight() = 0;
 
     /**
      * Clear all values in the tree.
@@ -150,11 +150,11 @@ class BinaryTree {
     bool empty() const noexcept;
 
     // Get the value at the root
-    virtual value_type getRoot() const;
+    virtual T getRoot() const;
 
     // Get the maximum and minimum values stored in the tree
-    virtual value_type getMostLeft() const;
-    virtual value_type getMostRight() const;
+    virtual T getMostLeft() const;
+    virtual T getMostRight() const;
 
     /**
      * Get the height of the tree.
@@ -388,11 +388,11 @@ class BinaryTree {
         // Iterator traits
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
-        using value_type = value_type;
+        using value_type = T;
         using size_type = unsigned int;
         using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
-        using pointer = value_type*;
-        using reference = value_type&;
+        using pointer = T*;
+        using reference = T&;
 
         // Copy constructor
         stack_iterator(const stack_iterator& iter) : stack(iter.stack) {}
@@ -433,7 +433,7 @@ class BinaryTree {
             return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
         }
 
-        virtual value_type operator*() const {
+        virtual T operator*() const {
             if (!stack.empty())
                 return stack.top()->value;
             else
@@ -465,11 +465,11 @@ class BinaryTree {
         // Iterator traits
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
-        using value_type = value_type;
+        using value_type = T;
         using size_type = unsigned int;
         using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
-        using pointer = value_type*;
-        using reference = value_type&;
+        using pointer = T*;
+        using reference = T&;
 
         // Copy constructor
         queue_iterator(const queue_iterator& iter) : queue(iter.queue) {}
@@ -510,7 +510,7 @@ class BinaryTree {
             return !(*this == iter); // NOLINT: Expression can *not* be simplified. That would make an infinite loop.
         }
 
-        virtual value_type operator*() const {
+        virtual T operator*() const {
             if (!queue.empty())
                 return queue.front()->value;
             else
@@ -820,10 +820,10 @@ protected:
         // Iterator traits
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
-        using value_type = value_type;
+        using value_type = T;
         using difference_type = void; // infinite iterator, no type big enough
-        using pointer = value_type*;
-        using reference = value_type&;
+        using pointer = T*;
+        using reference = T&;
 
         // Copy constructor
         level_order_print_iterator(const level_order_print_iterator &iter): queue(iter.queue) {}

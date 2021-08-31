@@ -8,14 +8,14 @@
 #include "binaryTreeCountable.h"
 
 // Copy constructor
-template <class Node>
-BinaryTreeCountable<Node>::BinaryTreeCountable(const BinaryTreeCountable &tree): BinaryTree<Node>(tree), _count(tree._count) {}
+template <class T, class Node>
+BinaryTreeCountable<T, Node>::BinaryTreeCountable(const BinaryTreeCountable &tree): BinaryTree<T, Node>(tree), _count(tree._count) {}
 
 // Assignment constructor
-template <class Node>
+template <class T, class Node>
 // NOLINT: Despite what the linter thinks, this properly handles self assignment
-BinaryTreeCountable<Node>& BinaryTreeCountable<Node>::operator=(const BinaryTreeCountable &tree) {
+BinaryTreeCountable<T, Node>& BinaryTreeCountable<T, Node>::operator=(const BinaryTreeCountable &tree) {
     _count = tree._count;
-    return BinaryTree<Node>::operator=(tree);
+    return BinaryTree<T, Node>::operator=(tree);
 }
 #endif //BINARYTREECOUNTABLE_CPP

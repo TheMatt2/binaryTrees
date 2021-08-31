@@ -6,11 +6,11 @@
 #include "AVLTreeCountable.h"
 
 template <class T, class Node>
-AVLTreeCountable<T, Node>::AVLTreeCountable(int (*compare)(const T &a, const T &b)): BinaryTree<Node>(compare), BinaryTreeCountable<Node>(compare), AVLTree<T, Node>(compare) {}
+AVLTreeCountable<T, Node>::AVLTreeCountable(int (*compare)(const T &a, const T &b)): BinaryTree<T, Node>(compare), BinaryTreeCountable<T, Node>(compare), AVLTree<T, Node>(compare) {}
 
 // Copy constructor
 template <class T, class Node>
-AVLTreeCountable<T, Node>::AVLTreeCountable(const AVLTreeCountable<T, Node> &tree): BinaryTree<Node>(tree), BinaryTreeCountable<Node>(tree), AVLTree<T, Node>(tree) {}
+AVLTreeCountable<T, Node>::AVLTreeCountable(const AVLTreeCountable<T, Node> &tree): BinaryTree<T, Node>(tree), BinaryTreeCountable<T, Node>(tree), AVLTree<T, Node>(tree) {}
 
 // Assignment constructor
 template <class T, class Node>

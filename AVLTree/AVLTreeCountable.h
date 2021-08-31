@@ -10,13 +10,12 @@
 // A specialized AVLTree that tracks the size of elements in the tree.
 // This uses another integer, but makes an O(1) size() function
 template <class T, class Node = AVLTreeNode<T>>
-class AVLTreeCountable: public AVLTree<T, Node>, public BinaryTreeCountable<Node> {
+class AVLTreeCountable: public AVLTree<T, Node>, public BinaryTreeCountable<T, Node> {
 public:
-    using value_type = typename BinaryTreeCountable<Node>::value_type;
+    using value_type = T;
 
-    static_assert(std::is_same<T, value_type>::value, "Node value type must match class type");
 protected:
-    using BinaryTreeCountable<Node>::_count;
+    using BinaryTreeCountable<T, Node>::_count;
 public:
     explicit AVLTreeCountable(int (*compare)(const T &a, const T &b) = default_compare);
 

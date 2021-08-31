@@ -10,12 +10,12 @@
 
 // A specialized BinaryTree that tracks the size the tree.
 // This uses another integer, but makes an O(1) size() function
-template <class Node>
-class BinaryTreeCountable: virtual public BinaryTree<Node> {
+template <class T, class Node>
+class BinaryTreeCountable: virtual public BinaryTree<T, Node> {
   public:
-    using value_type = typename BinaryTree<Node>::value_type;
+    using value_type = T;
 
-    explicit BinaryTreeCountable(int (*compare)(const value_type &a, const value_type &b) = default_compare): BinaryTree<Node>(compare) {};
+    explicit BinaryTreeCountable(int (*compare)(const value_type &a, const value_type &b) = default_compare): BinaryTree<T, Node>(compare) {};
 
     // Copy constructor
     BinaryTreeCountable(const BinaryTreeCountable &tree);
@@ -28,7 +28,7 @@ class BinaryTreeCountable: virtual public BinaryTree<Node> {
         if (_count != tree._count) return false;
 
         // Fallback to normal equality
-        return BinaryTree<Node>::operator==(tree);
+        return BinaryTree<T, Node>::operator==(tree);
     }
 
     bool operator!=(const BinaryTreeCountable &tree) const noexcept {
@@ -37,7 +37,7 @@ class BinaryTreeCountable: virtual public BinaryTree<Node> {
 
     bool insert(const value_type &value) noexcept override = 0;
     bool remove(const value_type &value) noexcept override = 0;
-    void clear() noexcept override {BinaryTree<Node>::clear(); _count = 0;};
+    void clear() noexcept override {BinaryTree<T, Node>::clear(); _count = 0;};
 
     value_type popMostLeft() override = 0;
     value_type popMostRight() override = 0;
@@ -48,11 +48,11 @@ class BinaryTreeCountable: virtual public BinaryTree<Node> {
     // Only define sanity check if compile flag is specified.
     // Throws errors if anything is wrong
     void sanityCheck() const override {
-        BinaryTree<Node>::sanityCheck();
+        BinaryTree<T, Node>::sanityCheck();
 
         // Add additional check for the count variable (expensive)
         unsigned int count = 0;
-        for (auto it = BinaryTree<Node>::preorder_begin(); it != BinaryTree<Node>::preorder_end(); ++it) {
+        for (auto it = BinaryTree<T, Node>::preorder_begin(); it != BinaryTree<T, Node>::preorder_end(); ++it) {
             count++;
         }
 

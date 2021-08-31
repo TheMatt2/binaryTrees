@@ -6,11 +6,11 @@
 #include "splayTreeCountable.h"
 
 template <class T, class Node>
-SplayTreeCountable<T, Node>::SplayTreeCountable(int (*compare)(const T& a, const T& b)): BinaryTree<Node>(compare), BinaryTreeCountable<Node>(compare), SplayTree<T, Node>(compare) {}
+SplayTreeCountable<T, Node>::SplayTreeCountable(int (*compare)(const T& a, const T& b)): BinaryTree<T, Node>(compare), BinaryTreeCountable<T, Node>(compare), SplayTree<T, Node>(compare) {}
 
 // Copy constructor
 template <class T, class Node>
-SplayTreeCountable<T, Node>::SplayTreeCountable(const SplayTreeCountable<T, Node>& tree): BinaryTree<Node>(tree), BinaryTreeCountable<Node>(tree), SplayTree<T, Node>(tree) {}
+SplayTreeCountable<T, Node>::SplayTreeCountable(const SplayTreeCountable<T, Node>& tree): BinaryTree<T, Node>(tree), BinaryTreeCountable<T, Node>(tree), SplayTree<T, Node>(tree) {}
 
 // Assignment constructor
 template <class T, class Node>
