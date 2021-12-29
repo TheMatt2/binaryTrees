@@ -4,7 +4,6 @@
 // amount of data in the tree, so will be tested repeatedly.
 
 #include <chrono>
-#include <string>
 #include <random>
 #include <vector>
 #include <utility>
@@ -83,8 +82,14 @@ void churntest(Tree &tree, typename Tree::value_type dataset[], size_t size) {
     // Testing at "0" churn is meaningless, since nothing would be added or removed.
     // Test at 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100%
     assert(tree.empty());
+
+    double duration;
+
+    // For timing of overall tree performance
+    auto start = std::chrono::high_resolution_clock::now();
+
     // Use part of the dataset as churn data, the rest is loaded into the tree.
-    for (float churn: {.1, .2, .3, .4, .5, .6, .7, .8, .9, 1.0}) {
+    for (double churn: {.1, .2, .3, .4, .5, .6, .7, .8, .9, 1.0}) {
         size_t split_index = size * churn;
 
         for (size_t i = split_index; i < size; i++) {
@@ -92,15 +97,22 @@ void churntest(Tree &tree, typename Tree::value_type dataset[], size_t size) {
         }
 
         // https://stackoverflow.com/a/3093470 shows this is safe because a vector will be continuous
-        auto duration = performanceTest(tree, size, dataset, split_index);
+        duration = performanceTest(tree, size, dataset, split_index);
         assert(duration > 0);
 
         std::cout << churn * 100 << "% churn\t: "
                   << duration / 1000000.0 // million nanoseconds in a millisecond
-                  << "ms" << std::endl;
+                  << " ms" << std::endl;
 
         tree.clear();
     }
+
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    duration = (double) std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
+    std::cout << "overall churn\t: "
+              << duration / 1000000.0 // million nanoseconds in a millisecond
+              << " ms" << std::endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -162,6 +174,7 @@ int main(int argc, char *argv[]) {
 
     // Convert vector to pointer
     churntest(avltree, &dataset[0], dataset.size());
+    std::cout << std::endl;
 
 //    std::cout << "Countable AVL Tree Tests" << std::endl;
 //    auto avltreecount = AVLTreeCountable<std::string>(stringCompare);
