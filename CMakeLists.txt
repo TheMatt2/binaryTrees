@@ -62,6 +62,13 @@ if (benchmark_FOUND)
     target_link_libraries(AVLTreeBenchmark benchmark::benchmark)
 
     add_executable(
+            AVLTreeFlatBenchmark
+            AVLTreeFlat/AVLTreeFlatBenchmark.cpp
+            AVLTreeFlat/AVLTreeFlat.cpp)
+
+    target_link_libraries(AVLTreeFlatBenchmark benchmark::benchmark)
+
+    add_executable(
             splayTreeBenchmark
             SplayTree/splayTreeBenchmark.cpp
             SplayTree/splayTreeCountable.cpp
