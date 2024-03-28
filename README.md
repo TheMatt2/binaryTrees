@@ -7,9 +7,9 @@ a common root class, many traversal methods, and a print function to display the
 
 ### Common Interface
 
-This interface is shared between all binary trees for easy intercompatability.
+This interface is shared between all binary trees for easy compatability.
 
-```
+```c++
 class BinaryTree {
     BinaryTree(int (*compare)(const T &a, const T &b) = default_compare);
 
@@ -83,30 +83,31 @@ class BinaryTree {
 
 ### Project Layout
 
+<!-- Because of course this should be formatted with `tree` -->
+
 ```
-+-- README.md
-+-- LICENSE.md
-+-- CMakeLists.txt
-|
-+-- binaryTree.h    Base interface all trees share.
-+-- binaryTree.cpp  Base implementations shared.
-|
-+-- churntest.cpp
-+-- speedtest.cpp
-|
-+-- AVLTree
-|   +-- AVLTree.h
-|   +-- AVLTree.cpp
-|   +-- AVLTreeTest.cpp
-|   +-- AVLTreeBenchmark.cpp
-|
-+-- SplayTree
-|   +-- splayTree.h
-|   +-- splayTree.cpp
-|   +-- splayTreeTest.cpp
-|   +-- splayTreeBenchmark.cpp
-|
-+-- util
-    +-- clearable_queue.h
-    +-- clearable_stack.h
+├── README.md
+├── LICENSE.md
+├── CMakeLists.txt
+├── binaryTree.h    Base interface all trees share.
+├── binaryTree.cpp  Base implementations shared.
+├── churntest.cpp
+├── speedtest.cpp
+├── AVLTree
+│   ├── AVLTreeBenchmark.cpp
+│   ├── AVLTreeCountable.cpp
+│   ├── AVLTreeCountable.h
+│   ├── AVLTree.cpp
+│   ├── AVLTree.h
+│   └── AVLTreeTest.cpp
+├── SplayTree
+│   ├── splayTreeBenchmark.cpp
+│   ├── splayTreeCountable.cpp
+│   ├── splayTreeCountable.h
+│   ├── splayTree.cpp
+│   ├── splayTree.h
+│   └── splayTreeTest.cpp
+└── util
+    ├── clearable_queue.h
+    └── clearable_stack.h.h
 ```
