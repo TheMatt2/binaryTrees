@@ -28,11 +28,10 @@ inline int default_compare(const T &a, const T &b) noexcept {
 
 template <> inline int default_compare(const std::string &a, const std::string &b) noexcept {return a.compare(b);}
 
-// All integer types have a simple compare function
+// Numerical types smaller than integers have a simple compare function
 template <> inline int default_compare(const int &a, const int &b) noexcept {return a - b;}
 template <> inline int default_compare(const char &a, const char &b) noexcept {return a - b;}
 template <> inline int default_compare(const short &a, const short &b) noexcept {return a - b;}
-//template <> int default_compare(const long &a, const long &b) noexcept {return a - b;} // TODO safe long compare
 
 template <class T, class Node>
 class BinaryTree {
@@ -75,7 +74,7 @@ class BinaryTree {
      * This assumes the tree may be of any shape, and tries all branches.
      *
      */
-    virtual unsigned int getHeightInternal(const Node* const &node) const noexcept;
+    virtual size_t getHeightInternal(const Node* const &node) const noexcept;
 
     /**
      * Internal function only used for determining how to print
@@ -106,8 +105,8 @@ class BinaryTree {
      * stream to print to.
      */
     void printTreeInternal(const Node* const &node,
-                           unsigned int padding_left, unsigned int padding_right,
-                           unsigned int width, char background, std::ostream &ostream) const noexcept;
+                           size_t padding_left, size_t padding_right,
+                           size_t width, char background, std::ostream &ostream) const noexcept;
 
   public:
     explicit BinaryTree(int (*compare)(const T &a, const T &b) = default_compare): compare(compare), root(nullptr) {};
@@ -160,7 +159,7 @@ class BinaryTree {
      * Get the height of the tree.
      * A height of zero indicates an empty tree.
      */
-    virtual unsigned int getHeight() const noexcept;
+    virtual size_t getHeight() const noexcept;
 
     /**
      * Get the number of elements within the tree.
@@ -168,7 +167,7 @@ class BinaryTree {
      * This will be linear time or better.
      * @return size of trees
      */
-    virtual unsigned int size() const noexcept;
+    virtual size_t size() const noexcept;
 
     /**
      * Print a text visualization of the binary tree.
@@ -227,7 +226,7 @@ class BinaryTree {
      * @param ostream
      * Output stream to print the tree to.
      */
-    void printTree(unsigned int width, unsigned int height = 0, char fill = ' ', bool biasLeft = true,
+    void printTree(size_t width, size_t height = 0, char fill = ' ', bool biasLeft = true,
                    bool trailing = false, char background = ' ', std::ostream &ostream = std::cout) const noexcept;
 
     /**
@@ -301,7 +300,7 @@ class BinaryTree {
      * @param ostream
      * Output stream to print the tree to.
      */
-    void printTreeWithSpacing(unsigned int spacing, unsigned int width = 0, unsigned int height = 0,
+    void printTreeWithSpacing(size_t spacing, size_t width = 0, size_t height = 0,
                               char fill = ' ', bool biasLeft = true, bool trailing = false,
                               char background = ' ', std::ostream &ostream = std::cout) const noexcept;
 
@@ -389,8 +388,8 @@ class BinaryTree {
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
         using value_type = T;
-        using size_type = unsigned int;
-        using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
+        using size_type = size_t;
+        using difference_type = ptrdiff_t;
         using pointer = T*;
         using reference = T&;
 
@@ -466,8 +465,8 @@ class BinaryTree {
         // Makes this iterator "official" in the eyes of the stl functions
         using iterator_category = std::forward_iterator_tag;
         using value_type = T;
-        using size_type = unsigned int;
-        using difference_type = long; // Issue is this requires signed type, but we may have unsigned int elements
+        using size_type = size_t;
+        using difference_type = ptrdiff_t;
         using pointer = T*;
         using reference = T&;
 
@@ -583,7 +582,7 @@ class BinaryTree {
       protected:
         using stack_iterator::stack;
         using stack_iterator::stack_iterator;
-    
+
         void advance() override;
     };
 
@@ -609,7 +608,7 @@ class BinaryTree {
 
       protected:
         using stack_iterator::stack;
-      
+
         explicit postorder_iterator(Node *root): stack_iterator(root) {
             // The root is the last value in postorder traversal, not the first
             // so advance() must be called from the constructor for start
@@ -646,7 +645,7 @@ class BinaryTree {
 
       protected:
         using stack_iterator::stack;
-    
+
         explicit reverse_postorder_iterator(Node *root): stack_iterator(root) {
             // Go to the first value
             if (root != nullptr) advanceToNext();
@@ -680,7 +679,7 @@ class BinaryTree {
 
       protected:
         using stack_iterator::stack;
-    
+
         explicit inorder_iterator(Node *root): stack_iterator(root) {
                 // Go to the first value
                 if (root != nullptr) advanceToNext();
@@ -714,7 +713,7 @@ class BinaryTree {
 
       protected:
         using stack_iterator::stack;
-      
+
         explicit reverse_inorder_iterator(Node *root): stack_iterator(root) {
                 // Go to the first value
                 if (root != nullptr) advanceToNext();
@@ -749,7 +748,7 @@ class BinaryTree {
       protected:
         using queue_iterator::queue;
         using queue_iterator::queue_iterator;
-      
+
         void advance() override;
     };
 
@@ -776,7 +775,7 @@ class BinaryTree {
       protected:
         using queue_iterator::queue;
         using queue_iterator::queue_iterator;
-      
+
         void advance() override;
     };
 

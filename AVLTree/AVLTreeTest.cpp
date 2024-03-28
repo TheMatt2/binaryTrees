@@ -302,7 +302,7 @@ void test_unique_trees(const Tree forest[], size_t length) {
 }
 
 template <class Tree>
-unsigned int count_unique_trees(const int n) {
+size_t count_unique_trees(int n) {
     // For a given number of elements, count how many unique tree
     // structures exist.
     // This corresponds to https://oeis.org/A006265
@@ -347,7 +347,7 @@ unsigned int count_unique_trees(const int n) {
 }
 
 template <class Tree>
-bool check_size(const unsigned int size, const Tree forest[], size_t length) {
+bool check_size(size_t size, const Tree forest[], size_t length) {
     // Check that the size of all trees is the same as expected
     for (size_t i = 0; i < length; ++i) {
         if (size != forest[i].size()) {
@@ -358,7 +358,7 @@ bool check_size(const unsigned int size, const Tree forest[], size_t length) {
 }
 
 template <class Tree>
-bool check_height(const unsigned int height, Tree forest[], size_t length) {
+bool check_height(size_t height, Tree forest[], size_t length) {
     // Check that the size of all trees is the same as expected
     for (size_t i = 0; i < length; ++i) {
         if (height != forest[i].getHeight()) {
@@ -370,8 +370,8 @@ bool check_height(const unsigned int height, Tree forest[], size_t length) {
 
 // Number of values in a list
 template <class It>
-unsigned int size(It first, It last) {
-    unsigned int n = 0;
+size_t size(It first, It last) {
+    size_t n = 0;
     for (; first != last; ++first) {
         n++;
     }

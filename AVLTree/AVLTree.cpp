@@ -6,7 +6,7 @@
 #include "AVLTree.h"
 
 template <class T, class Node>
-unsigned int AVLTree<T, Node>::getHeight() const noexcept {
+size_t AVLTree<T, Node>::getHeight() const noexcept {
     // Zero if tree is empty
     if (root == nullptr) {
         return 0;

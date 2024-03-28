@@ -42,7 +42,7 @@ class BinaryTreeCountable: virtual public BinaryTree<T, Node> {
     value_type popMostLeft() override = 0;
     value_type popMostRight() override = 0;
 
-    unsigned int size() const noexcept override {return _count;};
+    size_t size() const noexcept override {return _count;};
 
 #ifdef BINARYTREE_SANITY_CHECK
     // Only define sanity check if compile flag is specified.
@@ -51,7 +51,7 @@ class BinaryTreeCountable: virtual public BinaryTree<T, Node> {
         BinaryTree<T, Node>::sanityCheck();
 
         // Add additional check for the count variable (expensive)
-        unsigned int count = 0;
+        size_t count = 0;
         for (auto it = BinaryTree<T, Node>::preorder_begin(); it != BinaryTree<T, Node>::preorder_end(); ++it) {
             count++;
         }
@@ -61,7 +61,7 @@ class BinaryTreeCountable: virtual public BinaryTree<T, Node> {
     }
 #endif
   protected:
-    unsigned int _count = 0;
+    size_t _count = 0;
 };
 #include "binaryTreeCountable.cpp"
 #endif //BINARYTREECOUNTABLE_H

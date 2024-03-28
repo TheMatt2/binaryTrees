@@ -153,13 +153,13 @@ const Node* BinaryTree<T, Node>::getMostRightInternal(const Node* const &node) c
 }
 
 template <class T, class Node>
-unsigned int BinaryTree<T, Node>::getHeight() const noexcept {
+size_t BinaryTree<T, Node>::getHeight() const noexcept {
     // Get the height of the tree.
     return getHeightInternal(root);
 }
 
 template <class T, class Node>
-unsigned int BinaryTree<T, Node>::getHeightInternal(const Node* const &node) const noexcept {
+size_t BinaryTree<T, Node>::getHeightInternal(const Node* const &node) const noexcept {
     if (node == nullptr) {
         // A nullptr node has a height of zero
         return 0;
@@ -170,7 +170,7 @@ unsigned int BinaryTree<T, Node>::getHeightInternal(const Node* const &node) con
 }
 
 template <class T, class Node>
-unsigned int BinaryTree<T, Node>::size() const noexcept {
+size_t BinaryTree<T, Node>::size() const noexcept {
     return std::distance(preorder_begin(), preorder_end());
 }
 
@@ -185,7 +185,7 @@ void BinaryTree<T, Node>::printTree(std::ostream &ostream) const noexcept {
 }
 
 template <class T, class Node>
-void BinaryTree<T, Node>::printTree(unsigned int width, const unsigned int height, const char fill, const bool biasLeft,
+void BinaryTree<T, Node>::printTree(size_t width, const size_t height, const char fill, const bool biasLeft,
                                     const bool trailing, const char background, std::ostream &ostream) const noexcept {
     // Spacing is equal to width
     if (width == 0) {
@@ -196,7 +196,7 @@ void BinaryTree<T, Node>::printTree(unsigned int width, const unsigned int heigh
 }
 
 template <class T, class Node>
-void BinaryTree<T, Node>::printTreeWithSpacing(const unsigned int spacing, unsigned int width, unsigned int height,
+void BinaryTree<T, Node>::printTreeWithSpacing(const size_t spacing, size_t width, size_t height,
                                          const char fill, const bool biasLeft, const bool trailing,
                                          const char background, std::ostream &ostream) const noexcept {
     if (width == 0) {
@@ -208,7 +208,7 @@ void BinaryTree<T, Node>::printTreeWithSpacing(const unsigned int spacing, unsig
     // This prevents the use of O(2^height) memory.
     // (Note that O(n) memory is required for the region where there is actually tree)
     // The fix is to spend O(log(n)) time now finding the height of the tree.
-    unsigned int tree_height = getHeight();
+    size_t tree_height = getHeight();
 
     // If height is zero, it is the height of the tree.
     if (height == 0) {
@@ -230,32 +230,32 @@ void BinaryTree<T, Node>::printTreeWithSpacing(const unsigned int spacing, unsig
     // Special in it is both the first and last value on the level
     // Scoped to prevent name collisions
     {
-        const unsigned int base_width = ((width + spacing) << (height - 1)) - width;
-        const unsigned int padding_left  = (base_width + !biasLeft - spacing) / 2;
-        const unsigned int padding_right = trailing ? (base_width + biasLeft - spacing) / 2: 0;
+        const size_t base_width = ((width + spacing) << (height - 1)) - width;
+        const size_t padding_left  = (base_width + !biasLeft - spacing) / 2;
+        const size_t padding_right = trailing ? (base_width + biasLeft - spacing) / 2: 0;
         printTreeInternal(*it, padding_left, padding_right, width, background, ostream);
         ostream << std::endl;
     }
 
-    unsigned int level = 1;
+    size_t level = 1;
     for (; level < tree_height; level++) {
         // Calculate the width of the base of this subtree.
         // Width, minus the width of the single object that will be printed.
-        const unsigned int base_width = ((width + spacing) << (height - level - 1)) - width;
-        const unsigned int base_width_left = base_width + !biasLeft;
-        const unsigned int base_width_right = base_width + biasLeft;
+        const size_t base_width = ((width + spacing) << (height - level - 1)) - width;
+        const size_t base_width_left = base_width + !biasLeft;
+        const size_t base_width_right = base_width + biasLeft;
 
         // Special case for the first value
         printTreeInternal(*++it, (base_width_left - spacing) / 2, base_width_right / 2,
                           width, background, ostream);
 
-        for (unsigned int position = 1; position < ((1U << level) - 1U); position++) {
+        for (size_t position = 1; position < ((1U << level) - 1U); position++) {
             printTreeInternal(*++it, base_width_left / 2, base_width_right / 2,
                               width, background, ostream);
         }
 
         // Special case for final in level
-        const unsigned int padding_right = trailing ? (base_width_right - spacing) / 2: 0;
+        const size_t padding_right = trailing ? (base_width_right - spacing) / 2: 0;
         printTreeInternal(*++it, base_width_left / 2, padding_right, width, background, ostream);
         ostream << std::endl;
     }
@@ -269,21 +269,21 @@ void BinaryTree<T, Node>::printTreeWithSpacing(const unsigned int spacing, unsig
         // All values will be null
         // Calculate the width of the base of this subtree.
         // Width, minus the width of the single object that will be printed.
-        const unsigned int base_width = ((width + spacing) << (height - level - 1)) - width;
-        const unsigned int base_width_left = base_width + !biasLeft;
-        const unsigned int base_width_right = base_width + biasLeft;
+        const size_t base_width = ((width + spacing) << (height - level - 1)) - width;
+        const size_t base_width_left = base_width + !biasLeft;
+        const size_t base_width_right = base_width + biasLeft;
 
         // Special case for the first value
         printTreeInternal(nullptr, (base_width_left - spacing) / 2, base_width_right / 2,
                           width, background, ostream);
 
-        for (unsigned int position = 1; position < ((1U << level) - 1U); position++) {
+        for (size_t position = 1; position < ((1U << level) - 1U); position++) {
             printTreeInternal(nullptr, base_width_left / 2, base_width_right / 2,
                               width, background, ostream);
         }
 
         // Special case for final in level
-        const unsigned int padding_right = trailing ? (base_width_right - spacing) / 2: 0;
+        const size_t padding_right = trailing ? (base_width_right - spacing) / 2: 0;
         printTreeInternal(nullptr, base_width_left / 2, padding_right, width, background, ostream);
         ostream << std::endl;
     }
@@ -292,10 +292,10 @@ void BinaryTree<T, Node>::printTreeWithSpacing(const unsigned int spacing, unsig
 template <class T, class Node>
 void BinaryTree<T, Node>::printTreeInternal(
         const Node* const &node,
-        const unsigned int padding_left, const unsigned int padding_right,
-        const unsigned int width, const char background, std::ostream &ostream) const noexcept {
+        const size_t padding_left, const size_t padding_right,
+        const size_t width, const char background, std::ostream &ostream) const noexcept {
     // Print left
-    for (unsigned int i = 0; i < padding_left; ++i) ostream << background;
+    for (size_t i = 0; i < padding_left; ++i) ostream << background;
 
     // Print object
     ostream << std::setw((int) width);
@@ -305,7 +305,7 @@ void BinaryTree<T, Node>::printTreeInternal(
         ostream << "";
 
     // Print right
-    for (unsigned int i = 0; i < padding_right; ++i) ostream << background;
+    for (size_t i = 0; i < padding_right; ++i) ostream << background;
 }
 
 template <class T, class Node>

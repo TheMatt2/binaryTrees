@@ -69,7 +69,7 @@ class AVLTree: virtual public BinaryTree<T, Node> {
     T popMostRight() override;
 
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
-    unsigned int getHeight() const noexcept override;
+    size_t getHeight() const noexcept override;
 
 #ifdef BINARYTREE_SANITY_CHECK
   protected:

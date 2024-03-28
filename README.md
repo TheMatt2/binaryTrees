@@ -32,28 +32,28 @@ class BinaryTree {
     T popMostLeft();
     T popMostRight();
 
-    unsigned int getHeight();
+    size_t getHeight();
 
-    unsigned int size();
+    size_t size();
 
     void printTree();
     void printTree(std::ostream &ostream);
-    void printTree(unsigned int width);
-    void printTree(unsigned int width, unsigned int height);
-    void printTree(unsigned int width, unsigned int height, char fill);
-    void printTree(unsigned int width, unsigned int height, char fill, bool biasLeft);
-    void printTree(unsigned int width, unsigned int height, char fill, bool biasLeft, bool trailing);
-    void printTree(unsigned int width, unsigned int height, char fill, bool biasLeft, bool trailing, char background);
-    void printTree(unsigned int width, unsigned int height, char fill, bool biasLeft, bool trailing, char background, std::ostream &ostream);
+    void printTree(size_t width);
+    void printTree(size_t width, size_t height);
+    void printTree(size_t width, size_t height, char fill);
+    void printTree(size_t width, size_t height, char fill, bool biasLeft);
+    void printTree(size_t width, size_t height, char fill, bool biasLeft, bool trailing);
+    void printTree(size_t width, size_t height, char fill, bool biasLeft, bool trailing, char background);
+    void printTree(size_t width, size_t height, char fill, bool biasLeft, bool trailing, char background, std::ostream &ostream);
 
-    void printTreeWithSpacing(unsigned int spacing);
-    void printTreeWithSpacing(unsigned int spacing, unsigned int width);
-    void printTreeWithSpacing(unsigned int spacing, unsigned int width, unsigned int height);
-    void printTreeWithSpacing(unsigned int spacing, unsigned int width, unsigned int height, char fill);
-    void printTreeWithSpacing(unsigned int spacing, unsigned int width, unsigned int height, char fill, bool biasLeft);
-    void printTreeWithSpacing(unsigned int spacing, unsigned int width, unsigned int height, char fill, bool biasLeft, bool trailing);
-    void printTreeWithSpacing(unsigned int spacing, unsigned int width, unsigned int height, char fill, bool biasLeft, bool trailing, char background);
-    void printTreeWithSpacing(unsigned int spacing, unsigned int width, unsigned int height, char fill, bool biasLeft, bool trailing, char background, std::ostream &ostream);
+    void printTreeWithSpacing(size_t spacing);
+    void printTreeWithSpacing(size_t spacing, size_t width);
+    void printTreeWithSpacing(size_t spacing, size_t width, size_t height);
+    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill);
+    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill, bool biasLeft);
+    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill, bool biasLeft, bool trailing);
+    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill, bool biasLeft, bool trailing, char background);
+    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill, bool biasLeft, bool trailing, char background, std::ostream &ostream);
 
     // Iterators
     preorder_iterator preorder_begin();

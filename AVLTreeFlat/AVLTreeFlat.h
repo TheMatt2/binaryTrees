@@ -49,7 +49,7 @@ class AVLTreeFlat {
     T popMostRight() override;
 
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
-    unsigned int getHeight() const;
+    size_t getHeight() const;
 };
 
 #include "AVLTreeFlat.cpp"
