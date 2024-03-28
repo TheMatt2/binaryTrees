@@ -170,18 +170,18 @@ int main(int argc, char *argv[]) {
     std::cout << "AVL Tree Tests" << std::endl;
     std::cout.setf(std::ios::fixed);
     std::cout.precision(4);
-    auto avltree = AVLTree<std::string>(stringCompare);
+    auto avl_tree = AVLTree<std::string>(stringCompare);
 
     // Convert vector to pointer
-    churntest(avltree, &dataset[0], dataset.size());
+    churntest(avl_tree, &dataset[0], dataset.size());
     std::cout << std::endl;
 
 //    std::cout << "Countable AVL Tree Tests" << std::endl;
-//    auto avltreecount = AVLTreeCountable<std::string>(stringCompare);
+//    auto avl_tree_count = avl_tree_countable<std::string>(stringCompare);
 //    // Convert vector to pointer
-//    churntest(avltreecount, &dataset[0], dataset.size());
+//    churntest(avl_tree_count, &dataset[0], dataset.size());
 
     std::cout << "Splay Tree Tests" << std::endl;
-    auto splaytree = SplayTree<std::string>(stringCompare);
-    churntest(splaytree, &dataset[0], dataset.size());
+    auto splay_tree = SplayTree<std::string>(stringCompare);
+    churntest(splay_tree, &dataset[0], dataset.size());
 }
