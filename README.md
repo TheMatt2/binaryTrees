@@ -7,7 +7,7 @@ a common root class, many traversal methods, and a print function to display the
 
 ### Common Interface
 
-This interface is shared between all binary trees for easy compatability.
+This interface is shared between all binary trees for easy compatibility.
 
 ```c++
 class BinaryTree {
@@ -36,24 +36,13 @@ class BinaryTree {
 
     size_t size();
 
-    void printTree();
-    void printTree(std::ostream &ostream);
-    void printTree(size_t width);
-    void printTree(size_t width, size_t height);
-    void printTree(size_t width, size_t height, char fill);
-    void printTree(size_t width, size_t height, char fill, bool biasLeft);
-    void printTree(size_t width, size_t height, char fill, bool biasLeft, bool trailing);
-    void printTree(size_t width, size_t height, char fill, bool biasLeft, bool trailing, char background);
-    void printTree(size_t width, size_t height, char fill, bool biasLeft, bool trailing, char background, std::ostream &ostream);
+    void printTree(
+        size_t width, size_t height, char fill,
+        bool biasLeft, bool trailing, char background, std::ostream &ostream);
 
-    void printTreeWithSpacing(size_t spacing);
-    void printTreeWithSpacing(size_t spacing, size_t width);
-    void printTreeWithSpacing(size_t spacing, size_t width, size_t height);
-    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill);
-    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill, bool biasLeft);
-    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill, bool biasLeft, bool trailing);
-    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill, bool biasLeft, bool trailing, char background);
-    void printTreeWithSpacing(size_t spacing, size_t width, size_t height, char fill, bool biasLeft, bool trailing, char background, std::ostream &ostream);
+    void printTreeWithSpacing(
+        size_t spacing, size_t width, size_t height, char fill,
+        bool biasLeft, bool trailing, char background, std::ostream &ostream);
 
     // Iterators
     preorder_iterator preorder_begin();
@@ -79,6 +68,7 @@ class BinaryTree {
 
     reverse_level_order_iterator reverse_level_order_begin();
     reverse_level_order_iterator reverse_level_order_end();
+};
 ```
 
 ### Project Layout
