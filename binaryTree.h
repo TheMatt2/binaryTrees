@@ -43,6 +43,14 @@ class BinaryTree {
     int (*compare)(const T &a, const T &b);
 
     Node *root;
+    size_t count;
+
+    virtual bool insertInternal(Node *&node, const T &value) = 0;
+
+    virtual bool removeInternal(Node *&node, const T &value) = 0;
+
+    virtual Node* popMostLeftInternal(Node *&node) = 0;
+    virtual Node* popMostRightInternal(Node *&node) = 0;
 
     /**
      * Recursively deallocate the values in the tree.
@@ -134,11 +142,11 @@ class BinaryTree {
     bool operator!=(const BinaryTree &tree) const noexcept;
 
     virtual bool contains(const T &value) noexcept = 0;
-    virtual bool insert(const T &value) noexcept = 0;
-    virtual bool remove(const T &value) noexcept = 0;
+    virtual bool insert(const T &value) noexcept;
+    virtual bool remove(const T &value) noexcept;
 
-    virtual T popMostLeft() = 0;
-    virtual T popMostRight() = 0;
+    virtual T popMostLeft();
+    virtual T popMostRight();
 
     /**
      * Clear all values in the tree.
@@ -889,6 +897,16 @@ protected:
     virtual void sanityCheck() const {
         if (root != nullptr)
             sanityCheckInternal(root);
+
+        // Check count is correct
+        size_t sanity_count = 0;
+        for (auto it = this->preorder_begin(); it != this->preorder_end(); ++it) {
+            sanity_count++;
+        }
+
+        if (count != sanity_count) {
+            throw std::logic_error("BinaryTree size does not match count of elements");
+        }
     }
   protected:
     virtual void sanityCheckInternal(const Node* const &node) const {

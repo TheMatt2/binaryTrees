@@ -44,9 +44,6 @@ class SplayTree: virtual public BinaryTree<T, Node> {
     bool contains(const T &value) noexcept override;
     bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
-
-    T popMostLeft() override;
-    T popMostRight() override;
 };
 #include "splayTree.cpp"
 #endif //SPLAYTREE_H

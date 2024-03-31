@@ -184,11 +184,6 @@ bool SplayTree<T, Node>::contains(const T &value) noexcept {
 }
 
 template <class T, class Node>
-T SplayTree<T, Node>::popMostLeft() {
-    return popMostLeftInternal(root)->value;
-}
-
-template <class T, class Node>
 Node* SplayTree<T, Node>::popMostLeftInternal(Node *&node) {
     Node *temp;
     if (node->left != nullptr) {
@@ -203,11 +198,6 @@ Node* SplayTree<T, Node>::popMostLeftInternal(Node *&node) {
         node = node->right;
     }
     return temp;
-}
-
-template <class T, class Node>
-T SplayTree<T, Node>::popMostRight() {
-    return popMostRightInternal(root)->value;
 }
 
 template <class T, class Node>

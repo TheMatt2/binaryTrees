@@ -19,34 +19,28 @@ set(CMAKE_CXX_FLAGS_RELEASE_INIT "${CMAKE_CXX_FLAGS} ${GCC_WALL} ${GCC_PEDANTIC}
 add_executable(
         AVLTreeTest
         AVLTree/AVLTreeTest.cpp
-        AVLTree/AVLTreeCountable.cpp
         AVLTree/AVLTree.cpp
-        binaryTree.cpp
-        binaryTreeCountable.cpp)
+        binaryTree.cpp)
 
 add_executable(
         splayTreeTest
         SplayTree/splayTreeTest.cpp
-        SplayTree/splayTreeCountable.cpp
         SplayTree/splayTree.cpp
-        binaryTree.cpp
-        binaryTreeCountable.cpp)
+        binaryTree.cpp)
 
 add_executable(
         churntest
         churntest.cpp
         AVLTree/AVLTree.cpp
         SplayTree/splayTree.cpp
-        binaryTree.cpp
-        binaryTreeCountable.cpp)
+        binaryTree.cpp)
 
 add_executable(
         speedtest
         speedtest.cpp
         AVLTree/AVLTree.cpp
         SplayTree/splayTree.cpp
-        binaryTree.cpp
-        binaryTreeCountable.cpp)
+        binaryTree.cpp)
 
 # Only build benchmarks if library available
 find_package(benchmark QUIET)
@@ -54,10 +48,8 @@ if (benchmark_FOUND)
     add_executable(
             AVLTreeBenchmark
             AVLTree/AVLTreeBenchmark.cpp
-            AVLTree/AVLTreeCountable.cpp
             AVLTree/AVLTree.cpp
-            binaryTree.cpp
-            binaryTreeCountable.cpp)
+            binaryTree.cpp)
 
     target_link_libraries(AVLTreeBenchmark benchmark::benchmark)
 
@@ -71,10 +63,8 @@ if (benchmark_FOUND)
     add_executable(
             splayTreeBenchmark
             SplayTree/splayTreeBenchmark.cpp
-            SplayTree/splayTreeCountable.cpp
             SplayTree/splayTree.cpp
-            binaryTree.cpp
-            binaryTreeCountable.cpp)
+            binaryTree.cpp)
 
     target_link_libraries(splayTreeBenchmark benchmark::benchmark)
 endif()

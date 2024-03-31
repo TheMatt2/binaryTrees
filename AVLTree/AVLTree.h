@@ -62,11 +62,6 @@ class AVLTree: virtual public BinaryTree<T, Node> {
     AVLTree(const AVLTree &tree): BinaryTree<T, Node>(tree) {};
 
     bool contains(const T &value) noexcept override;
-    bool insert(const T &value) noexcept override;
-    bool remove(const T &value) noexcept override;
-
-    T popMostLeft() override;
-    T popMostRight() override;
 
     // Specialized getHeight(). Implement O(1) algorithm specific to AVL trees
     size_t getHeight() const noexcept override;

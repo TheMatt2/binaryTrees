@@ -203,7 +203,7 @@ void AVLTree<T, Node>::leftRotation(Node *&node) {
 }
 
 template <class T, class Node>
-void AVLTree<T, Node>::rightRotation(Node *&node){
+void AVLTree<T, Node>::rightRotation(Node *&node) {
     /**
      * Rotate the tree right about the given node.
      */
@@ -307,7 +307,7 @@ void AVLTree<T, Node>::rightRotation(Node *&node){
 }
 
 template <class T, class Node>
-void AVLTree<T, Node>::rebalance(Node *&node){
+void AVLTree<T, Node>::rebalance(Node *&node) {
     /**
      * If needed, shifts node, node->left, and node->right
      * will to transformed to balance the node.
@@ -337,22 +337,14 @@ void AVLTree<T, Node>::rebalance(Node *&node){
     // Otherwise, no rotation is needed
 }
 
-template <class T, class Node>
-bool AVLTree<T, Node>::insert(const T &value) noexcept {
-    /**
-     * Insert the a new value into the tree;
-     */
-    return insertInternal(root, value);
-}
-
+/**
+ * An internal insert command that inserts a new value recursively.
+ *
+ * Returns true if the value is inserted.
+ * Returns false if the value is found in the tree, and the tree is not modified.
+ */
 template <class T, class Node>
 bool AVLTree<T, Node>::insertInternal(Node *&node, const T &value) {
-    /**
-     * An internal insert command that inserts a new value recursively.
-     *
-     * Returns true if the value is inserted.
-     * Returns false if the value is found in the tree, and the tree is not modified.
-     */
     // Handle if node does not exist
     if (node == nullptr) {
         // Well, insert the value here.
@@ -407,17 +399,6 @@ bool AVLTree<T, Node>::insertInternal(Node *&node, const T &value) {
 }
 
 template <class T, class Node>
-T AVLTree<T, Node>::popMostLeft() {
-    if (!empty()) {
-        return popMostLeftInternal(root)->value;
-    } else {
-        // There are no values, so nothing valid to return
-        // Raise out of bounds error
-        throw std::out_of_range("tree is empty");
-    }
-}
-
-template <class T, class Node>
 Node* AVLTree<T, Node>::popMostLeftInternal(Node *&node) {
     Node *temp;
     if (node->left != nullptr) {
@@ -434,17 +415,6 @@ Node* AVLTree<T, Node>::popMostLeftInternal(Node *&node) {
 }
 
 template <class T, class Node>
-T AVLTree<T, Node>::popMostRight() {
-    if (!empty()) {
-        return popMostRightInternal(root)->value;
-    } else {
-        // There are no values, so nothing valid to return
-        // Raise out of bounds error
-        throw std::out_of_range("tree is empty");
-    }
-}
-
-template <class T, class Node>
 Node* AVLTree<T, Node>::popMostRightInternal(Node *&node) {
     Node *temp;
     if (node->right != nullptr) {
@@ -458,11 +428,6 @@ Node* AVLTree<T, Node>::popMostRightInternal(Node *&node) {
         node = node->left;
     }
     return temp;
-}
-
-template <class T, class Node>
-bool AVLTree<T, Node>::remove(const T &value) noexcept {
-    return removeInternal(root, value);
 }
 
 template <class T, class Node>

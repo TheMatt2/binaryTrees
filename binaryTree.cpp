@@ -8,11 +8,32 @@
 #include <algorithm>
 #include "binaryTree.h"
 
+/**
+ * Insert the a new value into the tree.
+ */
+template <class T, class Node>
+bool BinaryTree<T, Node>::insert(const T &value) noexcept {
+    bool result = insertInternal(root, value);
+    count += result;
+    return result;
+}
+
+/**
+ * Remove a value from the tree.
+ */
+template <class T, class Node>
+bool BinaryTree<T, Node>::remove(const T &value) noexcept {
+    bool result = removeInternal(root, value);
+    count -= result;
+    return result;
+}
+
 template <class T, class Node>
 void BinaryTree<T, Node>::clear() noexcept {
     // Deallocate memory recursively
     clearInternal(root);
     root = nullptr;
+    count = 0;
 }
 
 template <class T, class Node>
@@ -76,6 +97,7 @@ BinaryTree<T, Node>::BinaryTree(const BinaryTree &tree): compare(tree.compare) {
 template <class T, class Node>
 // NOLINT: Despite what the linter thinks, this properly handles self assignment
 BinaryTree<T, Node>& BinaryTree<T, Node>::operator=(const BinaryTree<T, Node> &tree) {
+    count = tree.count;
     compare = tree.compare;
     replaceNode(root, tree.root);
     return *this;
@@ -83,6 +105,9 @@ BinaryTree<T, Node>& BinaryTree<T, Node>::operator=(const BinaryTree<T, Node> &t
 
 template <class T, class Node>
 bool BinaryTree<T, Node>::operator==(const BinaryTree &tree) const noexcept {
+    // Size must match first
+    if (count != tree.count) return false;
+
     // Use inorder iterator to compare. Identical if the iterators are identical
     return std::equal(inorder_begin(), inorder_end(), tree.inorder_begin(), tree.inorder_end());
 }
@@ -153,6 +178,30 @@ const Node* BinaryTree<T, Node>::getMostRightInternal(const Node* const &node) c
 }
 
 template <class T, class Node>
+T BinaryTree<T, Node>::popMostLeft() {
+    if (!empty()) {
+        T &result = popMostLeftInternal(root)->value;
+        count--;
+        return result;
+    } else {
+        // There are no values, so nothing valid to return
+        throw std::out_of_range("tree is empty");
+    }
+}
+
+template <class T, class Node>
+T BinaryTree<T, Node>::popMostRight() {
+    if (!empty()) {
+        T &result = popMostRightInternal(root)->value;
+        count--;
+        return result;
+    } else {
+        // There are no values, so nothing valid to return
+        throw std::out_of_range("tree is empty");
+    }
+}
+
+template <class T, class Node>
 size_t BinaryTree<T, Node>::getHeight() const noexcept {
     // Get the height of the tree.
     return getHeightInternal(root);
@@ -171,7 +220,7 @@ size_t BinaryTree<T, Node>::getHeightInternal(const Node* const &node) const noe
 
 template <class T, class Node>
 size_t BinaryTree<T, Node>::size() const noexcept {
-    return std::distance(preorder_begin(), preorder_end());
+    return count;
 }
 
 template <class T, class Node>
