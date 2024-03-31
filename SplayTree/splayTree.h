@@ -27,6 +27,7 @@ class SplayTree: virtual public BinaryTree<T, Node> {
   protected:
     using BinaryTree<T, Node>::root;
     using BinaryTree<T, Node>::compare;
+    using BinaryTree<T, Node>::count;
 
     bool insertInternal(Node *&node, const T &value);
 
@@ -42,7 +43,6 @@ class SplayTree: virtual public BinaryTree<T, Node> {
     explicit SplayTree(int (*compare)(const T& a, const T& b) = default_compare) : BinaryTree<T, Node>(compare) {}
 
     bool contains(const T &value) noexcept override;
-    bool insert(const T &value) noexcept override;
     bool remove(const T &value) noexcept override;
 };
 #include "splayTree.cpp"

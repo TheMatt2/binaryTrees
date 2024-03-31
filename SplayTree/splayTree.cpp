@@ -108,11 +108,6 @@ void SplayTree<T, Node>::rotateRight(Node *&node) {
     node = temp;
 }
 
-template<class T, class Node>
-bool SplayTree<T, Node>::insert(const T &value) noexcept {
-    return insertInternal(root, value);
-}
-
 template <class T, class Node>
 bool SplayTree<T, Node>::insertInternal(Node *&node, const T &value) {
     /*
@@ -222,11 +217,14 @@ bool SplayTree<T, Node>::remove(const T &value) noexcept {
     // The value to remove needs to be brought to the root
     bool result = makeSplay(root, value);
 
-    if (!result)
+    if (!result) {
         // Value is not in tree
         return false;
+    }
 
-    return removeInternal(root, value);
+    result = removeInternal(root, value);
+    count -= result;
+    return result;
 }
 
 // TODO make sure this is a *valid* remove operation that is O(log(n))
